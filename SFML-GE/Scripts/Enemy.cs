@@ -3,13 +3,12 @@
     internal class Enemy : Component
     {
         public float HP = 1f;
-        public float speed = 50f;
+        public float speed = 150f;
         public static Vector2 target = new Vector2(205,0);
 
 
         public Enemy() { }
         public Enemy(float hp) { HP = hp; }
-
 
         public override void Update() 
         {
@@ -24,7 +23,6 @@
             if(diff.Magnitude() <= 1f)
             {
                 gameObject.Destroy();
-                Console.WriteLine("its joever");
             }
         }
 

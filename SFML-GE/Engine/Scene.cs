@@ -3,6 +3,7 @@
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using SFML_GE.Engine;
 using System.Diagnostics;
 
 namespace SFML_GE
@@ -17,12 +18,15 @@ namespace SFML_GE
 
         RenderManager renderManager = new RenderManager();
 
+        public Camera MainCamera { get; set; }
+
         Stopwatch deltaWatch = new Stopwatch();
 
         public float deltaTime { get; private set; } = 0;
 
         public Scene(string name, Project project)
         {
+            MainCamera = new Camera(project);
             this.Name = name;
             Project = project;
         }
@@ -96,7 +100,7 @@ namespace SFML_GE
             {
                 GameObjects[i].GetRenderables(renderManager);
             }
-
+            MainCamera.OnRender(rt);
             renderManager.Render(rt);
         }
 

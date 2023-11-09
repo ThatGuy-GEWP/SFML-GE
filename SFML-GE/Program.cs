@@ -15,43 +15,28 @@ namespace SFML_GE
 
         static void Main(string[] args)
         {
-            App = new RenderWindow(new VideoMode(800, 400), "SFML Template");
+            App = new RenderWindow(new VideoMode(1280, 720), "SFML Template");
             App.Closed += (a, b) => { App.Close(); };
 
             Project mainProject = new Project("Res", App);
+            Scene MainScene = mainProject.CreateSceneAndLoad("Test!");
+
+            MainScene.MainCamera.Zoom = 2f;
 
             Prefab EnemyPrefab = new Prefab("Enemy", (proj, scene) =>
             {
-                GameObject enemyBase = scene.CreateGameObject("Enemy");
-                enemyBase.AddComponent(new Enemy(5));
-                enemyBase.AddComponent(new Sprite2D(new Vector2(5, 5)));
-                return enemyBase;
+                GameObject enemyBot = scene.CreateGameObject("Enemy");
+                enemyBot.AddComponent(new Enemy(5));
+                enemyBot.AddComponent(new Sprite2D(new Vector2(5, 5)));
+                return enemyBot;
             });
 
-            Prefab RotatersTest = new Prefab("Rotater", 
-                (proj, scene) => {
-                    GameObject baseObj = scene.CreateGameObject("Base");
-                    GameObject secdObj = baseObj.CreateChild("Sncd");
+            for (int i = 0; i < 850; i++)
+            {
+                MainScene.InstanciatePrefab(EnemyPrefab).Position = new Vector2(RandomGen.Next(50, 1200), RandomGen.Next(50, 700));
+            }
 
-                    baseObj.AddComponent(new Sprite2D(new Vector2(8, 8)));
-                    secdObj.AddComponent(new Sprite2D(new Vector2(5, 5)));
-                    secdObj.LocalPosition = new Vector2(100, 0);
-                    secdObj.AddComponent(new Spinner());
-
-                    return baseObj;
-                });
-
-            Scene MainScene = mainProject.CreateSceneAndLoad("Test!");
             MainScene.Start();
-
-            MainScene.InstanciatePrefab(RotatersTest).Position = new Vector2(100, 100);
-            MainScene.InstanciatePrefab(RotatersTest).Position = new Vector2(200, 100);
-            MainScene.InstanciatePrefab(RotatersTest).Position = new Vector2(300, 100);
-
-            MainScene.InstanciatePrefab(EnemyPrefab).Position = new Vector2(300, 160);
-
-            float t = 0;
-
             while (true)
             {
                 App.DispatchEvents();
@@ -59,8 +44,6 @@ namespace SFML_GE
 
                 mainProject.Update();
                 mainProject.Draw(App);
-                
-                t += MainScene.deltaTime;
 
                 App.Display();
             }

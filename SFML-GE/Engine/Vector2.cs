@@ -19,17 +19,6 @@ namespace SFML_GE
         }
 
         /// <summary>
-        /// Normalize this vector.
-        /// </summary>
-        /// <returns></returns>
-        public void Normalize()
-        {
-            Vector2 nVec = Normalize(this);
-            x = nVec.x;
-            y = nVec.y;
-        }
-
-        /// <summary>
         /// Rotates a point <paramref name="degrees"/> around (0,0)
         /// </summary>
         /// <param name="point"></param>
