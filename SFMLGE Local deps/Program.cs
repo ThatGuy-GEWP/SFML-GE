@@ -1,5 +1,7 @@
-﻿using SFML.Graphics;
+﻿using SFML.Audio;
+using SFML.Graphics;
 using SFML.Window;
+using SFML_Game_Engine;
 
 namespace SFML_Game_Engine
 {
@@ -35,28 +37,13 @@ namespace SFML_Game_Engine
                     baseObj.Rotation = 45;
                     baseObj.AddComponent(new Sprite2D(new Vector2(8, 8)));
                     secdObj.AddComponent(new Sprite2D(new Vector2(5, 5)));
-                    secdObj.LocalPosition = new Vector2(100, 0);
+                    secdObj.Position = new Vector2(100, 0);
                     secdObj.AddComponent(new Spinner());
 
                     return baseObj;
                 });
 
             Scene MainScene = mainProject.CreateSceneAndLoad("Test!");
-            MainScene.Start();
-
-            GameObject test = MainScene.InstanciatePrefab(RotatersTest);
-            GameObject test2 = MainScene.InstanciatePrefab(RotatersTest);
-
-            MainScene.InstanciatePrefab(RotatersTest).Position = new Vector2(100, 100);
-            MainScene.InstanciatePrefab(RotatersTest).Position = new Vector2(200, 100);
-            MainScene.InstanciatePrefab(RotatersTest).Position = new Vector2(300, 100);
-
-            for(int i = 0; i < 50; i++)
-            {
-                MainScene.InstanciatePrefab(EnemyPrefab).Position = new Vector2(150 + (10 * i), 160);
-            }
-
-            float t = 0;
 
             mainProject.Start();
             while (true)
@@ -64,12 +51,8 @@ namespace SFML_Game_Engine
                 App.DispatchEvents();
                 App.Clear();
 
-                MainScene.camera.SetPosition(new Vector2(MathF.Sin(t*5) * 50, 0));
-
                 mainProject.Update();
-                mainProject.Draw(App);
-                
-                t += MainScene.deltaTime;
+                mainProject.OnRender(App);
 
                 App.Display();
             }

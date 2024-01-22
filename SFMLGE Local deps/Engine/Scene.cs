@@ -14,7 +14,7 @@ namespace SFML_Game_Engine
 
         public Project Project { get; private set; }
 
-        public List<GameObject> GameObjects = new List<GameObject>();
+        GameObject root;
 
         public bool started = false;
 
@@ -22,9 +22,9 @@ namespace SFML_Game_Engine
 
         public AudioManager audioManager { get; private set; }
 
-        public Camera camera { get; private set; }
+        public RenderManager renderManager { get; private set; } = new RenderManager();
 
-        RenderManager renderManager = new RenderManager();
+        public Camera camera { get; private set; }
 
         Stopwatch deltaWatch = new Stopwatch();
 
@@ -36,33 +36,42 @@ namespace SFML_Game_Engine
             Project = project;
             camera = new Camera(project.App);
             audioManager = new AudioManager(this);
+            root = new GameObject(project, this);
+            root.name = "ROOT";
         }
 
         public GameObject InstanciatePrefab(Prefab prefab)
         {
             GameObject? instance = prefab.CreatePrefab?.Invoke(Project, this);
             if(instance == null) { return null; }
-            GameObjects.Add(instance);
-
+            root.AddChild(instance);
             return instance;
         }
 
         public GameObject CreateGameObject(string name)
         {
             GameObject go = new GameObject(Project, this);
-            GameObjects.Add(go);
+            root.AddChild(go);
             go.name = name; 
             return go;
         }
 
+        public GameObject CreateGameObject(string name, GameObject parent)
+        {
+            GameObject go = new GameObject(Project, this, parent);
+            go.name = name;
+            return go;
+        }
+
         /// <summary>
-        /// Searches entire gameObject tree for child with the matching name.
+        /// Searches entire gameObject tree for child with the matching name,
+        /// returns null if not found.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public GameObject? GetGameObject(string name)
+        public GameObject GetGameObject(string name)
         {
-            foreach (GameObject gm in GameObjects)
+            foreach (GameObject gm in root.GetChildren())
             {
                 if (gm.name == name)
                 {
@@ -81,11 +90,11 @@ namespace SFML_Game_Engine
         public void Start()
         {
             deltaWatch.Start();
-            foreach (var gameObject in GameObjects)
+            foreach (GameObject gm in root.GetChildren())
             {
-                if(gameObject.started) { continue; }
-                gameObject.Start();
-                gameObject.started = true;
+                if(gm.started) { continue; }
+                gm.Start();
+                gm.started = true;
             }
             started = true;
         }
@@ -111,9 +120,8 @@ namespace SFML_Game_Engine
 
             if(!started) { Start(); return; }
 
-            for(int i = 0; i < GameObjects.Count; i++)
+            foreach(GameObject gameObject in root.GetChildren())
             {
-                GameObject gameObject = GameObjects[i];
                 if (!gameObject.enabled) continue;
                 if (!gameObject.started) { gameObject.Start(); gameObject.started = true; continue; }
                 gameObject.Update();
@@ -128,24 +136,32 @@ namespace SFML_Game_Engine
         {
             if (!isLoaded) { return; }
 
-            for (int i = 0; i < GameObjects.Count; i++)
+            foreach(GameObject gm in root.GetChildren())
             {
-                GameObjects[i].GetRenderables(renderManager);
+                gm.GetRenderables(renderManager);
             }
 
             renderManager.Render(rt);
+
+            View oldView = new View(rt.GetView());
+            rt.SetView(rt.DefaultView);
+
+            renderManager.RenderOverlay(rt);
+
+            rt.SetView(oldView);
         }
 
         /// <summary> Gets the mouse position in Screen space </summary>
-        public Vector2 GetMouseWindowPosition()
+        public Vector2 GetMouseScreenPosition()
         {
             return (Vector2)Mouse.GetPosition(Project.App);
         }
 
         /// <summary> Gets the mouse position in World space </summary>
-        public Vector2 GetMousePosition()
+        public Vector2 GetMouseWorldPosition()
         {
-            return Project.App.MapPixelToCoords((Vector2i)GetMouseWindowPosition());
+            Vector2 pos = GetMouseScreenPosition();
+            return Project.App.MapPixelToCoords((Vector2i)pos);
         }
 
     }

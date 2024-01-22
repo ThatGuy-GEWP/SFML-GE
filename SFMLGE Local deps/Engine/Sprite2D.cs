@@ -34,42 +34,43 @@ namespace SFML_Game_Engine
         /// </summary>
         public TextureResource? texture = null;
 
+
         RectangleShape shape = new RectangleShape();
 
-        public sbyte zOrder { get; set; } = 5;
+        public sbyte ZOrder { get; set; } = 5;
         public bool Visible { get; set; } = true;
-        byte IRenderable.ZOrder { get; set; }
         public bool AutoQueue { get; set; } = true;
+        public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;
 
         public Sprite2D() { }
 
         public Sprite2D(Vector2 Size)
         {
-            size = Size * 2;
+            size = Size;
         }
 
         public Sprite2D(Vector2 Size, TextureResource Texture)
         {
-            size = Size * 2;
+            size = Size;
             texture = Texture;
         }
 
         public Sprite2D(Vector2 Size, Vector2 Origin)
         {
-            size = Size * 2;
+            size = Size;
             this.origin = Origin;
         }
 
         public Sprite2D(Vector2 Size, Vector2 Origin, TextureResource Texture)
         {
-            size = Size * 2;
+            size = Size;
             this.origin = Origin;
             texture = Texture;
         }
 
-        public override void Start(Project project, Scene scene)
+        public override void Start()
         {
-            shape.Position = gameObject.Position;
+            shape.Position = gameObject.WorldPosition;
             shape.Size = size;
             shape.Origin = size * origin;
         }
@@ -82,7 +83,7 @@ namespace SFML_Game_Engine
             }
 
             shape.Texture = texture.resource;
-            shape.Position = gameObject.Position;
+            shape.Position = gameObject.WorldPosition + offset;
             shape.Size = size;
             shape.Origin = size * origin;
             shape.FillColor = fillColor;

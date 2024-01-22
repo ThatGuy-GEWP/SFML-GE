@@ -26,7 +26,12 @@
 
         Vector2 _position = new Vector2(0, 0);
 
-        /// <summary>Position relative to world</summary>
+        /// <summary>
+        /// if true, when <see cref="Position"/> is changes, children will be moved.
+        /// </summary>
+        public bool moveChildren = true;
+
+        /// <summary>wanted position</summary>
         public Vector2 Position
         {
             get
@@ -35,25 +40,33 @@
             }
             set
             {
+                _position = value;
+                if (!moveChildren) { return; }
                 foreach (var child in Children)
                 {
-                    child.Position += value - _position;
+                    child.Position = child.LocalPosition + value;
                 }
-                _position = value;
             }
         }
 
-        /// <summary>Position relative to parent</summary>
+        /// <summary>
+        /// Position relative to parent
+        /// </summary>
         public Vector2 LocalPosition
         {
             get
             {
-                return parent == null ? _position : _position - parent.Position;
+                if(parent == null) { return _position; }
+                return _position - parent.WorldPosition;
             }
-            set
+        }
+
+        /// <summary>Position in the world</summary>
+        public Vector2 WorldPosition
+        {
+            get
             {
-                if (parent == null) { Position = value; return; }
-                Position = parent.Position + value;
+                return parent == null ? _position : parent.Position + _position;
             }
         }
 
@@ -97,7 +110,8 @@
 
         public GameObject(Project project, Scene scene, GameObject parent)
         {
-            this.parent = parent;
+            name = "GameObject";
+            parent.AddChild(this);
             Project = project;
             Scene = scene;
             Position = new Vector2(0, 0);
@@ -122,41 +136,55 @@
         {
             if (DestroyQueued) return;
 
-            foreach (var comp in Components)
+            for(int i = 0; i < Components.Count; i++)
             {
-                if(comp is IRenderable && ((IRenderable)comp).AutoQueue)
+                Component comp = Components[i];
+
+                if(comp as IRenderable != null) 
                 {
-                    renderManager.AddToRenderQueue((IRenderable)comp);
+                    IRenderable renderComp = (IRenderable)comp;
+                    if (renderComp.AutoQueue == true)
+                    {
+                        switch (renderComp.QueueType) // switch just felt right here idk why
+                        {
+                            case RenderQueueType.OverlayQueue:
+                                renderManager.AddToGUIQueue(renderComp);
+                                continue;
+                            case RenderQueueType.DefaultQueue:
+                                renderManager.AddToQueue(renderComp);
+                                continue;
+                        }
+                    }
                 }
             }
 
-            foreach (var child in Children)
+            for(int i = 0; i < Children.Count; i++)
             {
-                child.GetRenderables(renderManager);
+                Children[i].GetRenderables(renderManager);
             }
         }
 
         void StartComponent(Component comp)
         {
-            if (comp.Started) { return; }
             comp.scene = Scene;
             comp.project = Scene.Project;
+            if (comp.Started) { return; }
 
-            comp.Start(Scene.Project, Scene);
+            comp.Start();
             comp.Started = true;
         }
 
         public void Start()
         {
             if (started) return;
-            foreach (var Comp in Components)
+            for(int i = 0; i < Components.Count; i++) 
             {
-                StartComponent(Comp);
+                StartComponent(Components[i]);
             }
 
-            foreach (var child in Children)
+            for (int i = 0; i < Children.Count; i++)
             {
-                child.Start();
+                Children[i].Start();
             }
         }
 
@@ -172,32 +200,32 @@
         {
             if (DestroyQueued)
             {
-                foreach(var comp in Components)
+                for (int i = 0; i < Components.Count; i++)
                 {
-                    comp.OnDestroy(this);
-                    comp.Enabled = false;
+                    Components[i].OnDestroy(this);
+                    Components[i].Enabled = false;
                 }
-                Scene.GameObjects.Remove(this);
+                //parent.Remove(this);
                 enabled = false;
                 return;
             }
 
             if (!enabled) return;
-            foreach (var Comp in Components)
+            for(int i = 0; i < Components.Count; i++)
             {
-                if (!Comp.Enabled) continue;
+                if (!Components[i].Enabled) continue;
 
-                if (!Comp.Started) {
-                    StartComponent(Comp);
+                if (!Components[i].Started) {
+                    StartComponent(Components[i]);
                     continue;
                 }
 
-                Comp.Update();
+                Components[i].Update();
             }
 
-            foreach (var child in Children)
+            for(int i = 0; i < Children.Count; i++)
             {
-                child.Update();
+                Children[i].Update();
             }
         }
 
@@ -205,22 +233,27 @@
         /// Adds a child to this gameObject, returns the child.
         /// If called twice with the same child, it will still return the child
         /// </summary>
-        /// <param name="go"></param>
+        /// <param name="child"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public GameObject AddChild(GameObject go)
+        public GameObject AddChild(GameObject child)
         {
-            if(go == parent)
+            if(child == parent)
             {
                 throw new ArgumentException(
-                    $"Cannot add parent to self as a child! |!| {name} tried to add {go.name} as a child"
+                    $"Cannot add parent to self as a child! |!| {name} tried to add {child.name} as a child"
                     );
             }
 
-            if (go.parent == this) { return go; }
-            go.parent = this;
-            Children.Add(go);
-            return go;
+            if (child.parent == this) { return child; }
+            child.parent = this;
+            Children.Add(child);
+            return child;
+        }
+
+        public GameObject[] GetChildren()
+        {
+            return Children.ToArray();
         }
 
         public T AddComponent<T>(T comp) where T : Component
@@ -230,7 +263,7 @@
             return comp;
         }
 
-        public T? GetComponent<T>() where T : Component
+        public T GetComponent<T>() where T : Component
         {
             foreach (Component component in Components)
             {

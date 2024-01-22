@@ -12,11 +12,11 @@
 
         public override void Update() 
         {
-            gameObject.Rotation = GEMath.RadToDeg(MathF.Atan2(target.y - gameObject.Position.y, target.x - gameObject.Position.x));
+            gameObject.Rotation = MathGE.RadToDeg(MathF.Atan2(target.y - gameObject.Position.y, target.x - gameObject.Position.x));
 
             gameObject.Position += Vector2.Normalize(new Vector2(target.x - gameObject.Position.x, target.y - gameObject.Position.y)) * speed * scene.deltaTime;
 
-            target = scene.GetMousePosition();
+            target = scene.GetMouseWorldPosition();
 
             Vector2 diff = target - gameObject.Position;
 

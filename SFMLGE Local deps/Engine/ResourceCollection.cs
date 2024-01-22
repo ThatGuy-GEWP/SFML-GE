@@ -13,16 +13,20 @@ namespace SFML_Game_Engine
         string rootName = string.Empty;
 
         /// <summary>
+        /// An empty resource collection.
+        /// </summary>
+        public ResourceCollection()
+        {
+
+        }
+
+        /// <summary>
         /// Collects resources from a directory, pass <see cref="null"/> if you plan on adding your own manualy.
         /// </summary>
         /// <param name="dirToCollect"></param>
         public ResourceCollection(string? dirToCollect)
         {
-            if(dirToCollect == null) { Console.Write("Loading no resources."); return; }
-            rootName = dirToCollect;
-
-            Console.WriteLine($"Loading folder {dirToCollect}");
-            searchFolder(dirToCollect, true);
+            CollectDir(dirToCollect);
 
             Image defaultSpriteImg = new Image(25, 25);
             for(uint x = 0; x < 25; x++)
@@ -68,6 +72,15 @@ namespace SFML_Game_Engine
             {
                 searchFolder(directory, false);
             }
+        }
+
+        public void CollectDir(string? dirToCollect)
+        {
+            if (dirToCollect == null) { Console.Write("Loading no resources."); return; }
+            rootName = dirToCollect;
+
+            Console.WriteLine($"Loading folder {dirToCollect}");
+            searchFolder(dirToCollect, true);
         }
 
         /// <summary>

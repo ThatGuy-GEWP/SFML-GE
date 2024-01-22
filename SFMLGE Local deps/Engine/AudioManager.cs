@@ -78,5 +78,14 @@ namespace SFMLGE_Local_deps.Engine
             inst.sound.Play();
             activeSounds.Push(inst);
         }
+
+        public void PlaySound(SoundResource sound, float volume)
+        {
+            if (activeSounds.Count > 200) { return; }
+            SoundInstance inst = new SoundInstance(sound);
+            inst.sound.Volume = volume;
+            inst.sound.Play();
+            activeSounds.Push(inst);
+        }
     }
 }

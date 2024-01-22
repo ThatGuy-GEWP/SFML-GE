@@ -1,6 +1,6 @@
 ﻿namespace SFML_Game_Engine
 {
-    public static class GEMath
+    public static class MathGE
     {
         /// <summary>
         /// Lerps <paramref name="A"/> to <paramref name="B"/> lineraly using <paramref name="X"/>
@@ -11,17 +11,8 @@
         /// <returns></returns>
         public static float Lerp(float A, float B, float X)
         {
+            X = X > 1.0f ? 1.0f : X;
             return A + (B - A) * X;
-        }
-
-        public static float DegToRad(float degrees)
-        {
-            return (degrees * MathF.PI / 180);
-        }
-
-        public static float RadToDeg(float radians)
-        {
-            return radians * (180 / MathF.PI);
         }
 
         /// <summary>
@@ -36,6 +27,16 @@
         public static float Map(float value, float fromMin, float fromMax, float toMin, float toMax)
         {
             return (value - fromMin) / (fromMax - fromMin) * (toMax - toMin) + toMin;
+        }
+
+        public static float DegToRad(float degrees)
+        {
+            return degrees * (MathF.PI / 180); // Convert degrees to radians
+        }
+
+        public static float RadToDeg(float radians)
+        {
+            return radians * (180 / MathF.PI); // Convert radians to degrees
         }
     }
 }

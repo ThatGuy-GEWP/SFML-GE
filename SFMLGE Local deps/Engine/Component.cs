@@ -3,18 +3,21 @@
 namespace SFML_Game_Engine
 {
     /// <summary>
-    /// Base class all components derive from, anything that requires access to the <see cref="Project"/> or the <see cref="Scene"/>,
-    /// should be done in <see cref="Start(Project, Scene)"/>
-    /// if you need to access these variables in update, use <see cref="project"/>, and <see cref="project.Scene"/>
+    /// A Base class all components derive from
     /// </summary>
     public abstract class Component
     {
         /// <summary>
-        /// The gameObject this component is attached too. null if not yet added.
+        /// The <see cref="GameObject"/> this component is attached too. null if this component is not added to anything yet
         /// </summary>
         public GameObject gameObject { 
             get { return _gameObject; }
             set { _gameObject = value; OnAdded(value); }
+        }
+
+        public float deltaTime
+        {
+            get { return scene.deltaTime; }
         }
 
         public bool Started
@@ -35,20 +38,20 @@ namespace SFML_Game_Engine
         GameObject? _gameObject;
 
         /// <summary>
-        /// The <see cref="project"/> this component is within.
+        /// The <see cref="Project"/> this component is within.
         /// Null on component creation.
         /// </summary>
-        public Project project;
+        public Project project = null!; // null! to suppress warnings
 
         /// <summary>
-        /// The <see cref="scene"/> this component is within.
+        /// The <see cref="Scene"/> this component is within.
         /// Null on component creation.
         /// </summary>
-        public Scene scene;
+        public Scene scene = null!; // null! to suppress warnings
 
         public virtual void Update() { return; }
 
-        public virtual void Start(Project project, Scene scene)
+        public virtual void Start()
         {
             return;
         }

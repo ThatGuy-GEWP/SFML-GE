@@ -1,8 +1,9 @@
-﻿using SFML.System;
+﻿using SFML.Graphics;
+using SFML.System;
 
 namespace SFML_Game_Engine
 {
-    public struct Vector2
+    public class Vector2
     {
         public float x;
         public float y;
@@ -15,18 +16,7 @@ namespace SFML_Game_Engine
 
         public float Magnitude()
         {
-            return Magnitude(this);
-        }
-
-        /// <summary>
-        /// Normalize this vector.
-        /// </summary>
-        /// <returns></returns>
-        public void Normalize()
-        {
-            Vector2 nVec = Normalize(this);
-            x = nVec.x;
-            y = nVec.y;
+            return MathF.Sqrt(x * x + y * y);
         }
 
         /// <summary>
@@ -59,27 +49,13 @@ namespace SFML_Game_Engine
             return (Rotate(point - origin, degrees) + origin);
         }
 
-        /// <summary>
-        /// Flips the x and y of an input vector.
-        /// </summary>
-        /// <param name="vec"></param>
-        /// <returns></returns>
         public static Vector2 Flip(Vector2 vec)
         {
             return new Vector2(vec.y, vec.x);
         }
 
         /// <summary>
-        /// Returns the magnitude of the input vector
-        /// </summary>
-        /// <returns></returns>
-        public static float Magnitude(Vector2 v)
-        {
-            return MathF.Sqrt(v.x * v.x + v.y * v.y);
-        }
-
-        /// <summary>
-        /// Normalizes the input vector
+        /// Normalizes a Vector
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -104,6 +80,11 @@ namespace SFML_Game_Engine
         public Vector2 Clamp(float min, float max)
         {
             return new Vector2(MathF.Min(MathF.Max(min, x), max), MathF.Min(MathF.Max(min, y), max));
+        }
+
+        public Vector2 Clamp(float xMin, float xMax, float yMin, float yMax) 
+        {
+            return new Vector2(MathF.Min(MathF.Max(xMin, x), xMax), MathF.Min(MathF.Max(yMin, y), yMax));
         }
 
         public static float Cross(Vector2 a, Vector2 b)
@@ -166,5 +147,7 @@ namespace SFML_Game_Engine
         public static explicit operator Vector2(Vector2i vec) => new Vector2(vec.X, vec.Y);
 
         public static explicit operator Vector2(Vector2u v) => new Vector2(v.X, v.Y);
+
+        public static implicit operator Vertex(Vector2 v) => new Vertex(v);
     }
 }

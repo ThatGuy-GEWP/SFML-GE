@@ -1,45 +1,75 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace SFML_Game_Engine
 {
-    // too lazy to rewrite this, i probably should though!
     /// <summary>
     /// A trigger that can sense when the mouse interacts with it, great for UI or ingame buttons
     /// </summary>
-    internal class MouseTrigger : Component
+    public class MouseTrigger : Component, IRenderable
     {
-        /// <summary>An Offset relative to the <see cref="GameObject.Position"/></summary>
-        public Vector2 Offset;
+        public Vector2 Offset; // relative to gameObject of course.
+        public Vector2 Size; // not scale!, absolute size of this mouse trigger
+        public Vector2 Origin; // origin is same as everying else, (0.0,0.0) would be the top left of this box, (1.0,1.0) would be bottom right
 
-        /// <summary>Not scale!, absolute size of this mouse trigger</summary>
-        public Vector2 Size;
+        /// <summary>
+        /// Draws the mouseTrigger with a green outline
+        /// </summary>
+        public bool debugDraw = false;
 
-        /// <summary>Origin of the mouse trigger, (0.5, 0.5) would be centered, (0.0, 0.0) would be the top left</summary>
-        public Vector2 Origin;
-
-        /// <summary>Target button of this trigger.</summary>
+        /// <summary>
+        /// Target button of this trigger.
+        /// </summary>
         public Mouse.Button Button = Mouse.Button.Left;
 
-        /// <summary>True if mouse is held and hovering over this trigger.</summary>
+        /// <summary>
+        /// True if mouse is held and hovering over this trigger.
+        /// </summary>
         public bool mouseHeld = false;
-
-        /// <summary>True for a single frame when this trigger is clicked with the selected <see cref="Button"/></summary>
+        /// <summary>
+        /// True for a single frame when this trigger is clicked with the selected <see cref="Button"/>
+        /// </summary>
         public bool mousePressed = false;
-
-        /// <summary>True if mouse is hovering over this trigger.</summary>
+        /// <summary>
+        /// True if mouse is hovering over this trigger.
+        /// </summary>
         public bool mouseHovering = false;
 
-        /// <summary>Called once every time the trigger is clicked. Passes the current <see cref="MouseTrigger"/></summary>
-        public event Action<MouseTrigger> OnClick = null!;
+        /// <summary>
+        /// If true, the trigger will check within the gameObject.Position + screen space or smtn idfk
+        /// </summary>
+        public bool relativeToScreen = true;
 
-        /// <summary>Called once the trigger is released, or the cursor left the trigger while held. passes the current <see cref="MouseTrigger"/></summary>
-        public event Action<MouseTrigger> OnRelease = null!;
-
-        /// <summary>Called while the trigger is held, passes the current <see cref="MouseTrigger"/></summary>
-        public event Action<MouseTrigger> OnHeld = null!;
+        public bool requireFocus = true;
 
         bool mousePressedReset = false; // used internaly, do not remove
+
+        public sbyte ZOrder { get; set; } = 5;
+        public bool Visible { get; set; } = true;
+        public bool AutoQueue { get; set; } = false;
+
+        public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;
+
+        /// <summary>
+        /// Called once every time the trigger is clicked. Passes the current <see cref="MouseTrigger"/>
+        /// </summary>
+        public event Action<MouseTrigger> OnClick;
+
+        /// <summary>
+        /// Called once the mouse enters the trigger.
+        /// </summary>
+        public event Action<MouseTrigger> OnMouseEnter;
+
+        /// <summary>
+        /// Called once the mouse leaves the trigger.
+        /// </summary>
+        public event Action<MouseTrigger> OnMouseExit;
 
         public MouseTrigger(Vector2 size, Vector2 origin, Vector2 offset)
         {
@@ -64,17 +94,17 @@ namespace SFML_Game_Engine
 
         public override void Update()
         {
-            Vector2 newPosition = gameObject.Position + Offset;
+            if(requireFocus && !project.App.HasFocus()) { return; }
 
-            Vector2 upperBound = newPosition;
-            Vector2 lowerBound = newPosition + Size;
+            Vector2 realPosition = gameObject.WorldPosition + Offset;
+
+            Vector2 upperBound = realPosition;
+            Vector2 lowerBound = realPosition + Size;
 
             upperBound -= Size * Origin;
             lowerBound -= Size * Origin;
 
-            Vector2 mousePos = gameObject.Scene.GetMousePosition();
-
-            bool was = mouseHeld;
+            Vector2 mousePos = relativeToScreen ? scene.GetMouseScreenPosition() : scene.GetMouseWorldPosition();
 
             if (mousePressed) { mousePressed = false; }
             mouseHeld = false;
@@ -84,22 +114,28 @@ namespace SFML_Game_Engine
                 return;
             }
 
+            bool lastHover = mouseHovering;
+
             if (mousePos.x > upperBound.x && mousePos.y > upperBound.y && mousePos.x < lowerBound.x && mousePos.y < lowerBound.y)
             {
                 mouseHovering = true;
                 mouseHeld = Mouse.IsButtonPressed(Button);
-                if(was == true && mouseHeld == false)
-                {
-                    OnRelease?.Invoke(this);
-                }
             }
             else
             {
-                if (was == true)
-                {
-                    OnRelease?.Invoke(this);
-                }
                 mouseHovering = false;
+            }
+
+            if (mouseHovering != lastHover)
+            {
+                if(mouseHovering == false && lastHover == true)
+                {
+                    OnMouseExit?.Invoke(this);
+                }
+                if(mouseHovering == true && lastHover == false)
+                {
+                    OnMouseEnter?.Invoke(this);
+                }
             }
 
             if (Mouse.IsButtonPressed(Button) && !mousePressedReset)
@@ -114,10 +150,27 @@ namespace SFML_Game_Engine
                 mousePressedReset = false;
             }
 
-            if (mouseHeld)
+            if (debugDraw)
             {
-                OnHeld?.Invoke(this);
+                if (relativeToScreen)
+                {
+                    scene.renderManager.AddToGUIQueue(this);
+                    return;
+                } 
+                scene.renderManager.AddToQueue(this);
             }
+        }
+
+        public void OnRender(RenderTarget rt)
+        {
+            Vector2 worldPosition = gameObject.WorldPosition + Offset;
+            RectangleShape shape = new RectangleShape(Size);
+            shape.FillColor = new Color(255, 255, 255, 0);
+            shape.OutlineColor = new Color(0, 255, 0, 255);
+            shape.OutlineThickness = -1f;
+            shape.Position = worldPosition;
+            shape.Origin = Size * Origin;
+            rt.Draw(shape);
         }
     }
 }

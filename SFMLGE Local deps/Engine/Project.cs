@@ -15,10 +15,15 @@ namespace SFML_Game_Engine
 
         public Scene? ActiveScene;
 
+        List<Scene> scenes = new List<Scene>();
+
         public RenderWindow App;
 
         public Dictionary<string, Keyboard.Key> inputs = new Dictionary<string, Keyboard.Key>()
         {
+            {"save_game", Keyboard.Key.F1 },
+            {"load_game", Keyboard.Key.F2 },
+            {"debug_toggle", Keyboard.Key.F3 },
             {"exit" ,      Keyboard.Key.Escape},
             {"move_up" ,   Keyboard.Key.W},
             {"move_down",  Keyboard.Key.S},
@@ -29,6 +34,8 @@ namespace SFML_Game_Engine
         Dictionary<string, bool> inputPressed = new Dictionary<string, bool>();
         Dictionary<string, bool> inputJustPressed = new Dictionary<string, bool>();
         Dictionary<string, bool> inputJustReleased = new Dictionary<string, bool>();
+
+        public bool started { get; private set; } = false;
 
         public Project(string ResourceDir, RenderWindow app) 
         {
@@ -43,12 +50,16 @@ namespace SFML_Game_Engine
 
         public Scene CreateScene()
         {
-            return new Scene("Untitled", this);
+            Scene scn = new Scene("Untitled", this);
+            scenes.Add(scn);
+            return scn;
         }
 
         public Scene CreateScene(string sceneName)
         {
-            return new Scene(sceneName, this);
+            Scene scn = new Scene(sceneName, this);
+            scenes.Add(scn);
+            return scn;
         }
 
         public Scene CreateSceneAndLoad()
@@ -65,8 +76,38 @@ namespace SFML_Game_Engine
             return ActiveScene;
         }
 
+        public void LoadScene(Scene scene)
+        {
+            if(ActiveScene == null)
+            {
+                ActiveScene = scene;
+                ActiveScene.LoadScene();
+                if(started) { ActiveScene.Start(); }
+                return;
+            }
+            ActiveScene.UnloadScene();
+            ActiveScene = scene;
+            ActiveScene.LoadScene();
+            if (started) { ActiveScene.Start(); }
+        }
+
+        public void LoadScene(string sceneName)
+        {
+            foreach(Scene scn in scenes)
+            {
+                if(scn.Name == sceneName)
+                {
+                    LoadScene(scn);
+                    return;
+                }
+            }
+            Console.WriteLine("Failed to load scene '" + sceneName + "'!");
+        }
+
         public void Start()
         {
+            InputUpdate();
+            started = true;
             if (ActiveScene is null) { return; }
             ActiveScene.Start();
         }
@@ -74,11 +115,14 @@ namespace SFML_Game_Engine
         public void Update()
         {
             if (ActiveScene is null) { return; }
+
+            if (!ActiveScene.started) { ActiveScene.Start(); return; }
+
             InputUpdate();
             ActiveScene.Update();
         }
 
-        public void Draw(RenderTarget rt)
+        public void OnRender(RenderTarget rt)
         {
             if(ActiveScene is null) { return; }
             ActiveScene.Render(rt);
@@ -103,17 +147,41 @@ namespace SFML_Game_Engine
 
         public bool IsInputPressed(string inputName)
         {
+            if (!App.HasFocus()) { return false; }
             return inputPressed[inputName];
         }
 
         public bool IsInputJustPressed(string inputName)
         {
+            if (!App.HasFocus()) { return false; }
             return inputJustPressed[inputName];
         }
 
         public bool IsInputJustReleased(string inputName)
         {
+            if (!App.HasFocus()) { return false; }
             return inputJustReleased[inputName];
+        }
+
+        /// <summary>
+        /// Returns a normalized vector2 based on the provided inputs
+        /// </summary>
+        /// <param name="xminus">the negative x axis input</param>
+        /// <param name="xplus">the positive x axis input</param>
+        /// <param name="yminus">the negative y axis input</param>
+        /// <param name="yplus">the positive y axis input</param>
+        /// <returns></returns>
+        public Vector2 GetInputAxis(string xminus, string xplus, string yminus, string yplus)
+        {
+            bool xnegPressed = IsInputPressed(xminus);
+            bool xposPressed = IsInputPressed(xplus);
+
+            bool ynegPressed = IsInputPressed(yminus);
+            bool yposPressed = IsInputPressed(yplus);
+
+            return Vector2.Normalize(new Vector2(
+                xnegPressed && xposPressed ? 0 : xnegPressed ? -1 : xposPressed ? 1 : 0,
+                ynegPressed && yposPressed ? 0 : ynegPressed ? -1 : yposPressed ? 1 : 0));
         }
     }
 }
