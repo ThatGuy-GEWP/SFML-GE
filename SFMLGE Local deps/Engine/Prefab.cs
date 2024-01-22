@@ -14,7 +14,7 @@
          * 
          * Prefab myPrefab = new Prefab("myPrefab", (project, scene) => { return scene.CreateGameObject("test!"); });
          *                                                                  ^- you MUST return a GameObject, dont forget!
-         * myScene.InstanciatePrefab(myPrefab)
+         * GameObject prefabInstance = myScene.InstanciatePrefab(myPrefab)
          */
 
         public Prefab(string name, Func<Project, Scene, GameObject> createPrefab)

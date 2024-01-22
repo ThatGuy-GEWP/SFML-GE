@@ -43,6 +43,11 @@ namespace SFML_Game_Engine
 
         public Sprite2D() { }
 
+        public Sprite2D(float sizeX, float sizeY)
+        {
+            size = new Vector2(sizeX, sizeY);
+        }
+
         public Sprite2D(Vector2 Size)
         {
             size = Size;

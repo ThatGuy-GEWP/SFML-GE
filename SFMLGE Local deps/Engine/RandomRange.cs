@@ -10,7 +10,6 @@ namespace SFML_Game_Engine
     /// A struct for representing a random number range.<para></para>
     /// good for properties,
     /// bad for one time uses, use <see cref="RandomGen.Next(int, int)"/> or <see cref="RandomGen.Next(float, float)"/> instead <para></para>
-    /// <seealso cref="Random.Next(int, int)"/>
     /// Example:
     /// <code>
     /// RandomRange rand = RandomRange{min = -20, max = 20}

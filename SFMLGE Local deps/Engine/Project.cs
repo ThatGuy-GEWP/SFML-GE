@@ -21,9 +21,6 @@ namespace SFML_Game_Engine
 
         public Dictionary<string, Keyboard.Key> inputs = new Dictionary<string, Keyboard.Key>()
         {
-            {"save_game", Keyboard.Key.F1 },
-            {"load_game", Keyboard.Key.F2 },
-            {"debug_toggle", Keyboard.Key.F3 },
             {"exit" ,      Keyboard.Key.Escape},
             {"move_up" ,   Keyboard.Key.W},
             {"move_down",  Keyboard.Key.S},
@@ -114,6 +111,8 @@ namespace SFML_Game_Engine
 
         public void Update()
         {
+            App.DispatchEvents();
+
             if (ActiveScene is null) { return; }
 
             if (!ActiveScene.started) { ActiveScene.Start(); return; }
@@ -122,7 +121,7 @@ namespace SFML_Game_Engine
             ActiveScene.Update();
         }
 
-        public void OnRender(RenderTarget rt)
+        public void Render(RenderTarget rt)
         {
             if(ActiveScene is null) { return; }
             ActiveScene.Render(rt);
