@@ -1,7 +1,5 @@
-﻿using SFML.Audio;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.Window;
-using SFML_Game_Engine;
 
 namespace SFML_Game_Engine
 {
@@ -34,8 +32,8 @@ namespace SFML_Game_Engine
                 (proj, scene) => {
                     GameObject baseObj = scene.CreateGameObject("Base");
                     GameObject secdObj = baseObj.CreateChild("Sncd");
-                    baseObj.Rotation = 45;
-                    baseObj.AddComponent(new Sprite2D(new Vector2(8, 8)));
+                    baseObj.Rotation = 0;
+                    baseObj.AddComponent(new Sprite2D(new Vector2(55, 55)));
                     secdObj.AddComponent(new Sprite2D(new Vector2(5, 5)));
                     secdObj.Position = new Vector2(100, 0);
                     secdObj.AddComponent(new Spinner());
@@ -45,7 +43,10 @@ namespace SFML_Game_Engine
 
             Scene MainScene = mainProject.CreateSceneAndLoad("Test!");
 
+            MainScene.InstanciatePrefab(RotatersTest).Position = new Vector2(100, 100);
+
             mainProject.Start();
+
             while (true)
             {
                 App.DispatchEvents();

@@ -98,7 +98,7 @@ namespace SFML_Game_Engine
         /// <typeparam name="T">Type of resource</typeparam>
         /// <param name="name">Name of the resource</param>
         /// <returns></returns>
-        public T GetResourceByName<T>(string name) where T : Resource
+        public T GetResource<T>(string name) where T : Resource
         {
             foreach (Resource resource in resources)
             {

@@ -32,8 +32,7 @@ namespace SFML_Game_Engine
         /// <summary>
         /// The texture of this rectangle, when set the texture will be stretched to this rects <see cref="size"/>, defaults to a white texture.
         /// </summary>
-        public TextureResource? texture = null;
-
+        public TextureResource? Texture { get; set; }
 
         RectangleShape shape = new RectangleShape();
 
@@ -52,7 +51,7 @@ namespace SFML_Game_Engine
         public Sprite2D(Vector2 Size, TextureResource Texture)
         {
             size = Size;
-            texture = Texture;
+            this.Texture = Texture;
         }
 
         public Sprite2D(Vector2 Size, Vector2 Origin)
@@ -65,7 +64,7 @@ namespace SFML_Game_Engine
         {
             size = Size;
             this.origin = Origin;
-            texture = Texture;
+            this.Texture = Texture;
         }
 
         public override void Start()
@@ -77,12 +76,12 @@ namespace SFML_Game_Engine
 
         public void OnRender(RenderTarget rt)
         {
-            if (texture is null)
+            if (Texture is null)
             {
-                texture = project.Resources.GetResourceByName<TextureResource>("DefaultSprite");
+                Texture = project.GetResource<TextureResource>("DefaultSprite");
             }
-
-            shape.Texture = texture.resource;
+            shape.Texture = Texture.Resource;
+            shape.TextureRect = new IntRect(0, 0, (int)Texture.Resource.Size.X, (int)Texture.Resource.Size.Y);
             shape.Position = gameObject.WorldPosition + offset;
             shape.Size = size;
             shape.Origin = size * origin;

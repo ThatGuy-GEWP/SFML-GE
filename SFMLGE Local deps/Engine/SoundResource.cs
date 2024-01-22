@@ -4,19 +4,19 @@ namespace SFML_Game_Engine
 {
     public class SoundResource : Resource
     {
-        public SoundBuffer resource;
+        public SoundBuffer Resource { get; private set; }
 
         public SoundResource(string path, string name) 
         {
             this.name = name;
-            resource = new SoundBuffer(path);
+            Resource = new SoundBuffer(path);
         }
 
         public override void Dispose()
         {
-            resource.Dispose();
+            Resource.Dispose();
         }
 
-        public static implicit operator SoundBuffer(SoundResource res) { return res.resource; }
+        public static implicit operator SoundBuffer(SoundResource res) { return res.Resource; }
     }
 }

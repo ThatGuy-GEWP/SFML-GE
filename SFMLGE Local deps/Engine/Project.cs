@@ -45,7 +45,7 @@ namespace SFML_Game_Engine
 
         public T GetResource<T>(string name) where T : Resource
         {
-            return Resources.GetResourceByName<T>(name);
+            return Resources.GetResource<T>(name);
         }
 
         public Scene CreateScene()

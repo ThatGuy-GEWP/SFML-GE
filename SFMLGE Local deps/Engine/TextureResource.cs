@@ -4,28 +4,31 @@ namespace SFML_Game_Engine
 {
     public class TextureResource : Resource
     {
-        public Texture resource { get; private set; }
+        public Texture Resource {
+            get;
+            set;
+        }
 
         public TextureResource(Texture text, string name)
         {
             base.name = name;
-            resource = text;
+            Resource = text;
         }
 
         public TextureResource(string path, string name)
         {
             base.name = name;
-            resource = new Texture(path);
+            Resource = new Texture(path);
         }
 
         public override void Dispose()
         {
-            resource.Dispose();
+            Resource.Dispose();
         }
 
         public static implicit operator Texture(TextureResource resource)
         {
-            return resource.resource;
+            return resource.Resource;
         }
     }
 }

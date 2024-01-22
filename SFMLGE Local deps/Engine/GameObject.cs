@@ -41,6 +41,7 @@
             set
             {
                 _position = value;
+                RotationChanged?.Invoke(this);
                 if (!moveChildren) { return; }
                 foreach (var child in Children)
                 {
@@ -50,7 +51,7 @@
         }
 
         /// <summary>
-        /// Position relative to parent
+        /// Position relative to parent, where (0,0) is the parents position.
         /// </summary>
         public Vector2 LocalPosition
         {
@@ -61,7 +62,7 @@
             }
         }
 
-        /// <summary>Position in the world</summary>
+        /// <summary>Position in the world + parents position, where (0,0) is the world origin.</summary>
         public Vector2 WorldPosition
         {
             get
@@ -83,13 +84,13 @@
             {
                 if (value != _rotation)
                 {
+                    _rotation = value;
                     RotationChanged?.Invoke(this);
                     foreach (GameObject g in Children)
                     {
-                        g.RotationChanged?.Invoke(g);
+                        g.RotationChanged?.Invoke(g); // since we dont actually change the childs rotation.
                     }
                 }
-                _rotation = value;
             }
         }
 
