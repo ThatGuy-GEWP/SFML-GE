@@ -1,12 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace SFML_Game_Engine
 {
     /// <summary>
@@ -19,7 +13,7 @@ namespace SFML_Game_Engine
         public Vector2 Origin; // origin is same as everying else, (0.0,0.0) would be the top left of this box, (1.0,1.0) would be bottom right
 
         /// <summary>
-        /// Draws the mouseTrigger with a green outline
+        /// Draws the mouseTrigger with a green outline when it can be pressed,
         /// </summary>
         public bool debugDraw = false;
 
@@ -46,11 +40,14 @@ namespace SFML_Game_Engine
         /// </summary>
         public bool relativeToScreen = true;
 
+        /// <summary>
+        /// If true, the trigger will only work if the program is in focus.
+        /// </summary>
         public bool requireFocus = true;
 
         bool mousePressedReset = false; // used internaly, do not remove
 
-        public sbyte ZOrder { get; set; } = 5;
+        public sbyte ZOrder { get; set; } = 127;
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = false;
 
@@ -70,6 +67,14 @@ namespace SFML_Game_Engine
         /// Called once the mouse leaves the trigger.
         /// </summary>
         public event Action<MouseTrigger> OnMouseExit;
+
+        public MouseTrigger(Vector2 size, Vector2 origin, Vector2 offset, Mouse.Button button)
+        {
+            Offset = offset;
+            Size = size;
+            Origin = origin;
+            Button = button;
+        }
 
         public MouseTrigger(Vector2 size, Vector2 origin, Vector2 offset)
         {
@@ -94,7 +99,7 @@ namespace SFML_Game_Engine
 
         public override void Update()
         {
-            if(requireFocus && !project.App.HasFocus()) { return; }
+            if (requireFocus && !project.App.HasFocus()) { return; }
 
             Vector2 realPosition = gameObject.WorldPosition + Offset;
 
@@ -128,11 +133,11 @@ namespace SFML_Game_Engine
 
             if (mouseHovering != lastHover)
             {
-                if(mouseHovering == false && lastHover == true)
+                if (mouseHovering == false && lastHover == true)
                 {
                     OnMouseExit?.Invoke(this);
                 }
-                if(mouseHovering == true && lastHover == false)
+                if (mouseHovering == true && lastHover == false)
                 {
                     OnMouseEnter?.Invoke(this);
                 }
@@ -156,7 +161,7 @@ namespace SFML_Game_Engine
                 {
                     scene.renderManager.AddToGUIQueue(this);
                     return;
-                } 
+                }
                 scene.renderManager.AddToQueue(this);
             }
         }

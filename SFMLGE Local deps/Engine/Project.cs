@@ -1,8 +1,6 @@
-﻿
-
-
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.Window;
+using System.Diagnostics;
 
 namespace SFML_Game_Engine
 {
@@ -11,6 +9,8 @@ namespace SFML_Game_Engine
     /// </summary>
     public class Project
     {
+        public Stopwatch sinceProjectCreation { get; private set; } = Stopwatch.StartNew();
+
         public ResourceCollection Resources;
 
         public Scene? ActiveScene;
@@ -26,6 +26,7 @@ namespace SFML_Game_Engine
             {"move_down",  Keyboard.Key.S},
             {"move_left",  Keyboard.Key.A},
             {"move_right", Keyboard.Key.D},
+            {"toggle_camera", Keyboard.Key.Space }
         };
 
         Dictionary<string, bool> inputPressed = new Dictionary<string, bool>();
@@ -34,10 +35,18 @@ namespace SFML_Game_Engine
 
         public bool started { get; private set; } = false;
 
-        public Project(string ResourceDir, RenderWindow app) 
+        string? resourceDir = null;
+
+        /// <summary>
+        /// Creates a new project and loads a directory of resources.
+        /// </summary>
+        /// <param name="ResourceDir"></param>
+        /// <param name="app"></param>
+        public Project(string ResourceDir, RenderWindow app)
         {
             App = app;
-            Resources = new ResourceCollection(ResourceDir);
+            resourceDir = ResourceDir;
+            Resources = new ResourceCollection(ResourceDir, this);
         }
 
         public T GetResource<T>(string name) where T : Resource
@@ -75,11 +84,11 @@ namespace SFML_Game_Engine
 
         public void LoadScene(Scene scene)
         {
-            if(ActiveScene == null)
+            if (ActiveScene == null)
             {
                 ActiveScene = scene;
                 ActiveScene.LoadScene();
-                if(started) { ActiveScene.Start(); }
+                if (started) { ActiveScene.Start(); }
                 return;
             }
             ActiveScene.UnloadScene();
@@ -90,9 +99,9 @@ namespace SFML_Game_Engine
 
         public void LoadScene(string sceneName)
         {
-            foreach(Scene scn in scenes)
+            foreach (Scene scn in scenes)
             {
-                if(scn.Name == sceneName)
+                if (scn.Name == sceneName)
                 {
                     LoadScene(scn);
                     return;
@@ -111,6 +120,12 @@ namespace SFML_Game_Engine
 
         public void Update()
         {
+            if(!started) 
+            {
+                Start();
+                return; 
+            }
+
             App.DispatchEvents();
 
             if (ActiveScene is null) { return; }
@@ -123,7 +138,7 @@ namespace SFML_Game_Engine
 
         public void Render(RenderTarget rt)
         {
-            if(ActiveScene is null) { return; }
+            if (ActiveScene is null) { return; }
             ActiveScene.Render(rt);
         }
 

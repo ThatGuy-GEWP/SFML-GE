@@ -82,7 +82,7 @@ namespace SFML_Game_Engine
             return new Vector2(MathF.Min(MathF.Max(min, x), max), MathF.Min(MathF.Max(min, y), max));
         }
 
-        public Vector2 Clamp(float xMin, float xMax, float yMin, float yMax) 
+        public Vector2 Clamp(float xMin, float xMax, float yMin, float yMax)
         {
             return new Vector2(MathF.Min(MathF.Max(xMin, x), xMax), MathF.Min(MathF.Max(yMin, y), yMax));
         }

@@ -1,9 +1,9 @@
 ﻿
 
+
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
-using SFMLGE_Local_deps.Engine;
 using System.Diagnostics;
 
 namespace SFML_Game_Engine
@@ -43,7 +43,7 @@ namespace SFML_Game_Engine
         public GameObject InstanciatePrefab(Prefab prefab)
         {
             GameObject? instance = prefab.CreatePrefab?.Invoke(Project, this);
-            if(instance == null) { return null; }
+            if (instance == null) { return null; }
             root.AddChild(instance);
             return instance;
         }
@@ -52,7 +52,7 @@ namespace SFML_Game_Engine
         {
             GameObject go = new GameObject(Project, this);
             root.AddChild(go);
-            go.name = name; 
+            go.name = name;
             return go;
         }
 
@@ -89,10 +89,13 @@ namespace SFML_Game_Engine
 
         public void Start()
         {
-            deltaWatch.Start();
+            if (!deltaWatch.IsRunning)
+            {
+                deltaWatch.Start();
+            }
             foreach (GameObject gm in root.GetChildren())
             {
-                if(gm.started) { continue; }
+                if (gm.started) { continue; }
                 gm.Start();
                 gm.started = true;
             }
@@ -107,20 +110,16 @@ namespace SFML_Game_Engine
 
         public void LoadScene()
         {
-            if (!deltaWatch.IsRunning && started)
-            {
-                deltaWatch.Start();
-            }
             isLoaded = true;
         }
 
         public void Update()
         {
-            if(!isLoaded) { return; }
+            if (!isLoaded) { return; }
 
-            if(!started) { Start(); return; }
+            if (!started) { Start(); return; }
 
-            foreach(GameObject gameObject in root.GetChildren())
+            foreach (GameObject gameObject in root.GetChildren())
             {
                 if (!gameObject.enabled) continue;
                 if (!gameObject.started) { gameObject.Start(); gameObject.started = true; continue; }
@@ -136,7 +135,7 @@ namespace SFML_Game_Engine
         {
             if (!isLoaded) { return; }
 
-            foreach(GameObject gm in root.GetChildren())
+            foreach (GameObject gm in root.GetChildren())
             {
                 gm.GetRenderables(renderManager);
             }

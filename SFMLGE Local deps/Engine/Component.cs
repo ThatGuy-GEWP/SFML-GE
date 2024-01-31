@@ -10,7 +10,8 @@ namespace SFML_Game_Engine
         /// <summary>
         /// The <see cref="GameObject"/> this component is attached too. null if this component is not added to anything yet
         /// </summary>
-        public GameObject gameObject { 
+        public GameObject gameObject
+        {
             get { return _gameObject; }
             set { _gameObject = value; OnAdded(value); }
         }
@@ -37,17 +38,38 @@ namespace SFML_Game_Engine
 
         GameObject? _gameObject;
 
+        Project _project = null!;
+        Scene _scene = null!;
+
         /// <summary>
         /// The <see cref="Project"/> this component is within.
         /// Null on component creation.
         /// </summary>
-        public Project project = null!; // null! to suppress warnings
+
+#pragma warning disable IDE1006 // Disables "waa this does not start with an uppercase letter!!1!1!" i know, i just dont care.
+        public Project project {
+            get { 
+                if (_project == null) 
+                {
+                    throw new NullReferenceException("\n"+
+                        "->  A component is trying to access Component.project before its initialized!"+"\n"+
+                        " -> Component.project should only be accessed during and after Component.Start()"
+                        );
+                } 
+                return _project; 
+            } 
+            set { _project = value; }
+        }
 
         /// <summary>
         /// The <see cref="Scene"/> this component is within.
         /// Null on component creation.
         /// </summary>
-        public Scene scene = null!; // null! to suppress warnings
+        public Scene scene {
+            get { return _scene; }
+            set { _scene = value; }
+        }
+#pragma warning restore IDE1006 // Renables naming warnings.
 
         public virtual void Update() { return; }
 
