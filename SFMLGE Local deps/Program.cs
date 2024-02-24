@@ -22,8 +22,22 @@ namespace SFML_Game_Engine
             mainProject.Start();
 
             GameObject testSlider = scene.CreateGameObject("Test slider");
-            testSlider.AddComponent(new TestSlider());
+            testSlider.AddComponent(new TestSlider(100)).sliderMoved += (val) =>
+            {
+                mainProject.GetResource<ShaderResource>("shader.f").Resource.SetUniform("sinScale", new Vector2(val * 15f, val * 15f));
+            };
 
+            GameObject testSlider2 = scene.CreateGameObject("Test slider");
+            testSlider2.AddComponent(new TestSlider(200)).sliderMoved += (val) =>
+            {
+                mainProject.GetResource<ShaderResource>("shader.f").Resource.SetUniform("waveScale", val * 0.15f);
+            };
+
+            GameObject testSlider3 = scene.CreateGameObject("Test slider");
+            testSlider3.AddComponent(new TestSlider(300)).sliderMoved += (val) =>
+            {
+                mainProject.GetResource<ShaderResource>("shader.f").Resource.SetUniform("timeScale", new Vector2(val * 15f, val * 15f));
+            };
 
             GameObject testObject = scene.CreateGameObject("Test object!");
             testObject.AddComponent(new Sprite2D(new Vector2(450, 450), new Vector2(0.5f, 0.5f))).Texture = mainProject.GetResource<TextureResource>("hardaf");

@@ -3,16 +3,45 @@
     public static class MathGE
     {
         /// <summary>
-        /// Lerps <paramref name="A"/> to <paramref name="B"/> lineraly using <paramref name="X"/>
+        /// Lerps <paramref name="A"/> to <paramref name="B"/> lineraly using <paramref name="T"/>
         /// </summary>
         /// <param name="A"></param>
         /// <param name="B"></param>
-        /// <param name="X"></param>
+        /// <param name="T"></param>
         /// <returns></returns>
-        public static float Lerp(float A, float B, float X)
+        public static float Lerp(float A, float B, float T)
         {
-            X = X > 1.0f ? 1.0f : X;
-            return A + (B - A) * X;
+            return A + (B - A) * T;
+        }
+
+
+        public static class Interpolation
+        {
+            static float HALF_PI = MathF.PI / 2;
+
+
+            public static float Squared(float A, float B, float T)
+            {
+                return Lerp(A, B, T*T);
+            }
+
+            public static float QuadraticEaseOut(float A, float B, float T)
+            {
+                return Lerp(A, B, 1.0f - (1.0f - T) * (1.0f - T));
+            }
+
+            public static float ElasticOut(float A, float B, float T)
+            {
+                float nt = MathF.Sin(A - 13.0f * (T + 1.0f) * HALF_PI) * MathF.Pow(2.0f, -10.0f * T) + 1.0f;
+                return Lerp(A, B, nt);
+            }
+
+            public static float SmoothStep(float A, float B, float T)
+            {
+                float v1 = T * T;
+                float v2 = 1.0f - (1.0f * T) * (1.0f - T);
+                return Lerp(A, B, Lerp(v1, v2, T));
+            }
         }
 
         /// <summary>

@@ -17,16 +17,25 @@ namespace SFMLGE_Local_deps.Scripts
         MouseTrigger trig;
         Sprite2D sprite2D;
 
+        float xPos = 200;
+
         float minSpot = 100;
         float maxSpot = 400;
 
         bool beingDragged = false;
 
+        public event Action<float> sliderMoved;
+
+        public TestSlider(float xPos)
+        {
+            this.xPos = xPos;
+        }
+
         public override void Start()
         {
-            trig = gameObject.AddComponent(new MouseTrigger(new Vector2(120, 50)));
-            sprite2D = gameObject.AddComponent(new Sprite2D(new Vector2(120, 50)));
-            gameObject.Position = new Vector2(200, 90);
+            trig = gameObject.AddComponent(new MouseTrigger(new Vector2(90, 50)));
+            sprite2D = gameObject.AddComponent(new Sprite2D(new Vector2(90, 50)));
+            gameObject.Position = new Vector2(xPos, 90);
 
             trig.Origin = new Vector2(0.5f, 0.5f);
 
@@ -48,11 +57,12 @@ namespace SFMLGE_Local_deps.Scripts
                 gameObject.Position = new Vector2(gameObject.Position.x, scene.GetMouseScreenPosition().y);
                 gameObject.Position = new Vector2(gameObject.Position.x, MathGE.Clamp(gameObject.Position.y, minSpot, maxSpot));
 
-                float val = MathGE.Map(gameObject.Position.y, 100, 400, 0, 1);
+                sliderMoved?.Invoke(MathGE.Map(gameObject.Position.y, minSpot, maxSpot, 0, 1));
 
-                project.GetResource<ShaderResource>("shader.f").Resource.SetUniform("timeScale", new Vector2(val * 15f, val * 15f));
+                /*project.GetResource<ShaderResource>("shader.f").Resource.SetUniform("timeScale", new Vector2(val * 15f, val * 15f));
+                project.GetResource<ShaderResource>("shader.f").Resource.SetUniform("waveScale", val * 0.2f);
 
-                Console.WriteLine(val);
+                Console.WriteLine(val);*/
             }
         }
 
