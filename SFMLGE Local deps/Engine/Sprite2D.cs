@@ -54,11 +54,13 @@ namespace SFML_Game_Engine
         public Sprite2D(float sizeX, float sizeY)
         {
             size = new Vector2(sizeX, sizeY);
+            fitTexture = false;
         }
 
         public Sprite2D(Vector2 Size)
         {
             size = Size;
+            fitTexture = false;
         }
 
         public Sprite2D(TextureResource Texture)
@@ -76,6 +78,7 @@ namespace SFML_Game_Engine
         public Sprite2D(Vector2 Size, Vector2 Origin)
         {
             size = Size;
+            fitTexture = false;
             this.origin = Origin;
         }
 

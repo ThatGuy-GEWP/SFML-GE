@@ -59,12 +59,22 @@ namespace SFML_Game_Engine
         public event Action<MouseTrigger> OnClick;
 
         /// <summary>
-        /// Called once the mouse enters the trigger.
+        /// Called every frame the trigger is held down. Passes the current <see cref="MouseTrigger"/>
+        /// </summary>
+        public event Action<MouseTrigger> OnHeld;
+
+        /// <summary>
+        /// Called once every time the trigger is unclicked. Passes the current <see cref="MouseTrigger"/>
+        /// </summary>
+        public event Action<MouseTrigger> OnReleased;
+
+        /// <summary>
+        /// Called once the mouse enters the trigger. Passes the current <see cref="MouseTrigger"/>
         /// </summary>
         public event Action<MouseTrigger> OnMouseEnter;
 
         /// <summary>
-        /// Called once the mouse leaves the trigger.
+        /// Called once the mouse leaves the trigger. Passes the current <see cref="MouseTrigger"/>
         /// </summary>
         public event Action<MouseTrigger> OnMouseExit;
 
@@ -125,6 +135,7 @@ namespace SFML_Game_Engine
             {
                 mouseHovering = true;
                 mouseHeld = Mouse.IsButtonPressed(Button);
+                if (mouseHeld) { OnHeld?.Invoke(this); }
             }
             else
             {
@@ -148,6 +159,11 @@ namespace SFML_Game_Engine
                 mousePressed = true;
                 mousePressedReset = true;
                 OnClick?.Invoke(this);
+            }
+
+            if(!Mouse.IsButtonPressed(Button) && mousePressedReset)
+            {
+                OnReleased?.Invoke(this);
             }
 
             if (!Mouse.IsButtonPressed(Button))

@@ -1,4 +1,5 @@
 ﻿using SFML.Graphics;
+using SFMLGE_Local_deps.Engine;
 using System.Runtime.CompilerServices;
 
 namespace SFML_Game_Engine
@@ -70,6 +71,20 @@ namespace SFML_Game_Engine
 
                     resources.Add(new SoundResource(file, name));
                     loadedSomething = true;
+                }
+
+                if (extension == ".frag" || extension == ".vert")
+                {
+                    if(extension == ".frag")
+                    {
+                        resources.Add(new ShaderResource(name + ".f", null, null, file));
+                        Console.Write("" + name + ".f");
+                    }
+                    if (extension == ".vert")
+                    {
+                        resources.Add(new ShaderResource(name + ".v", file, null, null));
+                        Console.Write("" + name + ".v");
+                    }
                 }
 
                 if(extension == ".ttf")

@@ -29,6 +29,11 @@
             return (value - fromMin) / (fromMax - fromMin) * (toMax - toMin) + toMin;
         }
 
+        public static float Clamp(float value, float min, float max)
+        {
+            return Math.Min(MathF.Max(value, min), max);
+        }
+
         public static float DegToRad(float degrees)
         {
             return degrees * (MathF.PI / 180); // Convert degrees to radians
