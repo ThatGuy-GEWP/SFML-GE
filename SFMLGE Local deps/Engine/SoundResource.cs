@@ -6,7 +6,7 @@ namespace SFML_Game_Engine
     {
         public SoundBuffer Resource { get; private set; }
 
-        public SoundResource(string path, string name) 
+        public SoundResource(string path, string name)
         {
             this.name = name;
             Resource = new SoundBuffer(path);

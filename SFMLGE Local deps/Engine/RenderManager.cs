@@ -18,7 +18,7 @@ namespace SFML_Game_Engine
         /// </summary>
         List<IRenderable> overlayQueue = new List<IRenderable>();
 
-        public RenderManager() {}
+        public RenderManager() { }
 
         /// <summary>
         /// Adds an <see cref="IRenderable"/> to the renderQueue
@@ -45,12 +45,13 @@ namespace SFML_Game_Engine
         /// <param name="target"></param>
         internal void Render(RenderTarget target)
         {
-            if(renderQueue.Count > 0)
+            if (renderQueue.Count > 0)
             {
                 renderQueue.Sort((x, y) => { return x.ZOrder - y.ZOrder; });
 
                 for (int i = 0; i < renderQueue.Count; i++)
                 {
+                    if (!renderQueue[i].Visible) { continue; }
                     renderQueue[i].OnRender(target);
                 }
 
@@ -73,6 +74,7 @@ namespace SFML_Game_Engine
 
                 for (int i = 0; i < overlayQueue.Count; i++)
                 {
+                    if (!overlayQueue[i].Visible) { continue; }
                     overlayQueue[i].OnRender(target);
                 }
 

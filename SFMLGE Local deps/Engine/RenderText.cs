@@ -19,13 +19,15 @@ namespace SFML_Game_Engine
 
         string _text = string.Empty;
 
-        public string Text { 
-            get { return _text; } 
-            set { 
-                if(value == _text) { return; }
+        public string Text
+        {
+            get { return _text; }
+            set
+            {
+                if (value == _text) { return; }
                 rtext.DisplayedString = value;
-                _text = value; 
-            } 
+                _text = value;
+            }
         }
         public uint size = 40;
         public Vector2 offset = new Vector2(0, 0);

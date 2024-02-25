@@ -57,7 +57,7 @@
         {
             get
             {
-                if(parent == null) { return _position; }
+                if (parent == null) { return _position; }
                 return _position - parent.WorldPosition;
             }
         }
@@ -137,11 +137,11 @@
         {
             if (DestroyQueued) return;
 
-            for(int i = 0; i < Components.Count; i++)
+            for (int i = 0; i < Components.Count; i++)
             {
                 Component comp = Components[i];
 
-                if(comp as IRenderable != null) 
+                if (comp as IRenderable != null)
                 {
                     IRenderable renderComp = (IRenderable)comp;
                     if (renderComp.AutoQueue == true)
@@ -159,7 +159,7 @@
                 }
             }
 
-            for(int i = 0; i < Children.Count; i++)
+            for (int i = 0; i < Children.Count; i++)
             {
                 Children[i].GetRenderables(renderManager);
             }
@@ -178,7 +178,7 @@
         public void Start()
         {
             if (started) return;
-            for(int i = 0; i < Components.Count; i++) 
+            for (int i = 0; i < Components.Count; i++)
             {
                 StartComponent(Components[i]);
             }
@@ -212,11 +212,12 @@
             }
 
             if (!enabled) return;
-            for(int i = 0; i < Components.Count; i++)
+            for (int i = 0; i < Components.Count; i++)
             {
                 if (!Components[i].Enabled) continue;
 
-                if (!Components[i].Started) {
+                if (!Components[i].Started)
+                {
                     StartComponent(Components[i]);
                     continue;
                 }
@@ -224,7 +225,7 @@
                 Components[i].Update();
             }
 
-            for(int i = 0; i < Children.Count; i++)
+            for (int i = 0; i < Children.Count; i++)
             {
                 Children[i].Update();
             }
@@ -239,7 +240,7 @@
         /// <exception cref="Exception"></exception>
         public GameObject AddChild(GameObject child)
         {
-            if(child == parent)
+            if (child == parent)
             {
                 throw new ArgumentException(
                     $"Cannot add parent to self as a child! |!| {name} tried to add {child.name} as a child"

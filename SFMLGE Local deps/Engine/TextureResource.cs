@@ -4,7 +4,8 @@ namespace SFML_Game_Engine
 {
     public class TextureResource : Resource
     {
-        public Texture Resource {
+        public Texture Resource
+        {
             get;
             set;
         }

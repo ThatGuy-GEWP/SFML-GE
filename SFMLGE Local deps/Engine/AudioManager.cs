@@ -1,40 +1,36 @@
 ﻿using SFML.Audio;
 using SFML_Game_Engine;
+using System.Runtime.ConstrainedExecution;
 
-namespace SFMLGE_Local_deps.Engine
+namespace SFML_Game_Engine
 {
-    public class SoundInstance
+    public class SoundInstance : IDisposable
     {
-        public Component? owner = null;
         public Sound sound;
+        public string name;
+        public bool Disposed = false;
 
-        public bool hadOwner = false;
+        /// <summary>
+        /// If true, this instance will be automatically disposed of.
+        /// </summary>
+        public bool allowCleanup = true;
 
-        public SoundInstance(Sound sound) { this.sound = sound; }
+        public SoundInstance(string name, Sound sound) { this.name = name; this.sound = sound; }
 
-        public SoundInstance(SoundResource sound)
+        public SoundInstance(string name, SoundResource sound)
         {
+            this.name = name;
             this.sound = new Sound(sound);
         }
 
-        public SoundInstance(Sound sound, Component owner)
-        {
-            this.sound = sound;
-            this.owner = owner;
-            hadOwner = true;
-        }
-
-        public SoundInstance(SoundResource sound, Component owner)
-        {
-            this.sound = new Sound(sound);
-            this.owner = owner;
-            hadOwner = true;
-        }
-
+        /// <summary>
+        /// Disposes of the soundInstance.
+        /// </summary>
         public void Dispose()
         {
             sound.Stop();
             sound.Dispose();
+            Disposed = true;
         }
     }
 
@@ -45,7 +41,7 @@ namespace SFMLGE_Local_deps.Engine
     /// </summary>
     public class AudioManager
     {
-        Stack<SoundInstance> activeSounds = new Stack<SoundInstance>(200);
+        List<SoundInstance> activeSounds = new List<SoundInstance>(200);
         Scene ownerScene;
 
         public AudioManager(Scene owner)
@@ -55,37 +51,76 @@ namespace SFMLGE_Local_deps.Engine
 
         public void Update()
         {
-            Stack<SoundInstance> stillPlayingSounds = new Stack<SoundInstance>(activeSounds.Count);
+            List<SoundInstance> stillPlayingSounds = new List<SoundInstance>();
             for (int i = 0; i < activeSounds.Count; i++)
             {
-                SoundInstance cur = activeSounds.Pop();
+                SoundInstance cur = activeSounds[i];
 
+                if (cur.Disposed) { continue; }
                 if (cur.sound == null) { continue; }
-                if(cur.sound.Status == SoundStatus.Stopped)
+                if ((cur.sound.Status == SoundStatus.Stopped) && cur.allowCleanup)
                 {
                     cur.Dispose();
                     continue;
                 }
-                stillPlayingSounds.Push(cur);
+                stillPlayingSounds.Add(cur);
             }
+            activeSounds.Clear();
             activeSounds = stillPlayingSounds;
         }
 
+        /// <summary>
+        /// Plays a given <see cref="SoundResource"/>
+        /// </summary>
+        /// <param name="sound"></param>
         public void PlaySound(SoundResource sound)
         {
-            if(activeSounds.Count > 200) { return; }
-            SoundInstance inst = new SoundInstance(sound);
+            if (activeSounds.Count > 200) { return; }
+            SoundInstance inst = new SoundInstance(sound.name, sound);
             inst.sound.Play();
-            activeSounds.Push(inst);
+            activeSounds.Add(inst);
         }
 
+        /// <summary>
+        /// Plays a given <paramref name="sound"/> at a given <paramref name="volume"/> from 0-100
+        /// </summary>
+        /// <param name="sound"></param>
         public void PlaySound(SoundResource sound, float volume)
         {
             if (activeSounds.Count > 200) { return; }
-            SoundInstance inst = new SoundInstance(sound);
+            SoundInstance inst = new SoundInstance(sound.name, sound);
             inst.sound.Volume = volume;
             inst.sound.Play();
-            activeSounds.Push(inst);
+            activeSounds.Add(inst);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="SoundInstance"/> from a given <see cref="SoundResource"/>
+        /// </summary>
+        /// <param name="sound"></param>
+        /// <returns><see cref="SoundInstance"/>, or null if active sounds is greater then 200</returns>
+        public SoundInstance CreateSound(SoundResource sound)
+        {
+            if (activeSounds.Count > 200) { return null; }
+            SoundInstance inst = new SoundInstance(sound.name, sound);
+            inst.allowCleanup = false;
+            activeSounds.Add(inst);
+            return inst;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="SoundInstance"/> from a given <see cref="SoundResource"/>
+        /// </summary>
+        /// <param name="sound"></param>
+        /// <returns><see cref="SoundInstance"/>, or null if active sounds is greater then 200</returns>
+        public SoundInstance CreateSound(SoundResource sound, float volume)
+        {
+            if (activeSounds.Count > 200) { return null; }
+            SoundInstance inst = new SoundInstance(sound.name, sound);
+            inst.allowCleanup = false;
+            inst.sound.Volume = volume;
+            activeSounds.Add(inst);
+            return inst;
         }
     }
 }
