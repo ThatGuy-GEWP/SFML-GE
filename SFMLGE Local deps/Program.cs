@@ -53,7 +53,7 @@ namespace SFML_Game_Engine
                 App.Clear();
 
                 mainProject.Update();
-                mainProject.OnRender(App);
+                mainProject.Render(App);
 
                 App.Display();
             }
