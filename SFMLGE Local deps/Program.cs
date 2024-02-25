@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
+using SFMLGE_Local_deps.Scripts;
 
 namespace SFML_Game_Engine
 {
@@ -11,15 +12,18 @@ namespace SFML_Game_Engine
         {
             bool appOpen = true;
             App.Closed += (a, args) => { App.Close(); appOpen = false; };
+            App.SetFramerateLimit(60);
 
             Project mainProject = new Project("Res", App);
             Scene scene = mainProject.CreateSceneAndLoad("Test!");
 
             mainProject.Start();
 
-            GameObject testObject = scene.CreateGameObject("Test object!");
-            testObject.AddComponent(new Sprite2D(new Vector2(25, 25), new Vector2(0.5f, 0.5f)));
-            testObject.Position = new Vector2(640, 360);
+            scene.CreateGameObject("TestInterp").AddComponent(new InterpTestin(100, 0));
+            scene.CreateGameObject("TestInterp").AddComponent(new InterpTestin(150, 1));
+            scene.CreateGameObject("TestInterp").AddComponent(new InterpTestin(200, 2));
+            scene.CreateGameObject("TestInterp").AddComponent(new InterpTestin(250, 3));
+            scene.CreateGameObject("TestInterp").AddComponent(new InterpTestin(300, 4));
 
             while (appOpen)
             {

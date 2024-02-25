@@ -19,15 +19,14 @@
         {
             static float HALF_PI = MathF.PI / 2;
 
-
-            public static float Squared(float A, float B, float T)
+            public static float QuadraticEaseIn(float A, float B, float T)
             {
                 return Lerp(A, B, T * T);
             }
 
             public static float QuadraticEaseOut(float A, float B, float T)
             {
-                return Lerp(A, B, 1.0f - (1.0f - T) * (1.0f - T));
+                return Lerp(A, B, 1.0f - ((1.0f - T) * (1.0f - T)));
             }
 
             public static float ElasticOut(float A, float B, float T)
@@ -39,7 +38,7 @@
             public static float SmoothStep(float A, float B, float T)
             {
                 float v1 = T * T;
-                float v2 = 1.0f - (1.0f * T) * (1.0f - T);
+                float v2 = 1.0f - (1.0f - T) * (1.0f - T);
                 return Lerp(A, B, Lerp(v1, v2, T));
             }
         }
