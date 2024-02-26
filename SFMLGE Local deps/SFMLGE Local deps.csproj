@@ -8,6 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Res\waveshader.frag" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Res\waveshader.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="sfml-audio">
       <HintPath>..\..\..\..\..\..\SFML-SHARP\SFML.Net-2.4 (64bit)\lib\sfml-audio.dll</HintPath>
     </Reference>
