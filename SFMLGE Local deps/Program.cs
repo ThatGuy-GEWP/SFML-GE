@@ -19,7 +19,7 @@ namespace SFML_Game_Engine
 
             GameObject testGo = scene.CreateGameObject("test!");
 
-            testGo.transform.position = new Vector2(100, 100);
+            testGo.transform.Position = new Vector2(100, 100);
             testGo.AddComponent(new Sprite2D(new Vector2(25, 25)));
 
             GameObject secondGo = scene.CreateGameObject("secondGo", testGo);
@@ -37,7 +37,7 @@ namespace SFML_Game_Engine
 
                 secondGo.transform.WorldPosition = new Vector2(0, 0);
 
-                testGo.transform.position = new Vector2(100, 100 + MathF.Sin(t)*50);
+                testGo.transform.Position = new Vector2(100, 100 + MathF.Sin(t)*50);
 
                 mainProject.Update();
                 mainProject.Render(App);
