@@ -1,59 +1,76 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
+using SFMLGE_Local_deps.Engine;
+using SFMLGE_Local_deps.Scripts;
 
 namespace SFML_Game_Engine
 {
     internal class Program
     {
-        public static RenderWindow App { get; private set; }
-
-        static void OnClose(object? sender, EventArgs args)
-        {
-            RenderWindow window = (RenderWindow)sender;
-            window.Close();
-        }
+        public static RenderWindow App { get; private set; } = new RenderWindow(new VideoMode(1280, 720), "SFML Template", Styles.Close | Styles.Titlebar);
 
         static void Main(string[] args)
         {
-            App = new RenderWindow(new VideoMode(800, 400), "SFML Template");
-            App.Closed += (a, b) => { App.Close(); };
+            bool appOpen = true;
+            App.Closed += (a, args) => { App.Close(); appOpen = false; };
+
+            App.SetFramerateLimit(144);
 
             Project mainProject = new Project("Res", App);
-
-            Prefab EnemyPrefab = new Prefab("Enemy", (proj, scene) =>
-            {
-                GameObject enemyBase = scene.CreateGameObject("Enemy");
-                enemyBase.AddComponent(new Enemy(5));
-                enemyBase.AddComponent(new Sprite2D(new Vector2(5, 5)));
-                return enemyBase;
-            });
-
-            Prefab RotatersTest = new Prefab("Rotater", 
-                (proj, scene) => {
-                    GameObject baseObj = scene.CreateGameObject("Base");
-                    GameObject secdObj = baseObj.CreateChild("Sncd");
-                    baseObj.Rotation = 0;
-                    baseObj.AddComponent(new Sprite2D(new Vector2(55, 55)));
-                    secdObj.AddComponent(new Sprite2D(new Vector2(5, 5)));
-                    secdObj.Position = new Vector2(100, 0);
-                    secdObj.AddComponent(new Spinner());
-
-                    return baseObj;
-                });
-
-            Scene MainScene = mainProject.CreateSceneAndLoad("Test!");
-
-            MainScene.InstanciatePrefab(RotatersTest).Position = new Vector2(100, 100);
+            Scene scene = mainProject.CreateSceneAndLoad("Test!");
 
             mainProject.Start();
 
-            while (true)
+            GameObject testSlider = scene.CreateGameObject("Test slider");
+            testSlider.AddComponent(new TestSlider(100)).sliderMoved += (val) =>
             {
-                App.DispatchEvents();
-                App.Clear();
+                mainProject.GetResource<ShaderResource>("shader.f").Resource.SetUniform("sinScale", new Vector2(val * 15f, val * 15f));
+            };
 
+            GameObject testSlider2 = scene.CreateGameObject("Test slider");
+            testSlider2.AddComponent(new TestSlider(200)).sliderMoved += (val) =>
+            {
+                mainProject.GetResource<ShaderResource>("shader.f").Resource.SetUniform("waveScale", val * 0.15f);
+            };
+
+            GameObject testSlider3 = scene.CreateGameObject("Test slider");
+            testSlider3.AddComponent(new TestSlider(300)).sliderMoved += (val) =>
+            {
+                mainProject.GetResource<ShaderResource>("shader.f").Resource.SetUniform("timeScale", new Vector2(val * 15f, val * 15f));
+            };
+
+            GameObject testObject = scene.CreateGameObject("Test object!");
+            testObject.AddComponent(new Sprite2D(new Vector2(450, 450), new Vector2(0.5f, 0.5f))).Texture = mainProject.GetResource<TextureResource>("hardaf");
+            testObject.Position = new Vector2(640, 360);
+
+            ShaderResource testShad = mainProject.GetResource<ShaderResource>("shader.f");
+            testShad.Resource.SetUniform("resolution", new SFML.Graphics.Glsl.Vec2(1280, 720));
+            testShad.Resource.SetUniform("timeScale", new Vector2(5f, 0.1f));
+
+            RenderTexture screenBuffer = new RenderTexture(1280, 720);
+            Sprite screenSprite = new Sprite(mainProject.GetResource<TextureResource>("hardaf"));
+
+
+            float time = 0;
+
+            while (appOpen)
+            {
+                App.Clear();
+                screenBuffer.Clear();
+
+                time += mainProject.ActiveScene.deltaTime;
                 mainProject.Update();
-                mainProject.Render(App);
+                mainProject.Render(screenBuffer);
+
+                screenBuffer.Display();
+
+                screenSprite.Texture = screenBuffer.Texture;
+                screenSprite.Texture.Smooth = true;
+
+                testShad.Resource.SetUniform("time", time);
+                testShad.Resource.SetUniform("texture", Shader.CurrentTexture);
+
+                App.Draw(screenSprite, testShad);
 
                 App.Display();
             }

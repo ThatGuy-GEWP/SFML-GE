@@ -1,4 +1,5 @@
 ﻿using SFML.Graphics;
+using SFML.Graphics.Glsl;
 using SFML.System;
 
 namespace SFML_Game_Engine
@@ -141,6 +142,8 @@ namespace SFML_Game_Engine
         public static implicit operator Vector2f(Vector2 vec) => new Vector2f(vec.x, vec.y);
 
         public static implicit operator Vector2(Vector2f vec) => new Vector2(vec.X, vec.Y);
+
+        public static implicit operator Vec2(Vector2 vec) => new Vec2(vec.x, vec.y);
 
         public static explicit operator Vector2i(Vector2 vec) => new Vector2i((int)Math.Floor(vec.x), (int)Math.Floor(vec.y));
 
