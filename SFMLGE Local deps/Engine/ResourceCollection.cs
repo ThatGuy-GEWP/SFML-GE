@@ -1,4 +1,5 @@
 ﻿using SFML.Graphics;
+using SFMLGE_Local_deps.Engine;
 using System.Runtime.CompilerServices;
 
 namespace SFML_Game_Engine
@@ -72,7 +73,21 @@ namespace SFML_Game_Engine
                     loadedSomething = true;
                 }
 
-                if(extension == ".ttf")
+                if (extension == ".frag" || extension == ".vert")
+                {
+                    if (extension == ".frag")
+                    {
+                        resources.Add(new ShaderResource(name + ".f", null, null, file));
+                        Console.Write("" + name + ".f");
+                    }
+                    if (extension == ".vert")
+                    {
+                        resources.Add(new ShaderResource(name + ".v", file, null, null));
+                        Console.Write("" + name + ".v");
+                    }
+                }
+
+                if (extension == ".ttf")
                 {
                     Console.Write("" + name);
                     resources.Add(new FontResource(file, name));
@@ -97,12 +112,12 @@ namespace SFML_Game_Engine
 
             Console.WriteLine($"Loading folder {dirToCollect}...");
             searchFolder(dirToCollect, true);
-            for(int i = 0; i < resources.Count; i++) // duplicates check
+            for (int i = 0; i < resources.Count; i++) // duplicates check
             {
                 Resource curRes = resources[i];
-                for(int j = 0; j < resources.Count; j++)
+                for (int j = 0; j < resources.Count; j++)
                 {
-                    if(j == i) { continue; }
+                    if (j == i) { continue; }
                     if (resources[j].name == curRes.name)
                     {
                         Console.WriteLine("Duplicate " + resources[j].name + ", removing...");
@@ -110,7 +125,7 @@ namespace SFML_Game_Engine
                     }
                 }
             }
-            Console.WriteLine($"\rFinished loading "+(resources.Count-1)+" resources in "+dirToCollect+"!");
+            Console.WriteLine($"\rFinished loading " + (resources.Count - 1) + " resources in " + dirToCollect + "!");
         }
 
         /// <summary>
@@ -149,11 +164,11 @@ namespace SFML_Game_Engine
                     }
                 }
             }
-            if(secondaryMatch != null)
+            if (secondaryMatch != null)
             {
                 return (T)secondaryMatch;
             }
-            
+
             throw new NullReferenceException($"Resource '{name}' could not be found!");
         }
 

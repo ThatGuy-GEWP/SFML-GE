@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <Content Include="Res\waveshader.frag">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
