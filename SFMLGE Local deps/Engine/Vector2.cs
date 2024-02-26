@@ -9,6 +9,17 @@ namespace SFML_Game_Engine
         public float x { get; }
         public float y { get; }
 
+        // for ANYONE who wants to know why these are read only
+        /*
+         *  Something something its good practice
+         *  Apparently it can cause issues if i dont do this, sorry
+         *  i personally liked when you could do vector2.x += 1 but now you cant!
+         *  but il take losing that if it means the memory usage of 
+         *  this class is basically 1/16th then when it was a class
+         *  
+         *  and the garbage collector also did a collection like 20 times a second lollololo
+         */
+
         public Vector2(float x, float y)
         {
             this.x = x;
@@ -49,9 +60,13 @@ namespace SFML_Game_Engine
         {
             return (Rotate(point - origin, degrees) + origin);
         }
-
+        
+        /// <summary>
+        /// Swaps x and y in a vector.
+        /// </summary>
         public static Vector2 Flip(Vector2 vec)
         {
+            // im looking at this and, im not sure if this is the correct name? whatever
             return new Vector2(vec.y, vec.x);
         }
 

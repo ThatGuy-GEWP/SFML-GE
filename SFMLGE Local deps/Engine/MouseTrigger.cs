@@ -111,7 +111,7 @@ namespace SFML_Game_Engine
         {
             if (requireFocus && !project.App.HasFocus()) { return; }
 
-            Vector2 realPosition = gameObject.WorldPosition + Offset;
+            Vector2 realPosition = gameObject.transform.WorldPosition + Offset;
 
             Vector2 upperBound = realPosition;
             Vector2 lowerBound = realPosition + Size;
@@ -184,7 +184,7 @@ namespace SFML_Game_Engine
 
         public void OnRender(RenderTarget rt)
         {
-            Vector2 worldPosition = gameObject.WorldPosition + Offset;
+            Vector2 worldPosition = gameObject.transform.WorldPosition + Offset;
             RectangleShape shape = new RectangleShape(Size);
             shape.FillColor = new Color(255, 255, 255, 0);
             shape.OutlineColor = new Color(0, 255, 0, 255);

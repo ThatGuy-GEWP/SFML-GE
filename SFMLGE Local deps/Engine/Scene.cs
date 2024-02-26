@@ -40,7 +40,7 @@ namespace SFML_Game_Engine
             root.name = "ROOT";
         }
 
-        public GameObject InstanciatePrefab(Prefab prefab)
+        public GameObject InstancePrefab(Prefab prefab)
         {
             GameObject? instance = prefab.CreatePrefab?.Invoke(Project, this);
             if (instance == null) { return null; }
@@ -58,6 +58,9 @@ namespace SFML_Game_Engine
 
         public GameObject CreateGameObject(string name, GameObject parent)
         {
+            if(parent == null) { return null; }
+            if(parent.Scene != this) { return null; }
+
             GameObject go = new GameObject(Project, this, parent);
             go.name = name;
             return go;
@@ -69,7 +72,7 @@ namespace SFML_Game_Engine
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public GameObject GetGameObject(string name)
+        public GameObject? GetGameObject(string name)
         {
             foreach (GameObject gm in root.GetChildren())
             {
@@ -164,4 +167,5 @@ namespace SFML_Game_Engine
         }
 
     }
+
 }

@@ -1,6 +1,8 @@
 ﻿namespace SFML_Game_Engine
 {
 
+    // this class is probably not secure at all but i dont give a shit!
+    // if anything has somehow gotten deep enough to set anonymous function its someones elses problem!
 
     /// <summary>
     /// Prefab's are instructions for creating GameObject's

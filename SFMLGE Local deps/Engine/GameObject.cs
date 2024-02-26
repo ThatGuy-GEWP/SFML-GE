@@ -10,10 +10,10 @@
 
         bool DestroyQueued = false;
 
-        /// <summary>The <see cref="Project"/> this GameObject belongs too.</summary>
+        /// <summary>The <see cref="SFML_Game_Engine.Project"/> this GameObject belongs too.</summary>
         public Project Project { get; private set; }
 
-        /// <summary>The <see cref="Scene"/> this GameObject belongs too.</summary>
+        /// <summary>The <see cref="SFML_Game_Engine.Scene"/> this GameObject belongs too.</summary>
         public Scene Scene { get; private set; }
 
         /// <summary>The parent of this GameObject, null if attached to scene root.</summary>
@@ -24,75 +24,14 @@
 
         public List<Component> Components { get; private set; } = new List<Component>();
 
+        public Transform transform;
+
         Vector2 _position = new Vector2(0, 0);
 
         /// <summary>
         /// if true, when <see cref="Position"/> is changes, children will be moved.
         /// </summary>
         public bool moveChildren = true;
-
-        /// <summary>wanted position</summary>
-        public Vector2 Position
-        {
-            get
-            {
-                return _position;
-            }
-            set
-            {
-                _position = value;
-                RotationChanged?.Invoke(this);
-                if (!moveChildren) { return; }
-                foreach (var child in Children)
-                {
-                    child.Position = child.LocalPosition + value;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Position relative to parent, where (0,0) is the parents position.
-        /// </summary>
-        public Vector2 LocalPosition
-        {
-            get
-            {
-                if (parent == null) { return _position; }
-                return _position - parent.WorldPosition;
-            }
-        }
-
-        /// <summary>Position in the world + parents position, where (0,0) is the world origin.</summary>
-        public Vector2 WorldPosition
-        {
-            get
-            {
-                return parent == null ? _position : parent.Position + _position;
-            }
-        }
-
-        float _rotation = 0;
-
-        /// <summary>Rotation relative to parent</summary>
-        public float Rotation
-        {
-            get
-            {
-                return parent == null ? _rotation : _rotation + parent.Rotation;
-            }
-            set
-            {
-                if (value != _rotation)
-                {
-                    _rotation = value;
-                    RotationChanged?.Invoke(this);
-                    foreach (GameObject g in Children)
-                    {
-                        g.RotationChanged?.Invoke(g); // since we dont actually change the childs rotation.
-                    }
-                }
-            }
-        }
 
         /// <summary> Fires when this gameObjects position is changed, or the parents <see cref="Position"/> is changed.</summary>
         public event Action<GameObject> PositionChanged;
@@ -106,7 +45,7 @@
             parent = null;
             Project = project;
             Scene = scene;
-            Position = new Vector2(0, 0);
+            transform = new Transform(this);
         }
 
         public GameObject(Project project, Scene scene, GameObject parent)
@@ -115,7 +54,7 @@
             parent.AddChild(this);
             Project = project;
             Scene = scene;
-            Position = new Vector2(0, 0);
+            transform = new Transform(this);
         }
 
         public GameObject CreateChild(string name)

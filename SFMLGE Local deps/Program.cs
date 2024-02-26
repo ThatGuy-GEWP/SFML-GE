@@ -17,11 +17,27 @@ namespace SFML_Game_Engine
             Project mainProject = new Project("Res", App);
             Scene scene = mainProject.CreateSceneAndLoad("Test!");
 
+            GameObject testGo = scene.CreateGameObject("test!");
+
+            testGo.transform.position = new Vector2(100, 100);
+            testGo.AddComponent(new Sprite2D(new Vector2(25, 25)));
+
+            GameObject secondGo = scene.CreateGameObject("secondGo", testGo);
+            secondGo.AddComponent(new Sprite2D(new Vector2(50, 50)));
+            secondGo.transform.WorldPosition = new Vector2(55, 0);
+
             mainProject.Start();
+
+            float t = 0;
 
             while (appOpen)
             {
                 App.Clear();
+                t += scene.deltaTime;
+
+                secondGo.transform.WorldPosition = new Vector2(0, 0);
+
+                testGo.transform.position = new Vector2(100, 100 + MathF.Sin(t)*50);
 
                 mainProject.Update();
                 mainProject.Render(App);
