@@ -8,16 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Res\waveshader.frag" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Res\waveshader.frag">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="sfml-audio">
       <HintPath>..\..\..\..\..\..\SFML-SHARP\SFML.Net-2.4 (64bit)\lib\sfml-audio.dll</HintPath>
     </Reference>
@@ -49,9 +39,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="OpenTK.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Res\hardaf.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Res\thenerve.png">
