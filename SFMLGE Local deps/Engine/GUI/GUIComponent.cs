@@ -23,6 +23,14 @@ namespace SFML_Game_Engine.GUI
             context.AddComponent(this); 
         }
 
+        static protected void CopyTransformBasic(GUITransform from, GUITransform to)
+        {
+            to.LocalPosition = from.LocalPosition;
+            to.rotation = from.rotation;
+            to.origin = from.origin;
+            to.size = from.size;
+        }
+
         public virtual void Update()
         {
             return;

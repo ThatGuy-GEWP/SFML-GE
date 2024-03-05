@@ -1,6 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
 using SFML_Game_Engine.GUI;
+using static SFML.Window.Mouse;
 
 namespace SFML_Game_Engine
 {
@@ -45,6 +46,15 @@ namespace SFML_Game_Engine
             {
                 buttonPannel.backgroundColor = GUIComponent.defaultBackground;
             };
+
+            for(int i = 0; i < 5; i++)
+            {
+                GUIButtonPannel butPan = new GUIButtonPannel(context);
+                butPan.transform.WorldPosition = new Vector2(350, 40 + 60*i);
+            }
+
+            GUIButtonLabel butPanLabel = new GUIButtonLabel(context, "Test label button");
+            butPanLabel.transform.WorldPosition = new Vector2(350, 40 + 60 * 5);
 
             float t = -0.1f;
 

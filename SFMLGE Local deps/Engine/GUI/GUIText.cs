@@ -13,6 +13,7 @@ namespace SFML_Game_Engine.GUI
         Text txt = null!;
         public uint CharSize = 18;
 
+        public Vector2 textSize = Vector2.zero;
 
         public GUIText(GUIContext context) : base(context)
         {
