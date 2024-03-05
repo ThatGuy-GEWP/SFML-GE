@@ -24,18 +24,17 @@ namespace SFML_Game_Engine
             GUIContext context = GUIBase.AddComponent(new GUIContext(1280, 720));
 
 
-            GUITextLabel textLabel = new GUITextLabel("The quick brown fox\nJumped over the\nLazy dog");
-
-            context.AddComponent(textLabel);
-
-            GUIButton testButton = new GUIButton();
-
-            testButton.transform.WorldPosition = new Vector2(100, 100);
+            GUITextLabel textLabel = new GUITextLabel(context, "The quick brown fox\nJumped over the\nLazy dog", new Vector2(20, 20));
 
 
-            GUIPanel buttonPannel = new GUIPanel(new Vector2(150, 50));
+            GUIButton testButton = new GUIButton(context, new Vector2(120 * 2, 80 * 2));
+            testButton.transform.WorldPosition = new Vector2(20, 110);
+
+
+            GUIPanel buttonPannel = new GUIPanel(context, new Vector2(120*2, 80*2));
             buttonPannel.transform.parent = testButton.transform;
 
+            buttonPannel.panelContent = mainProject.GetResource<TextureResource>("testImg");
 
             testButton.OnHoveringStart += (button) =>
             {
@@ -46,9 +45,6 @@ namespace SFML_Game_Engine
             {
                 buttonPannel.backgroundColor = GUIComponent.defaultBackground;
             };
-
-            context.AddComponent(buttonPannel);
-            context.AddComponent(testButton);
 
             float t = -0.1f;
 

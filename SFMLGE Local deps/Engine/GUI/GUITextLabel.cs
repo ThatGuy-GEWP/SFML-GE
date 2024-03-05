@@ -10,26 +10,36 @@ namespace SFML_Game_Engine.GUI
 {
     internal class GUITextLabel : GUIComponent
     {
-        GUIPanel panel = new GUIPanel();
-        GUIText text = new GUIText();
+        GUIPanel panel;
+        GUIText text;
 
         public float outlineThickness = 2.0f;
         public float padding = 15;
         public uint charSize = 18;
         public string displayedString = string.Empty;
 
-        public GUITextLabel(string displayedString) : base()
+        public GUITextLabel(GUIContext context, string displayedString) : base(context)
         { 
             this.displayedString = displayedString;
+
+            panel = new GUIPanel(context);
+            text = new GUIText(context);
+
+            panel.transform.parent = transform;
+            text.transform.parent = transform;
         }
 
-        public override void OnAdd()
+        public GUITextLabel(GUIContext context, string displayedString, Vector2 position) : base(context)
         {
+            this.displayedString = displayedString;
+
+            panel = new GUIPanel(context);
+            text = new GUIText(context);
+
             panel.transform.parent = transform;
             text.transform.parent = transform;
 
-            text.OnAdd();
-            panel.OnAdd();
+            transform.WorldPosition = position;
         }
 
         public override void Update()

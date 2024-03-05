@@ -20,15 +20,20 @@ namespace SFML_Game_Engine.GUI
         public bool Hovering { get; private set; } = false;
         public bool HeldDown { get; private set; } = false;
 
-
-        public GUIButton()
-        {
-            transform.size = new Vector2(150, 50);
-            transform.origin = new Vector2(0.0f, 0.5f);
-        }
-
         bool lastClickState = false;
         bool clickedThis = false;
+
+        public GUIButton(GUIContext context) : base(context)
+        {
+            transform.size = new Vector2(150, 50);
+            transform.origin = new Vector2(0.0f, 0.0f);
+        }
+
+        public GUIButton(GUIContext context, Vector2 size) : base(context)
+        {
+            transform.size = size;
+            transform.origin = new Vector2(0.0f, 0.0f);
+        }
 
         public override void Update()
         {
@@ -84,6 +89,7 @@ namespace SFML_Game_Engine.GUI
         }
 
         RectangleShape debugRect = new RectangleShape(new Vector2(50, 50));
+
         public override void OnRender(RenderTarget rt)
         {
             debugRect.Position = transform.WorldPosition;

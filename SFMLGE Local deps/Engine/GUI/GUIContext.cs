@@ -18,7 +18,6 @@ namespace SFML_Game_Engine.GUI
 
         List<GUIComponent> components = new List<GUIComponent>();
 
-
         public GUIContext(Vector2 size)
         {
             guiTexture = new RenderTexture((uint)size.x, (uint)size.y);
@@ -29,16 +28,13 @@ namespace SFML_Game_Engine.GUI
             guiTexture = new RenderTexture(sizeX, sizeY);
         }
 
-
-        public T AddComponent<T>(T component) where T : GUIComponent
+        /// <summary> Should NOT be used, passing a context into a GUIComponent adds it automatically </summary>
+        public T AddComponent<T>(T comp) where T : GUIComponent
         {
-            component.context = this;
-            components.Add(component);
-            component.OnAdd();
-
+            components.Add(comp);
+            comp.OnAdd();
             components.Sort((x, y) => { return x.transform.zOrder - y.transform.zOrder; });
-
-            return component;
+            return comp;
         }
 
 

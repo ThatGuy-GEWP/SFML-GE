@@ -17,6 +17,12 @@ namespace SFML_Game_Engine.GUI
         public GUITransform transform = new GUITransform();
         public bool visible = true;
 
+        public GUIComponent(GUIContext context) 
+        { 
+            this.context = context;
+            context.AddComponent(this); 
+        }
+
         public virtual void Update()
         {
             return;

@@ -14,13 +14,13 @@ namespace SFML_Game_Engine.GUI
         public uint CharSize = 18;
 
 
-        public GUIText()
+        public GUIText(GUIContext context) : base(context)
         {
             txt = new Text(displayedString, RenderText.defaultFont);
             txt.FillColor = GUIComponent.defaultForeground;
         }
 
-        public GUIText(string displayedString) : base()
+        public GUIText(string displayedString, GUIContext context) : base(context)
         {
             this.displayedString = displayedString;
             txt.DisplayedString = displayedString;

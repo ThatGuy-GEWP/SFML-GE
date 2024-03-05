@@ -13,25 +13,35 @@ namespace SFML_Game_Engine.GUI
         public Color backgroundColor = GUIComponent.defaultBackground;
         public Color outlineColor = GUIComponent.defaultSecondary;
 
-        public float outlineThickness = 5.0f;
+        public float outlineThickness = 2.0f;
 
         public bool indentedCorners = false;
+
+        public TextureResource panelContent = null!;
 
         RectangleShape panelRect = new RectangleShape();
 
         RectangleShape outlineRect = new RectangleShape();
 
+
         CircleShape cornerCircle = new CircleShape(32, 32);
 
-        public GUIPanel()
+        public GUIPanel(GUIContext context) : base(context)
         {
             transform.size = new Vector2(150, 50);
         }
 
-        public GUIPanel(Vector2 size)
+        public GUIPanel(GUIContext context, Vector2 size) : base(context)
         {
             transform.size = size;
         }
+
+        public GUIPanel(GUIContext context, Vector2 size, Vector2 position) : base(context)
+        {
+            transform.size = size;
+            transform.WorldPosition = position;
+        }
+
         public override void Update()
         {
             if (!visible) return;
@@ -67,6 +77,11 @@ namespace SFML_Game_Engine.GUI
                 DrawCorners(rt);
             }
 
+            if(panelContent == null)
+            {
+                panelContent = context.project.GetResource<TextureResource>("DefaultSprite");
+            }
+
             outlineRect.Size = (Vector2)panelRect.Size + new Vector2(0, outlineThickness);
             outlineRect.Position = transform.WorldPosition;
             rt.Draw(outlineRect);
@@ -80,6 +95,9 @@ namespace SFML_Game_Engine.GUI
 
             outlineRect.Position = transform.WorldPosition - new Vector2(outlineThickness, 0);
             rt.Draw(outlineRect);
+
+            panelRect.Texture = panelContent.Resource;
+            //panelRect.TextureRect = new IntRect(0, (int)(transform.size.y / 2f), (int)panelContent.Resource.Size.X, (int)((int)panelContent.Resource.Size.Y - transform.size.y));
 
             rt.Draw(panelRect);
 
