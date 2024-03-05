@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using SFML.Audio;
+using SFML.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +13,9 @@ namespace SFML_Game_Engine.GUI
         public Color backgroundColor = GUIComponent.defaultBackground;
         public Color outlineColor = GUIComponent.defaultSecondary;
 
-        float _outlineThickness = 2.0f;
+        public float outlineThickness = 5.0f;
 
-        public float OutlineThickness
-        {
-            get { return _outlineThickness; }
-            set { if (value != _outlineThickness) { GenerateCornerTexture(value); }  _outlineThickness = value; }
-        }
-
-        Sprite cornerSprite = new Sprite();
-
-        RenderTexture cornerDrawBuff = new RenderTexture(64, 64);
+        public bool indentedCorners = false;
 
         RectangleShape panelRect = new RectangleShape();
 
@@ -39,24 +32,6 @@ namespace SFML_Game_Engine.GUI
         {
             transform.size = size;
         }
-
-        public void GenerateCornerTexture(float radius)
-        {
-            cornerCircle.Radius = radius;
-            cornerCircle.Origin = new Vector2(radius, radius);
-            cornerCircle.Position = new Vector2(64, 64);
-            cornerCircle.FillColor = Color.White;
-
-            cornerDrawBuff.Clear(Color.Transparent);
-            cornerDrawBuff.Draw(cornerCircle);
-            cornerDrawBuff.Display();
-        }
-
-        public override void OnAdd()
-        {
-            GenerateCornerTexture(OutlineThickness);
-        }
-
         public override void Update()
         {
             if (!visible) return;
@@ -65,51 +40,53 @@ namespace SFML_Game_Engine.GUI
             panelRect.Size = transform.size;
 
             panelRect.FillColor = backgroundColor;
-            cornerSprite.Color = outlineColor;
+            cornerCircle.FillColor = outlineColor;
             outlineRect.FillColor = outlineColor;
+
+            cornerCircle.Radius = outlineThickness;
+            cornerCircle.Origin = new Vector2(outlineThickness, outlineThickness);
         }
 
-        public override void OnRender(RenderTarget rt)
+        void DrawCorners(RenderTarget rt)
         {
             FloatRect bounds = panelRect.GetGlobalBounds();
 
-            cornerSprite.Texture = cornerDrawBuff.Texture;
+            cornerCircle.Position = new Vector2(bounds.Left, bounds.Top);
+            rt.Draw(cornerCircle);
+            cornerCircle.Position = new Vector2(bounds.Left + bounds.Width, bounds.Top + 1);
+            rt.Draw(cornerCircle);
+            cornerCircle.Position = new Vector2(bounds.Left, bounds.Top + bounds.Height);
+            rt.Draw(cornerCircle);
+            cornerCircle.Position = new Vector2(bounds.Left + bounds.Width, bounds.Top + bounds.Height);
+            rt.Draw(cornerCircle);
+        }
+        public override void OnRender(RenderTarget rt)
+        {
+            if (!indentedCorners)
+            {
+                DrawCorners(rt);
+            }
 
-            cornerSprite.Rotation = 0;
-            cornerSprite.Position = new Vector2(bounds.Left, bounds.Top);
-            cornerSprite.Origin = new Vector2(64, 64);
-            rt.Draw(cornerSprite);
-
-            cornerSprite.Rotation = 90;
-            cornerSprite.Position = new Vector2(bounds.Left + bounds.Width, bounds.Top+1);
-            cornerSprite.Origin = new Vector2(64, 64);
-            rt.Draw(cornerSprite);
-
-            cornerSprite.Rotation = 270;
-            cornerSprite.Position = new Vector2(bounds.Left, bounds.Top + bounds.Height);
-            cornerSprite.Origin = new Vector2(64, 64);
-            rt.Draw(cornerSprite);
-
-            cornerSprite.Rotation = 180;
-            cornerSprite.Position = new Vector2(bounds.Left + bounds.Width, bounds.Top + bounds.Height);
-            cornerSprite.Origin = new Vector2(64, 64);
-            rt.Draw(cornerSprite);
-
-            outlineRect.Size = (Vector2)panelRect.Size + new Vector2(0, OutlineThickness);
+            outlineRect.Size = (Vector2)panelRect.Size + new Vector2(0, outlineThickness);
             outlineRect.Position = transform.WorldPosition;
             rt.Draw(outlineRect);
 
-            outlineRect.Position = transform.WorldPosition - new Vector2(0, OutlineThickness);
+            outlineRect.Position = transform.WorldPosition - new Vector2(0, outlineThickness);
             rt.Draw(outlineRect);
 
-            outlineRect.Size = (Vector2)panelRect.Size + new Vector2(OutlineThickness, 0);
+            outlineRect.Size = (Vector2)panelRect.Size + new Vector2(outlineThickness, 0);
             outlineRect.Position = transform.WorldPosition;
             rt.Draw(outlineRect);
 
-            outlineRect.Position = transform.WorldPosition - new Vector2(OutlineThickness, 0);
+            outlineRect.Position = transform.WorldPosition - new Vector2(outlineThickness, 0);
             rt.Draw(outlineRect);
 
             rt.Draw(panelRect);
+
+            if (indentedCorners)
+            {
+                DrawCorners(rt);
+            }
         }
 
 

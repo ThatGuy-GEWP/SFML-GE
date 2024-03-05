@@ -11,7 +11,7 @@ namespace SFML_Game_Engine.GUI
     {
         public string displayedString = "empty";
         Text txt = null!;
-        public uint CharSize = 15;
+        public uint CharSize = 18;
 
 
         public GUIText()

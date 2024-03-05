@@ -28,6 +28,28 @@ namespace SFML_Game_Engine
 
             context.AddComponent(textLabel);
 
+            GUIButton testButton = new GUIButton();
+
+            testButton.transform.WorldPosition = new Vector2(100, 100);
+
+
+            GUIPanel buttonPannel = new GUIPanel(new Vector2(150, 50));
+            buttonPannel.transform.parent = testButton.transform;
+
+
+            testButton.OnHoveringStart += (button) =>
+            {
+                buttonPannel.backgroundColor = GUIComponent.defaultPressed;
+            };
+
+            testButton.OnHoveringEnd += (button) =>
+            {
+                buttonPannel.backgroundColor = GUIComponent.defaultBackground;
+            };
+
+            context.AddComponent(buttonPannel);
+            context.AddComponent(testButton);
+
             float t = -0.1f;
 
             float ft = 0;
@@ -38,11 +60,6 @@ namespace SFML_Game_Engine
 
                 ft = t > 1.0f ? 1.0f : t < 0.0f ? 0.0f : t;
                 t = t > 2.0f ? 0.0f : t;
-
-                textLabel.padding = MathGE.Interpolation.QuadraticEaseOut(5, 15f, ft*2f);
-
-                textLabel.transform.origin = new Vector2(0.5f, 0.5f);
-                textLabel.transform.WorldPosition = scene.GetMouseWorldPosition();
 
                 mainProject.Update();
                 mainProject.Render(App);

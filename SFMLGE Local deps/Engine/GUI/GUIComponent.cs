@@ -1,18 +1,17 @@
 ﻿using SFML.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SFML_Game_Engine.GUI
 {
     public abstract class GUIComponent
     {
-        public static readonly Color defaultForeground = new Color(0xDCE0FAFF);
-        public static readonly Color defaultBackground = new Color(0x2C2D36FF);
-        public static readonly Color defaultSecondary = new Color(0x212436FF);
+        public static readonly Color defaultForeground = new Color(0xE0EBF1FF);
+        public static readonly Color defaultBackground = new Color(0x474859FF);
 
+        public static readonly Color defaultSecondary = new Color(0x61637BFF);
+        public static readonly Color defaultPrimary = new Color(0x767997FF);
+
+        public static readonly Color defaultPressed = new Color(0x2C2D36FF);
+        
 
         public GUIContext context;
         public GUITransform transform = new GUITransform();

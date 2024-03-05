@@ -15,7 +15,7 @@ namespace SFML_Game_Engine.GUI
 
         public float outlineThickness = 2.0f;
         public float padding = 15;
-        public uint charSize = 15;
+        public uint charSize = 18;
         public string displayedString = string.Empty;
 
         public GUITextLabel(string displayedString) : base()
@@ -48,7 +48,7 @@ namespace SFML_Game_Engine.GUI
 
             panel.transform.LocalPosition = new Vector2(0, 0);
 
-            panel.OutlineThickness = outlineThickness;
+            panel.outlineThickness = outlineThickness;
 
             panel.transform.size = text.transform.size + new Vector2(padding + 1, 0 + padding);
 
