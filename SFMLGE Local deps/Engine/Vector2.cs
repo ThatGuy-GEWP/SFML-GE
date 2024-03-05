@@ -26,6 +26,8 @@ namespace SFML_Game_Engine
             this.y = y;
         }
 
+        public static readonly Vector2 zero = new Vector2(0f, 0f);
+
         public float Magnitude()
         {
             return MathF.Sqrt(x * x + y * y);
@@ -149,6 +151,10 @@ namespace SFML_Game_Engine
         public static Vector2 operator +(Vector2 a, float b) => new Vector2(a.x + b, a.y + b);
 
         public static Vector2 operator *(Vector2 a, float b) => new Vector2(a.x * b, a.y * b);
+
+        public static bool operator ==(Vector2 a, Vector2 b) => a.x == b.x && a.y == b.y;
+
+        public static bool operator !=(Vector2 a, Vector2 b) => a.x != b.x || a.y != b.y;
 
         public static Vector2 operator /(Vector2 a, float b) => new Vector2(a.x / b, a.y / b);
 

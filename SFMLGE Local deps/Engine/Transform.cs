@@ -34,16 +34,23 @@ namespace SFML_Game_Engine
             }
             set
             {
-                Vector2 abs = owner.parent.transform.WorldPosition - value;
+                if (owner.parent != null)
+                {
+                    Vector2 abs = owner.parent.transform.WorldPosition - value;
 
-                _position = value - abs;
+                    _position = value - abs;
+                }
+                else
+                {
+                    _position = value;
+                }
             }
         }
 
         /// <summary>
         /// The position of this transform relative to itself.
         /// </summary>
-        public Vector2 Position
+        public Vector2 LocalPosition
         {
             get { return _position; }
             set { _position = value; }
