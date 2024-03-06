@@ -28,9 +28,6 @@ namespace SFML_Game_Engine.GUI
 
         static Texture cornerText = null!;
 
-
-        CircleShape cornerCircle = new CircleShape(32, 32);
-
         public GUIPanel(GUIContext context) : base(context)
         {
             transform.size = new Vector2(150, 50);
@@ -73,11 +70,7 @@ namespace SFML_Game_Engine.GUI
             panelRect.Size = transform.size;
 
             panelRect.FillColor = backgroundColor;
-            cornerCircle.FillColor = outlineColor;
             outlineRect.FillColor = outlineColor;
-
-            cornerCircle.Radius = outlineThickness;
-            cornerCircle.Origin = new Vector2(outlineThickness, outlineThickness);
         }
 
         RectangleShape recShape = new RectangleShape();

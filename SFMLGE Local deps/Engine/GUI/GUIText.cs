@@ -29,6 +29,7 @@ namespace SFML_Game_Engine.GUI
         {
             transform.zOrder = 5;
             this.displayedString = displayedString;
+            txt = new Text(displayedString, RenderText.defaultFont);
             txt.DisplayedString = displayedString;
         }
 
