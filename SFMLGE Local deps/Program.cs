@@ -1,7 +1,5 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
-using SFML_Game_Engine.GUI;
-using static SFML.Window.Mouse;
 
 namespace SFML_Game_Engine
 {
