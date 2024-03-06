@@ -11,7 +11,7 @@ namespace SFML_Game_Engine.GUI
     /// <summary>
     /// A <see cref="GUIText"/> with an included <see cref="GUIPanel"/>
     /// </summary>
-    internal class GUITextLabel : GUIComponent
+    public class GUITextLabel : GUIComponent
     {
         GUIPanel panel;
         GUIText text;

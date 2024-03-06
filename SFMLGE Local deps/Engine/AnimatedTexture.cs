@@ -4,7 +4,7 @@ using SFML_Game_Engine;
 namespace SFML_Game_Engine
 {
     // Should probably replace with a TextureResource variant that handles all this but oh well.
-    internal class AnimatedTexture : Component, IRenderable
+    public class AnimatedTexture : Component, IRenderable
     {
         public sbyte ZOrder { get; set; } = 0;
         public bool Visible { get; set; } = true;

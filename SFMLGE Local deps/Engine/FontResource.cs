@@ -2,7 +2,7 @@
 
 namespace SFML_Game_Engine
 {
-    internal class FontResource : Resource
+    public class FontResource : Resource
     {
         public Font resource;
 

@@ -10,7 +10,7 @@ namespace SFML_Game_Engine.GUI
     /// <summary>
     /// A Slider! size.y should be smaller then size.x or some weirdness goes on
     /// </summary>
-    internal class GUISlider : GUIComponent
+    public class GUISlider : GUIComponent
     {
         public GUIPanel backgroundPanel;
         public GUIButtonPanel sliderButton;

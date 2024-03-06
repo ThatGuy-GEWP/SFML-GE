@@ -10,7 +10,7 @@ namespace SFML_Game_Engine.GUI
     /// <summary>
     /// Just plain text without any other stuff included.
     /// </summary>
-    internal class GUIText : GUIComponent
+    public class GUIText : GUIComponent
     {
         public string displayedString = "empty";
         Text txt = null!;

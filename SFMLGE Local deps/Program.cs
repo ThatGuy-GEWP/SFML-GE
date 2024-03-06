@@ -4,7 +4,7 @@ using SFML_Game_Engine.GUI;
 
 namespace SFML_Game_Engine
 {
-    internal class Program
+    public class Program
     {
         public static RenderWindow App { get; private set; } = new RenderWindow(new VideoMode(1280, 720), "SFML Template", Styles.Close | Styles.Titlebar);
 
@@ -17,9 +17,6 @@ namespace SFML_Game_Engine
 
             Project mainProject = new Project("Res", App);
             Scene scene = mainProject.CreateSceneAndLoad("Test!");
-
-
-
 
 
             mainProject.Start();

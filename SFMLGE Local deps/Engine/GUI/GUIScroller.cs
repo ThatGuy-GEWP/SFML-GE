@@ -6,7 +6,7 @@ namespace SFML_Game_Engine.GUI
     /// <summary>
     /// Displays a <see cref="List{T}"/> of strings, allowing you to scroll through them.
     /// </summary>
-    internal class GUIScroller : GUIComponent
+    public class GUIScroller : GUIComponent
     {
         public bool Hovering = false;
         public GUIPanel panel;

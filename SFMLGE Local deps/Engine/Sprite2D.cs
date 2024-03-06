@@ -6,7 +6,7 @@ namespace SFML_Game_Engine
     /// <summary>
     /// A class for drawing rectangles.<para></para>
     /// </summary>
-    internal class Sprite2D : Component, IRenderable
+    public class Sprite2D : Component, IRenderable
     {
         public Vector2 size = new Vector2(50, 50);
 

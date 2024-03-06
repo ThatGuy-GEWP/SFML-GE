@@ -5,7 +5,7 @@ namespace SFML_Game_Engine
     /// <summary>
     /// A simple class for rendering text
     /// </summary>
-    internal class RenderText : Component, IRenderable
+    public class RenderText : Component, IRenderable
     {
         public static readonly Font defaultFont = new Font("Engine\\Font\\Roboto-Light.ttf");
         public Font font = defaultFont;

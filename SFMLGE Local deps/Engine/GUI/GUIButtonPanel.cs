@@ -11,7 +11,7 @@ namespace SFML_Game_Engine.GUI
     /// <summary>
     /// A <see cref="GUIButton"/> with an included <see cref="GUIPanel"/>, uses a shared transform amongst the panel, button and itself
     /// </summary>
-    internal class GUIButtonPanel : GUIComponent
+    public class GUIButtonPanel : GUIComponent
     {
         public GUIButton button;
         public GUIPanel panel;
