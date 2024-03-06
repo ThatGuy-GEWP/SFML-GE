@@ -16,16 +16,16 @@ namespace SFML_Game_Engine
     /// rand.Value // will return a new random number between -20 and 20 every time .Value is used.
     /// </code>
     /// </summary>
-    public class RandomRange
+    public struct RandomRange
     {
         /// <summary>
         /// The minimum value of this random range
         /// </summary>
-        public float min = 0;
+        public readonly float min = 0;
         /// <summary>
         /// The maximum value of this random range
         /// </summary>
-        public float max = 0;
+        public readonly float max = 1;
 
         public RandomRange()
         {
@@ -48,7 +48,7 @@ namespace SFML_Game_Engine
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public RandomRange(int min, int max)
+        public RandomRange(float min, float max)
         {
             this.min = min;
             this.max = max;

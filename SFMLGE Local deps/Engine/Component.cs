@@ -84,8 +84,8 @@ namespace SFML_Game_Engine
 
         public virtual void OnDestroy(GameObject gameObject) { return; }
 
-        public virtual void OnUnload(GameObject gameObject) { return; }
+        public virtual void OnUnload() { return; }
 
-        public virtual void OnLoad(GameObject gameObject) { return; }
+        public virtual void OnLoad() { return; }
     }
 }

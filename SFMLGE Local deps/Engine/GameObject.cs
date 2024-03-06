@@ -21,24 +21,19 @@
 
         /// <summary>The children of this GameObject</summary>
         public List<GameObject> Children { get; private set; } = new List<GameObject>();
-
         public List<Component> Components { get; private set; } = new List<Component>();
 
-        public Transform transform;
 
-        Vector2 _position = new Vector2(0, 0);
+        public Transform transform;
 
         /// <summary>
         /// if true, when <see cref="Position"/> is changes, children will be moved.
         /// </summary>
         public bool moveChildren = true;
 
-        /// <summary> Fires when this gameObjects position is changed, or the parents <see cref="Position"/> is changed.</summary>
-        public event Action<GameObject> PositionChanged;
-
-        /// <summary>Fires when this gameobjects rotation is changed, or the <see cref="parent"/>'s rotation is changed.</summary>
-        public event Action<GameObject> RotationChanged;
-
+        /// <summary>
+        /// Unless doing custom stuff, use <see cref="Scene.CreateGameObject(string)"/>
+        /// </summary>
         public GameObject(Project project, Scene scene)
         {
             name = "GameObject";
@@ -48,6 +43,9 @@
             transform = new Transform(this);
         }
 
+        /// <summary>
+        /// Unless doing custom stuff, use <see cref="Scene.CreateGameObject(string, GameObject)"/>
+        /// </summary>
         public GameObject(Project project, Scene scene, GameObject parent)
         {
             name = "GameObject";
@@ -171,6 +169,38 @@
                 {
                     Children.RemoveAt(i);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Called everytime the scene this gameObject is in is unloaded.
+        /// </summary>
+        public void OnUnload()
+        {
+            for (int i = 0; i < Components.Count; i++)
+            {
+                Components[i].OnUnload();
+            }
+
+            for (int i = 0; i < Children.Count; i++)
+            {
+                Children[i].OnUnload();
+            }
+        }
+
+        /// <summary>
+        /// Called everytime the scene this gameObject is in is loaded.
+        /// </summary>
+        public void OnLoad()
+        {
+            for (int i = 0; i < Components.Count; i++)
+            {
+                Components[i].OnLoad();
+            }
+
+            for (int i = 0; i < Children.Count; i++)
+            {
+                Children[i].OnLoad();
             }
         }
 

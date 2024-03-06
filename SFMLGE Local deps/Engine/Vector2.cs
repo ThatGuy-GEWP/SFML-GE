@@ -15,9 +15,9 @@ namespace SFML_Game_Engine
          *  Apparently it can cause issues if i dont do this, sorry
          *  i personally liked when you could do vector2.x += 1 but now you cant!
          *  but il take losing that if it means the memory usage of 
-         *  this class is basically 1/16th then when it was a class
+         *  this is basically 1/16th then when it was a class
          *  
-         *  and the garbage collector also did a collection like 20 times a second lollololo
+         *  the garbage collector also did a collection like 20 times a second when it was a class lollololo
          */
 
         public Vector2(float x, float y)

@@ -49,8 +49,6 @@ namespace SFML_Game_Engine
         public bool AutoQueue { get; set; } = true;
         public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;
 
-        public Sprite2D() { }
-
         public Sprite2D(float sizeX, float sizeY)
         {
             size = new Vector2(sizeX, sizeY);
@@ -66,12 +64,13 @@ namespace SFML_Game_Engine
         public Sprite2D(TextureResource Texture)
         {
             this.Texture = Texture;
-            size = (Vector2)Texture.Resource.Size;
+            fitTexture = true;
         }
 
         public Sprite2D(Vector2 Size, TextureResource Texture)
         {
             size = Size;
+            fitTexture = false;
             this.Texture = Texture;
         }
 
@@ -85,6 +84,7 @@ namespace SFML_Game_Engine
         public Sprite2D(Vector2 Size, Vector2 Origin, TextureResource Texture)
         {
             size = Size;
+            fitTexture = false;
             this.origin = Origin;
             this.Texture = Texture;
         }

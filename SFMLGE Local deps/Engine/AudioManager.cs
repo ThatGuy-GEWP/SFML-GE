@@ -23,6 +23,19 @@ namespace SFML_Game_Engine
             this.sound = new Sound(sound);
         }
 
+        public void Play()
+        {
+            sound.Play();
+        }
+        public void Stop()
+        {
+            sound.Stop();
+        }
+        public void SetVolume(float volume)
+        {
+            sound.Volume = volume;
+        }
+
         /// <summary>
         /// Disposes of the soundInstance.
         /// </summary>
@@ -36,8 +49,8 @@ namespace SFML_Game_Engine
 
 
     /// <summary>
-    /// Top level class that handles audio calls.
-    /// SFML Threads audio, so a manager is required if you want to unload scenes and such.
+    /// A Top level class that handles audio calls.
+    /// SFML Automatically spawns threads to play audio, so this just keeps track and disposes of unused or finished sounds.
     /// </summary>
     public class AudioManager
     {
@@ -67,6 +80,15 @@ namespace SFML_Game_Engine
             }
             activeSounds.Clear();
             activeSounds = stillPlayingSounds;
+        }
+
+        public void OnUnload()
+        {
+            for (int i = 0; i < activeSounds.Count; i++)
+            {
+                SoundInstance cur = activeSounds[i];
+                cur.Stop();
+            }
         }
 
         /// <summary>

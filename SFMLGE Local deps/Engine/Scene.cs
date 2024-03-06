@@ -109,11 +109,22 @@ namespace SFML_Game_Engine
         {
             deltaWatch.Stop();
             isLoaded = false;
+            audioManager.OnUnload();
+
+            foreach (GameObject gm in root.GetChildren())
+            {
+                gm.OnUnload();
+            }
         }
 
         public void LoadScene()
         {
             isLoaded = true;
+
+            foreach (GameObject gm in root.GetChildren())
+            {
+                gm.OnLoad();
+            }
         }
 
         public void Update()

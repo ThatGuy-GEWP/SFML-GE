@@ -110,6 +110,11 @@ namespace SFML_Game_Engine
             Console.WriteLine("Failed to load scene '" + sceneName + "'!");
         }
 
+        public void AddInput(string inputName, Keyboard.Key key)
+        {
+            inputs.Add(inputName, key);
+        }
+
         public void Start()
         {
             InputUpdate();

@@ -42,7 +42,25 @@ namespace SFML_Game_Engine
         {
             if (!Directory.Exists(path)) { return; }
 
-            string[] files = Directory.GetFiles(path);
+            EnumerationOptions enumOps = new EnumerationOptions();
+            enumOps.AttributesToSkip = FileAttributes.Hidden;
+            enumOps.RecurseSubdirectories = true;
+
+            List<string> filteredFiles = Directory
+                .EnumerateFiles(path, "*", enumOps)
+                .Where(file =>
+                    file.ToLower().EndsWith(".png") ||
+                    file.ToLower().EndsWith(".jpg") ||
+                    file.ToLower().EndsWith(".jpeg") ||
+                    file.ToLower().EndsWith(".wav") ||
+                    file.ToLower().EndsWith(".ogg") ||
+                    file.ToLower().EndsWith(".ttf") ||
+                    file.ToLower().EndsWith(".vert") ||
+                    file.ToLower().EndsWith(".frag")
+                    )
+                .ToList();
+
+            string[] files = filteredFiles.ToArray();
 
             foreach (string file in files)
             {
@@ -54,7 +72,7 @@ namespace SFML_Game_Engine
                 string name = file.Replace(extension, "").Replace(rootName + "\\", "").Replace("\\", "/");
                 Console.Write("loading ");
 
-                if (extension == ".png" || extension == ".jpg")
+                if (extension == ".png" || extension == ".jpg" || extension == ".jpeg")
                 {
                     Console.Write("" + name);
                     resources.Add(new TextureResource(file, name));
@@ -95,13 +113,6 @@ namespace SFML_Game_Engine
                 }
                 Console.Write("\n");
                 if (!loadedSomething) { continue; }
-            }
-
-            string[] dirs = Directory.GetDirectories(path);
-
-            foreach (string directory in dirs)
-            {
-                searchFolder(directory, false);
             }
         }
 

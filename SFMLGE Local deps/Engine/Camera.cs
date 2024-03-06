@@ -58,6 +58,15 @@ namespace SFML_Game_Engine
             cameraView.Center = vec;
         }
 
+        public void SetZoom(float factor) // bit wasteful but it should be fine
+        {
+            Vector2 pos = cameraView.Center;
+            cameraView.Dispose();
+            cameraView = app.DefaultView;
+            cameraView.Zoom(factor);
+            cameraView.Center = pos;
+        }
+
         public void Update()
         {
             app.SetView(cameraView);
