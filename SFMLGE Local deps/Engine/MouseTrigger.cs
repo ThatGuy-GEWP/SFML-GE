@@ -18,7 +18,7 @@ namespace SFML_Game_Engine
         public Vector2 Origin; // origin is same as everying else, (0.0,0.0) would be the top left of this box, (1.0,1.0) would be bottom right
 
         /// <summary> Draws the mouseTrigger with a green outline when it can be pressed </summary>
-        public bool debugDraw = true;
+        public bool debugDraw = false;
 
         /// <summary> Target button of this trigger. </summary>
         public Mouse.Button Button = Mouse.Button.Left;

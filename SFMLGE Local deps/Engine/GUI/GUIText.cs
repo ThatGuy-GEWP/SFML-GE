@@ -25,7 +25,7 @@ namespace SFML_Game_Engine.GUI
             txt.FillColor = GUIComponent.defaultForeground;
         }
 
-        public GUIText(string displayedString, GUIContext context) : base(context)
+        public GUIText(GUIContext context, string displayedString) : base(context)
         {
             transform.zOrder = 5;
             this.displayedString = displayedString;
