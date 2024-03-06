@@ -75,6 +75,7 @@ namespace SFML_Game_Engine
             scrollAdder.button.OnClick += (button) =>
             {
                 scroll.content.Add("Test:" + RandomGen.Next(0,2000)*0.1f);
+                context.gameObject.Destroy();
             };
 
             bool swipswap = false;

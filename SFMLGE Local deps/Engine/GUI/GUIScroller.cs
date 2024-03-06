@@ -120,5 +120,10 @@ namespace SFML_Game_Engine.GUI
 
             rt.Draw(spr);
         }
+
+        public override void OnRemove()
+        {
+            renderText.Dispose();
+        }
     }
 }

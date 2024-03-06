@@ -56,6 +56,16 @@ namespace SFML_Game_Engine.GUI
             }
         }
 
+        public override void OnDestroy(GameObject gameObject)
+        {
+            for (int i = 0; i < components.Count; i++)
+            {
+                components[i].OnRemove();
+            }
+
+            guiTexture.Dispose();
+        }
+
 
         public void Hide()
         {

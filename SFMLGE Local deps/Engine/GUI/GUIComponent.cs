@@ -50,5 +50,10 @@ namespace SFML_Game_Engine.GUI
         {
             return;
         }
+
+        public virtual void OnRemove()
+        {
+            return;
+        }
     }
 }

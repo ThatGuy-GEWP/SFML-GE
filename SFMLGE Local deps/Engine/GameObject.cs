@@ -145,7 +145,6 @@
                     Components[i].OnDestroy(this);
                     Components[i].Enabled = false;
                 }
-                //parent.Remove(this);
                 enabled = false;
                 return;
             }
@@ -167,6 +166,11 @@
             for (int i = 0; i < Children.Count; i++)
             {
                 Children[i].Update();
+
+                if (Children[i].DestroyQueued)
+                {
+                    Children.RemoveAt(i);
+                }
             }
         }
 
