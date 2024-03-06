@@ -2,6 +2,9 @@
 
 namespace SFML_Game_Engine.GUI
 {
+    /// <summary>
+    /// The base class for all GUIComponents.
+    /// </summary>
     public abstract class GUIComponent
     {
         public static readonly Color defaultForeground = new Color(0xE0EBF1FF);

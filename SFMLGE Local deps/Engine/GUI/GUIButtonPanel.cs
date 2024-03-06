@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace SFML_Game_Engine.GUI
 {
+    /// <summary>
+    /// A <see cref="GUIButton"/> with an included <see cref="GUIPanel"/>, uses a shared transform amongst the panel, button and itself
+    /// </summary>
     internal class GUIButtonPanel : GUIComponent
     {
         public GUIButton button;
@@ -17,9 +20,6 @@ namespace SFML_Game_Engine.GUI
         {
             panel = new GUIPanel(context);
             button = new GUIButton(context);
-
-            panel.transform.parent = this.transform;
-            button.transform.parent = panel.transform;
 
             transform.size = new Vector2(150, 50);
 

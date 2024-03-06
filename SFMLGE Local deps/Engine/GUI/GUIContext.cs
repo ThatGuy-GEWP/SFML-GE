@@ -7,6 +7,15 @@ using System.Threading.Tasks;
 
 namespace SFML_Game_Engine.GUI
 {
+    /// <summary>
+    /// Contains a collection of <see cref="GUIComponent"/>'s and renders them, required to use said GUIComponents.<para></para>
+    /// To add a <see cref="GUIComponent"/> to a context, just pass the context into its constructor.
+    /// <code>
+    /// GUIContext context = someGameObject.AddComponent(new GUIContext())
+    /// 
+    /// GUIPanel panel = new GUIPanel(context);
+    /// </code>
+    /// </summary>
     public class GUIContext : Component, IRenderable
     {
         public sbyte ZOrder { get; set; } = sbyte.MaxValue;
@@ -28,7 +37,7 @@ namespace SFML_Game_Engine.GUI
             guiTexture = new RenderTexture(sizeX, sizeY);
         }
 
-        /// <summary> Should NOT be used, passing a context into a GUIComponent adds it automatically </summary>
+        /// <summary> Should NOT be used, passing a context into a GUIComponent adds it automatically and manually adding it might break things</summary>
         public T AddComponent<T>(T comp) where T : GUIComponent
         {
             components.Add(comp);

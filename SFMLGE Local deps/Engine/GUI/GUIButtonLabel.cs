@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SFML_Game_Engine.GUI
 {
+    /// <summary>
+    /// A <see cref="GUIButton"/> with an included <see cref="GUIPanel"/> and <see cref="GUIText"/>, uses a shared transform.
+    /// </summary>
     internal class GUIButtonLabel : GUIComponent
     {
         public GUIButton button;

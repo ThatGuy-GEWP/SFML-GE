@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace SFML_Game_Engine.GUI
 {
+    /// <summary>
+    /// A fancy panel, acts as a background base for other components, but can be used by itself.
+    /// </summary>
     public class GUIPanel : GUIComponent
     {
         public Color backgroundColor = GUIComponent.defaultBackground;

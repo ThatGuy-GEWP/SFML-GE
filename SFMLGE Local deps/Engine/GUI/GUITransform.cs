@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SFML_Game_Engine.GUI
 {
+    /// <summary>
+    /// A Transform special made for GUIComponents.
+    /// </summary>
     public class GUITransform
     {
         public GUITransform? parent;

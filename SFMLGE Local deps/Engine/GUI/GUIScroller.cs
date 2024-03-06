@@ -3,6 +3,9 @@ using SFML.Window;
 
 namespace SFML_Game_Engine.GUI
 {
+    /// <summary>
+    /// Displays a <see cref="List{T}"/> of strings, allowing you to scroll through them.
+    /// </summary>
     internal class GUIScroller : GUIComponent
     {
         public bool Hovering = false;
@@ -17,27 +20,7 @@ namespace SFML_Game_Engine.GUI
 
         float scrollSpeed = 8f;
 
-        public List<string> content = new List<string>()
-        {
-            "A",
-            "B",
-            "C",
-            "D",
-            "E",
-            "F",
-            "G",
-            "H",
-            "I",
-            "J",
-            "K",
-            "L",
-            "M",
-            "N",
-            "O",
-            "P",
-            "Testy",
-            "MOAR TESTY!"
-        };
+        public List<string> content = new List<string>();
 
         Text labelText;
 

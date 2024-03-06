@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace SFML_Game_Engine.GUI
 {
+    /// <summary>
+    /// An interactable button, does not actually draw anything to the screen by itself, see <see cref="GUIButtonPanel"/> for that.
+    /// </summary>
     public class GUIButton : GUIComponent
     {
         public event Action<GUIButton> OnClick = null!;
