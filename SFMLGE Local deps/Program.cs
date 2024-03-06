@@ -1,6 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
-using SFML_Game_Engine.GUI;
+using SFML_Game_Engine.Editor;
 
 namespace SFML_Game_Engine
 {
@@ -16,16 +16,27 @@ namespace SFML_Game_Engine
             App.SetFramerateLimit(144);
 
             Project mainProject = new Project("Res", App);
+            EditorContext editContext = new EditorContext(mainProject);
+
             Scene scene = mainProject.CreateSceneAndLoad("Test!");
 
+            GameObject testy = scene.CreateGameObject("Test object!");
 
-            mainProject.Start();
+            testy.AddComponent(new Sprite2D(new Vector2(500, 2550)));
+
+
+            editContext.Start();
+
+            float t = 0;
             while (appOpen)
             {
                 App.Clear();
+                t += scene.deltaTime;
 
-                mainProject.Update();
-                mainProject.Render(App);
+                testy.transform.WorldPosition = new Vector2(MathF.Sin(t) * 50f, 0);
+
+                editContext.Update();
+                editContext.Render(App);
 
                 App.Display();
             }

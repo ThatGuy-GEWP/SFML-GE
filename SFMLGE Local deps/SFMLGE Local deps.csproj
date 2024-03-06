@@ -90,4 +90,8 @@
     <Folder Include="Scripts\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="NCalcSync" Version="3.11.0" />
+  </ItemGroup>
+
 </Project>

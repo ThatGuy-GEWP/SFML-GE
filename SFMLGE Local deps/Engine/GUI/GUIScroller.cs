@@ -3,15 +3,17 @@ using SFML.Window;
 
 namespace SFML_Game_Engine.GUI
 {
-    struct ScrollerContent
+    public struct ScrollerContent
     {
         public float height;
         public string content;
+        public object? obj;
 
-        public ScrollerContent(string content, float height)
+        public ScrollerContent(string content, float height, object? obj)
         {
             this.content = content;
             this.height = height;
+            this.obj = obj;
         }
     }
 
@@ -27,13 +29,26 @@ namespace SFML_Game_Engine.GUI
         Sprite spr = new Sprite();
 
 
+        public Color ContentBackgroundColor = defaultSecondary;
+        public Color ContentOutlineColor = defaultPrimary;
+
+
         float minScrollPos = -100f;
         float maxScrollPos = 5f;
         float scrollPos = 5f;
 
         float contentSpacing = 5f;
 
-        float scrollSpeed = 8f;
+        public float scrollSpeed = 8f;
+
+        public int hoveredItem = -1;
+        public int selectedItem = -1;
+
+        public bool interactable = true;
+
+        public event Action<GUIScroller, ScrollerContent> OnContentSelected = null!;
+
+        public uint charSize = 21;
 
         List<ScrollerContent> content = new List<ScrollerContent>();
 
@@ -95,11 +110,50 @@ namespace SFML_Game_Engine.GUI
             }
 
             scrollDelta = 0f;
+
+            if (!interactable) { return; }
+
+            float yPos = 0;
+
+            if (!Hovering) { hoveredItem = -1; }
+
+            bool mouseDown = Mouse.IsButtonPressed(Mouse.Button.Left);
+
+            for (int i = 0; i < content.Count; i++)
+            {
+                Vector2 position = transform.WorldPosition + new Vector2(2.5f, yPos + (scrollPos + contentSpacing * i));
+
+                bool inContentBoundsX =
+                    mousePos.x >= position.x &&
+                    mousePos.x <= position.x + transform.size.x;
+                bool inContentBoundsY =
+                    mousePos.y >= position.y &&
+                    mousePos.y <= position.y + content[i].height;
+
+                if (inContentBoundsX && inContentBoundsY && Hovering)
+                {
+                    hoveredItem = i;
+
+                    if (hoveredItem != selectedItem && mouseDown)
+                    {
+                        selectedItem = hoveredItem;
+                        OnContentSelected?.Invoke(this, content[selectedItem]);
+                    }
+                } else
+                {
+                    if(hoveredItem == i)
+                    {
+                        hoveredItem = -1;
+                    }
+                }
+
+                yPos += content[i].height;
+            }
         }
 
         public void AddContent(string str, float boxHeight)
         {
-            content.Add(new ScrollerContent(str, boxHeight));
+            content.Add(new ScrollerContent(str, boxHeight, null));
 
             minScrollPos = 0;
 
@@ -114,8 +168,35 @@ namespace SFML_Game_Engine.GUI
 
             minScrollPos = heightSum * -1f;
             minScrollPos = MathGE.Clamp(minScrollPos, -99999999999f, 0);
+        }
 
-            Console.WriteLine(minScrollPos);
+        public void AddContent(string str, float boxHeight, object? obj)
+        {
+            content.Add(new ScrollerContent(str, boxHeight, obj));
+
+            minScrollPos = 0;
+
+            float heightSum = 0;
+            for (int i = 0; i < content.Count; i++)
+            {
+                heightSum += content[i].height + (contentSpacing * i);
+            }
+
+            heightSum += contentSpacing;
+            heightSum -= transform.size.y;
+
+            minScrollPos = heightSum * -1f;
+            minScrollPos = MathGE.Clamp(minScrollPos, -99999999999f, 0);
+        }
+
+        public void ClearContent(bool resetSelection = false)
+        {
+            if (resetSelection)
+            {
+                selectedItem = -1;
+                hoveredItem = -1;
+            }
+            content.Clear();
         }
 
         RectangleShape rs = new RectangleShape(new Vector2(50, 50));
@@ -124,36 +205,47 @@ namespace SFML_Game_Engine.GUI
             panel.OnRender(rt);
 
             renderText.Clear(Color.Transparent);
+            
 
             float yPos = 0;
 
+
             for (int i = 0; i < content.Count; i++)
             {
-                rs.FillColor = defaultSecondary;
-                rs.OutlineColor = defaultPrimary;
+                rs.FillColor = ContentBackgroundColor;
+
+                if(i == hoveredItem)
+                {
+                    rs.FillColor = defaultPrimary;
+                }
+
+                if (i == selectedItem)
+                {
+                    rs.FillColor = defaultPressed;
+                }
+
+                rs.OutlineColor = ContentOutlineColor;
                 rs.OutlineThickness = 1f;
                 rs.Size = new Vector2(transform.size.x - 5f, content[i].height);
                 rs.Position = new SFML.System.Vector2f(2.5f, yPos + (scrollPos + contentSpacing * i));
 
-                labelText.Position = (Vector2)rs.Position + new Vector2(15f, 0);
+                labelText.Position = (Vector2)rs.Position + new Vector2(5f, 0);
 
-                labelText.CharacterSize = 16;
+                labelText.CharacterSize = charSize;
 
                 labelText.DisplayedString = content[i].content;
+
+                labelText.OutlineThickness = 1f;
+                labelText.OutlineColor = Color.Black;
 
                 renderText.Draw(rs);
                 renderText.Draw(labelText);
                 yPos += content[i].height;
             }
 
-
-
-
-
             renderText.Display();
             spr.Texture = renderText.Texture;
             spr.Position = transform.WorldPosition;
-
 
             rt.Draw(spr);
         }

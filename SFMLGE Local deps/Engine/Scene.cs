@@ -90,18 +90,42 @@ namespace SFML_Game_Engine
             return null;
         }
 
+        public GameObject[] GetGameObjects(int depth = 0)
+        {
+            if(depth == 0)
+            {
+                return root.GetChildren();
+            }
+
+            List<GameObject> children = new List<GameObject>();
+
+            GetObjectsAt(root, children, depth);
+
+            return children.ToArray();
+        }
+
+        void GetObjectsAt(GameObject from, List<GameObject> sofar, int depth)
+        {
+            sofar.AddRange(from.GetChildren());
+            if(depth > 0)
+            {
+                foreach(GameObject child in from.Children)
+                {
+                    if (child.Children.Count > 0)
+                    {
+                        GetObjectsAt(child, sofar, depth - 1);
+                    }
+                }
+            }
+        }
+
         public void Start()
         {
             if (!deltaWatch.IsRunning)
             {
                 deltaWatch.Start();
             }
-            foreach (GameObject gm in root.GetChildren())
-            {
-                if (gm.started) { continue; }
-                gm.Start();
-                gm.started = true;
-            }
+            root.Start();
             started = true;
         }
 
@@ -111,34 +135,22 @@ namespace SFML_Game_Engine
             isLoaded = false;
             audioManager.OnUnload();
 
-            foreach (GameObject gm in root.GetChildren())
-            {
-                gm.OnUnload();
-            }
+            root.OnUnload();
         }
 
         public void LoadScene()
         {
             isLoaded = true;
-
-            foreach (GameObject gm in root.GetChildren())
-            {
-                gm.OnLoad();
-            }
+            root.OnLoad();
         }
 
         public void Update()
         {
             if (!isLoaded) { return; }
-
             if (!started) { Start(); return; }
 
-            foreach (GameObject gameObject in root.GetChildren())
-            {
-                if (!gameObject.enabled) continue;
-                if (!gameObject.started) { gameObject.Start(); gameObject.started = true; continue; }
-                gameObject.Update();
-            }
+            root.Update();
+
             deltaTime = deltaWatch.ElapsedMilliseconds * 0.001f;
             deltaWatch.Restart();
             audioManager.Update();
