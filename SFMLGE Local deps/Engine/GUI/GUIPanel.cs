@@ -102,6 +102,8 @@ namespace SFML_Game_Engine.GUI
         }
         public override void OnRender(RenderTarget rt)
         {
+            if (!context.Started) { return; }
+
             if (cornerText == null)
             {
                 generateCornerTexture();

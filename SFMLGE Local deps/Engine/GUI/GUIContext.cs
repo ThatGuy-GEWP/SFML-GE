@@ -18,7 +18,7 @@ namespace SFML_Game_Engine.GUI
     /// </summary>
     public class GUIContext : Component, IRenderable
     {
-        public sbyte ZOrder { get; set; } = sbyte.MaxValue;
+        public sbyte ZOrder { get; set; } = 20;
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = true;
         public RenderQueueType QueueType { get; set; } = RenderQueueType.OverlayQueue;

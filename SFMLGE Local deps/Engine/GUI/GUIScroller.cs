@@ -151,42 +151,27 @@ namespace SFML_Game_Engine.GUI
             }
         }
 
-        public void AddContent(string str, float boxHeight)
-        {
-            content.Add(new ScrollerContent(str, boxHeight, null));
-
-            minScrollPos = 0;
-
-            float heightSum = 0;
-            for (int i = 0; i < content.Count; i++)
-            {
-                heightSum += content[i].height + (contentSpacing * i);
-            }
-
-            heightSum += contentSpacing;
-            heightSum -= transform.size.y;
-
-            minScrollPos = heightSum * -1f;
-            minScrollPos = MathGE.Clamp(minScrollPos, -99999999999f, 0);
-        }
-
-        public void AddContent(string str, float boxHeight, object? obj)
+        public void AddContent(string str, float boxHeight, object? obj = null)
         {
             content.Add(new ScrollerContent(str, boxHeight, obj));
 
             minScrollPos = 0;
 
-            float heightSum = 0;
+            float heightSum = -transform.size.y;
             for (int i = 0; i < content.Count; i++)
             {
-                heightSum += content[i].height + (contentSpacing * i);
+                heightSum += content[i].height + contentSpacing;
             }
 
             heightSum += contentSpacing;
-            heightSum -= transform.size.y;
 
             minScrollPos = heightSum * -1f;
             minScrollPos = MathGE.Clamp(minScrollPos, -99999999999f, 0);
+        }
+
+        public void ResetScrollPosition()
+        {
+            scrollPos = 0;
         }
 
         public void ClearContent(bool resetSelection = false)

@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
+using SFML_Game_Engine.Editor;
 using System.Diagnostics;
 
 namespace SFML_Game_Engine
@@ -14,6 +15,8 @@ namespace SFML_Game_Engine
         public ResourceCollection Resources;
 
         public Scene? ActiveScene;
+
+        public EditorContext? editorContext;
 
         List<Scene> scenes = new List<Scene>();
 
@@ -139,6 +142,7 @@ namespace SFML_Game_Engine
 
             InputUpdate();
             ActiveScene.Update();
+            if (editorContext != null) { editorContext.Update(); }
         }
 
         public void Render(RenderTarget rt)

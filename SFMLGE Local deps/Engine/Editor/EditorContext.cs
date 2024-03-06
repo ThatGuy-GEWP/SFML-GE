@@ -1,10 +1,12 @@
 ﻿using SFML.Graphics;
 using SFML_Game_Engine.GUI;
 using System.Reflection;
-using System.Xml.Linq;
 
 namespace SFML_Game_Engine.Editor
 {
+    /// <summary>
+    /// Controls the creation and managing of the Editor's GUI. To use simply add a new <see cref="EditorContext"/> to <see cref="Project.editorContext"/>
+    /// </summary>
     public class EditorContext
     {
         public Project project;
@@ -12,10 +14,6 @@ namespace SFML_Game_Engine.Editor
         public float version = 0.1f;
 
         GUIContext context;
-
-        bool wantsToStart = false;
-
-        bool hookedScene = false;
 
         GUIScroller explorer;
         GUIScroller extraInfo;
@@ -55,6 +53,10 @@ namespace SFML_Game_Engine.Editor
 
             explorer.OnContentSelected += (scrler, content) =>
             {
+                if(content.content != selectedObj.content)
+                {
+                    extraInfo.ResetScrollPosition();
+                }
                 selectedObj = content;
             };
         }
@@ -153,27 +155,19 @@ namespace SFML_Game_Engine.Editor
             }
         }
 
-        public void Start()
-        {
-            wantsToStart = true;
-            hookedScene = true;
-            project.ActiveScene.CreateGameObject("EditorHudHolder").AddComponent(context);
-
-            project.Start();
-        }
-
         public void Update()
         {
+            if(project.ActiveScene != null)
+            {
+                if(project.ActiveScene.GetGameObject("EditorHudHolder") == null)
+                {
+                    project.ActiveScene.CreateGameObject("EditorHudHolder").AddComponent(context);
+                }
+            }
+
             explorer.ClearContent();
             AddGameObjectsToScroller(project.ActiveScene.GetGameObjects(0), ExplorerSpacing, "", 0);
             if(selectedObj.obj != null) { AddInfoToExtraInfo((selectedObj.obj as GameObject)!); }
-            project.Update();
         }
-
-        public void Render(RenderTarget rt)
-        {
-            project.Render(rt);
-        }
-
     }
 }

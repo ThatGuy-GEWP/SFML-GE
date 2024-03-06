@@ -17,15 +17,13 @@ namespace SFML_Game_Engine
 
             Project mainProject = new Project("Res", App);
             EditorContext editContext = new EditorContext(mainProject);
+            mainProject.editorContext = editContext;
 
             Scene scene = mainProject.CreateSceneAndLoad("Test!");
 
             GameObject testy = scene.CreateGameObject("Test object!");
 
             testy.AddComponent(new Sprite2D(new Vector2(500, 2550)));
-
-
-            editContext.Start();
 
             float t = 0;
             while (appOpen)
@@ -35,8 +33,8 @@ namespace SFML_Game_Engine
 
                 testy.transform.WorldPosition = new Vector2(MathF.Sin(t) * 50f, 0);
 
-                editContext.Update();
-                editContext.Render(App);
+                mainProject.Update();
+                mainProject.Render(App);
 
                 App.Display();
             }
