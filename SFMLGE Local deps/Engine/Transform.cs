@@ -36,9 +36,9 @@ namespace SFML_Game_Engine
             {
                 if (owner.parent != null)
                 {
-                    Vector2 abs = owner.parent.transform.WorldPosition - value;
-
-                    _position = value - abs;
+                    Vector2 c = value - owner.parent.transform.WorldPosition;
+                    Console.WriteLine(c);
+                    _position = c;
                 }
                 else
                 {

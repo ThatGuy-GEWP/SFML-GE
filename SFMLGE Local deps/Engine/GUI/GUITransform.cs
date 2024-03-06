@@ -19,8 +19,6 @@ namespace SFML_Game_Engine.GUI
 
         public sbyte zOrder = 0;
 
-        public float rotation = 0f;
-
         Vector2 _position = Vector2.zero;
 
         /// <summary>The position of this transform relative to all parent's transforms</summary>
@@ -38,9 +36,8 @@ namespace SFML_Game_Engine.GUI
             {
                 if(parent != null)
                 {
-                    Vector2 abs = parent.WorldPosition - value;
-
-                    _position = value - abs;
+                    Vector2 c = value - parent.WorldPosition;
+                    _position = c;
                 }
                 else
                 {

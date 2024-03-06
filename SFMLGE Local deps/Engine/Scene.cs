@@ -50,7 +50,7 @@ namespace SFML_Game_Engine
 
         public GameObject CreateGameObject(string name)
         {
-            GameObject go = new GameObject(Project, this);
+            GameObject go = new GameObject(Project, this, root);
             root.AddChild(go);
             go.name = name;
             return go;

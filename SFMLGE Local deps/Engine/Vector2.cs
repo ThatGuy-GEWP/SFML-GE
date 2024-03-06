@@ -62,6 +62,11 @@ namespace SFML_Game_Engine
         {
             return (Rotate(point - origin, degrees) + origin);
         }
+
+        public static Vector2 Abs(Vector2 a)
+        {
+            return new Vector2(MathF.Abs(a.x), MathF.Abs(a.y));
+        }
         
         /// <summary>
         /// Swaps x and y in a vector.

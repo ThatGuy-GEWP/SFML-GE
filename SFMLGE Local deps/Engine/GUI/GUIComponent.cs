@@ -31,7 +31,6 @@ namespace SFML_Game_Engine.GUI
         static protected void CopyTransformBasic(GUITransform from, GUITransform to)
         {
             to.LocalPosition = from.LocalPosition;
-            to.rotation = from.rotation;
             to.origin = from.origin;
             to.size = from.size;
         }

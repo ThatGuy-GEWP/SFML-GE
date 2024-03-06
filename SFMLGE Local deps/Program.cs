@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
+using SFML_Game_Engine.GUI;
 
 namespace SFML_Game_Engine
 {
@@ -19,8 +20,9 @@ namespace SFML_Game_Engine
 
 
 
-            mainProject.Start();
 
+
+            mainProject.Start();
             while (appOpen)
             {
                 App.Clear();

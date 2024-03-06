@@ -32,6 +32,7 @@ namespace SFML_Game_Engine.GUI
         public GUIPanel(GUIContext context) : base(context)
         {
             transform.size = new Vector2(150, 50);
+            transform.origin = new Vector2(0.5f, 0.5f);
         }
 
         public GUIPanel(GUIContext context, Vector2 size) : base(context)
@@ -62,15 +63,13 @@ namespace SFML_Game_Engine.GUI
 
         void DrawCorners(RenderTarget rt)
         {
-            FloatRect bounds = panelRect.GetGlobalBounds();
-
-            cornerCircle.Position = new Vector2(bounds.Left, bounds.Top);
+            cornerCircle.Position = new Vector2(transform.WorldPosition.x, transform.WorldPosition.y);
             rt.Draw(cornerCircle);
-            cornerCircle.Position = new Vector2(bounds.Left + bounds.Width, bounds.Top + 1);
+            cornerCircle.Position = new Vector2(transform.WorldPosition.x + transform.size.x, transform.WorldPosition.y);
             rt.Draw(cornerCircle);
-            cornerCircle.Position = new Vector2(bounds.Left, bounds.Top + bounds.Height);
+            cornerCircle.Position = new Vector2(transform.WorldPosition.x, transform.WorldPosition.y + transform.size.y);
             rt.Draw(cornerCircle);
-            cornerCircle.Position = new Vector2(bounds.Left + bounds.Width, bounds.Top + bounds.Height);
+            cornerCircle.Position = new Vector2(transform.WorldPosition.x + transform.size.x, transform.WorldPosition.y + transform.size.y);
             rt.Draw(cornerCircle);
         }
         public override void OnRender(RenderTarget rt)
