@@ -135,7 +135,7 @@ namespace SFML_Game_Engine
                     }
                 }
             }
-            Console.WriteLine($"\rFinished loading " + (resources.Count - 1) + " resources in " + dirToCollect + "!");
+            Console.WriteLine($"\rFinished loading " + (resources.Count) + " resources in " + dirToCollect + "!");
         }
 
         /// <summary>
