@@ -52,7 +52,7 @@ namespace SFML_Game_Engine
 
             for(int i = 0; i < 5; i++)
             {
-                GUIButtonPannel butPan = new GUIButtonPannel(context);
+                GUIButtonPanel butPan = new GUIButtonPanel(context);
                 butPan.transform.WorldPosition = new Vector2(350, 40 + 60*i);
 
                 butPan.button.OnClick += (button) =>
@@ -69,7 +69,7 @@ namespace SFML_Game_Engine
 
             GUIScroller scroll = new GUIScroller(context);
 
-            GUIButtonPannel scrollAdder = new GUIButtonPannel(context);
+            GUIButtonPanel scrollAdder = new GUIButtonPanel(context);
 
             scrollAdder.transform.WorldPosition = new Vector2(765, 20);
             scrollAdder.button.OnClick += (button) =>
@@ -85,6 +85,28 @@ namespace SFML_Game_Engine
                 swipswap = !swipswap;
             };
 
+
+            GUISlider sliderR = new GUISlider(context, new Vector2(250, 25));
+            GUISlider sliderG = new GUISlider(context);
+            GUISlider sliderB = new GUISlider(context);
+
+            sliderR.transform.WorldPosition = new Vector2(20, 400);
+            sliderG.transform.WorldPosition = new Vector2(20, 430);
+            sliderB.transform.WorldPosition = new Vector2(20, 460);
+
+            byte r = 0;
+            byte g = 0;
+            byte b = 0;
+
+            sliderR.SliderChanged += (slider) => { r = (byte)MathGE.Lerp(0, 255, slider.SliderPosition); };
+            sliderG.SliderChanged += (slider) => { g = (byte)MathGE.Lerp(0, 255, slider.SliderPosition); };
+            sliderB.SliderChanged += (slider) => { b = (byte)MathGE.Lerp(0, 255, slider.SliderPosition); };
+
+            GUIPanel colorPanel = new GUIPanel(context);
+
+            colorPanel.transform.WorldPosition = new Vector2(20 + sliderB.transform.size.x + 4, 400);
+            colorPanel.transform.size = new Vector2(150, 25*3 + 4*2);
+
             while (appOpen)
             {
                 App.Clear();
@@ -92,6 +114,8 @@ namespace SFML_Game_Engine
                 t = swipswap ? MathGE.Lerp(t, 1.0f, scene.deltaTime * 5f) : MathGE.Lerp(t, 0.0f, scene.deltaTime * 5f);
 
                 pinPan.transform.WorldPosition = new Vector2(MathGE.Interpolation.SmoothStep(350, 500, t), 500);
+
+                colorPanel.backgroundColor = new Color(r, g, b);
 
                 mainProject.Update();
                 mainProject.Render(App);
