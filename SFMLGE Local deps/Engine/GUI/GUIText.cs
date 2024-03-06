@@ -17,12 +17,14 @@ namespace SFML_Game_Engine.GUI
 
         public GUIText(GUIContext context) : base(context)
         {
+            transform.zOrder = 5;
             txt = new Text(displayedString, RenderText.defaultFont);
             txt.FillColor = GUIComponent.defaultForeground;
         }
 
         public GUIText(string displayedString, GUIContext context) : base(context)
         {
+            transform.zOrder = 5;
             this.displayedString = displayedString;
             txt.DisplayedString = displayedString;
         }

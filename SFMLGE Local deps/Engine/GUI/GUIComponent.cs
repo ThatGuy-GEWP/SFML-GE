@@ -15,7 +15,9 @@ namespace SFML_Game_Engine.GUI
 
         public GUIContext context;
         public GUITransform transform = new GUITransform();
+
         public bool visible = true;
+        public bool autoQueue = true;
 
         public GUIComponent(GUIContext context) 
         { 

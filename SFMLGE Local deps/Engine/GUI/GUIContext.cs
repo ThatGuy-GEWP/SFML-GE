@@ -68,7 +68,7 @@ namespace SFML_Game_Engine.GUI
             {
                 for (int i = 0; i < components.Count; i++)
                 {
-                    if (!components[i].visible) { continue; }
+                    if (!components[i].visible || !components[i].autoQueue) { continue; }
                     components[i].OnRender(guiTexture);
                 }
             }
