@@ -58,7 +58,11 @@ namespace SFML_Game_Engine.GUI
 
             rt.Draw(tempCircle);
             rt.Display();
-            cornerText = rt.Texture;
+            cornerText = new Texture(rt.Texture); // otherwise rt.dispose would also take away the texture
+            cornerText.Repeated = false;
+
+            rt.Dispose();
+            tempCircle.Dispose();
         }
 
         public override void Update()
