@@ -68,7 +68,7 @@ namespace SFML_Game_Engine.GUI
 
             renderText = new RenderTexture((uint)transform.size.x, (uint)transform.size.y);
 
-            labelText = new Text("", RenderText.defaultFont);
+            labelText = new Text();
         }
 
         float scrollDelta = 0f;
@@ -76,8 +76,18 @@ namespace SFML_Game_Engine.GUI
 
         bool setupevent = false;
 
+        public override void Start()
+        {
+            if (labelText.Font == null)
+            {
+                labelText.Font = context.project.GetResource<FontResource>(defaultFontName);
+            }
+        }
+
         public override void Update()
         {
+            if (!started) { return; }
+
             if (!setupevent)
             {
                 context.project.App.MouseWheelScrolled += (obj, args) =>

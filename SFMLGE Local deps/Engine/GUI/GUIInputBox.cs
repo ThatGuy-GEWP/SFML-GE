@@ -129,7 +129,7 @@ namespace SFML_Game_Engine.GUI
         {
             panel = new GUIPanel(context);
             panel.autoQueue = false;
-            text = new GUIText(context, "Roboto-Regular");
+            text = new GUIText(context, defaultFontName);
             text.transform.parent = transform;
 
             transform.size = new Vector2(150, characterSize*1.5f);

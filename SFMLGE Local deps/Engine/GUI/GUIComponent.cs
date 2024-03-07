@@ -14,6 +14,8 @@ namespace SFML_Game_Engine.GUI
         public static readonly Color defaultPrimary = new Color(0x767997FF);
 
         public static readonly Color defaultPressed = new Color(0x2C2D36FF);
+
+        public static readonly string defaultFontName = "Roboto-Regular";
         
 
         public GUIContext context;
