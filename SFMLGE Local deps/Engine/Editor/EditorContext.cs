@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML_Game_Engine.GUI;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace SFML_Game_Engine.Editor
@@ -23,9 +24,14 @@ namespace SFML_Game_Engine.Editor
         public static float ExplorerSpacing = 17;
         public static uint ExplorerCharSize = 15;
 
+        public float valueRefreshFPS = 30f;
+
+        Stopwatch refreshTimer;
         public EditorContext(Project project)
         {
             this.project = project;
+
+            refreshTimer = Stopwatch.StartNew();
 
             context = new GUIContext((Vector2)project.App.Size);
 
@@ -36,7 +42,6 @@ namespace SFML_Game_Engine.Editor
             extraInfo = new GUIScroller(context, new Vector2(250, 400));
             extraInfo.transform.WorldPosition = new Vector2(5, 310);
             extraInfo.panel.outlineThickness = 1f;
-
 
             explorer.charSize = ExplorerCharSize;
             extraInfo.charSize = ExplorerCharSize;
@@ -165,9 +170,13 @@ namespace SFML_Game_Engine.Editor
                 }
             }
 
-            explorer.ClearContent();
-            AddGameObjectsToScroller(project.ActiveScene.GetGameObjects(0), ExplorerSpacing, "", 0);
-            if(selectedObj.obj != null) { AddInfoToExtraInfo((selectedObj.obj as GameObject)!); }
+            if(refreshTimer.ElapsedMilliseconds * 0.001f > 1f / valueRefreshFPS)
+            {
+                explorer.ClearContent();
+                AddGameObjectsToScroller(project.ActiveScene.GetGameObjects(0), ExplorerSpacing, "", 0);
+                if (selectedObj.obj != null) { AddInfoToExtraInfo((selectedObj.obj as GameObject)!); }
+                refreshTimer.Restart();
+            }
         }
     }
 }

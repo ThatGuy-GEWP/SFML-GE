@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
+	<ItemGroup>
     <Reference Include="sfml-audio">
       <HintPath>..\..\..\..\..\..\SFML-SHARP\SFML.Net-2.4 (64bit)\lib\sfml-audio.dll</HintPath>
     </Reference>
@@ -33,6 +33,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="csfml-window-2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Engine\Font\monogram-extended.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Engine\Font\monogram.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Engine\Font\Roboto-Black.ttf">
@@ -71,10 +77,10 @@
     <None Update="Engine\Font\Roboto-ThinItalic.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="openal32.dll">
+    <None Update="Engine\Font\unifont.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OpenTK.dll">
+    <None Update="openal32.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Res\funny.png">
@@ -91,7 +97,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NCalcSync" Version="3.11.0" />
+    <PackageReference Include="Jace" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

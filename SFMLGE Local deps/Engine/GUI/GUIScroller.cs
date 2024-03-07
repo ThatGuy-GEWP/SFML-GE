@@ -171,7 +171,7 @@ namespace SFML_Game_Engine.GUI
 
         public void ResetScrollPosition()
         {
-            scrollPos = 0;
+            scrollPos = maxScrollPos;
         }
 
         public void ClearContent(bool resetSelection = false)

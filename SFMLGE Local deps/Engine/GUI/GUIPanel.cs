@@ -16,7 +16,7 @@ namespace SFML_Game_Engine.GUI
         public Color backgroundColor = GUIComponent.defaultBackground;
         public Color outlineColor = GUIComponent.defaultSecondary;
 
-        public float outlineThickness = 2.0f;
+        public float outlineThickness = 1.0f;
 
         public bool indentedCorners = false;
 

@@ -19,6 +19,7 @@ namespace SFML_Game_Engine.GUI
         public GUIContext context;
         public GUITransform transform = new GUITransform();
 
+        public bool started = false;
         public bool visible = true;
         public bool autoQueue = true;
 
@@ -33,6 +34,11 @@ namespace SFML_Game_Engine.GUI
             to.LocalPosition = from.LocalPosition;
             to.origin = from.origin;
             to.size = from.size;
+        }
+
+        public virtual void Start()
+        {
+            return;
         }
 
         public virtual void Update()

@@ -26,7 +26,7 @@ namespace SFML_Game_Engine.GUI
             this.displayedString = displayedString;
 
             panel = new GUIPanel(context);
-            text = new GUIText(context);
+            text = new GUIText(context, "Roboto-Regular");
 
             panel.transform.parent = transform;
             text.transform.parent = transform;
@@ -37,7 +37,7 @@ namespace SFML_Game_Engine.GUI
             this.displayedString = displayedString;
 
             panel = new GUIPanel(context);
-            text = new GUIText(context);
+            text = new GUIText(context, "Roboto-Regular");
 
             panel.transform.parent = transform;
             text.transform.parent = transform;

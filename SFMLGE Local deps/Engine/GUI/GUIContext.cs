@@ -37,7 +37,7 @@ namespace SFML_Game_Engine.GUI
             guiTexture = new RenderTexture(sizeX, sizeY);
         }
 
-        /// <summary> Should NOT be used, passing a context into a GUIComponent adds it automatically and manually adding it might break things</summary>
+        /// <summary> Should NOT be used manually, passing a context into a GUIComponent adds it automatically and manually adding it might break things</summary>
         public T AddComponent<T>(T comp) where T : GUIComponent
         {
             components.Add(comp);
@@ -46,12 +46,12 @@ namespace SFML_Game_Engine.GUI
             return comp;
         }
 
-
         public override void Update()
         {
             if (!AutoQueue) { return; }
             for (int i = 0; i < components.Count; i++)
             {
+                if (!components[i].started) { components[i].Start(); components[i].started = true; continue; }
                 components[i].Update();
             }
         }
@@ -83,6 +83,7 @@ namespace SFML_Game_Engine.GUI
 
         public void OnRender(RenderTarget rt)
         {
+            if (!Started) { return; }
             if (components.Count > 0)
             {
                 for (int i = 0; i < components.Count; i++)

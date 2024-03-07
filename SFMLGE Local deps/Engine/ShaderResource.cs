@@ -19,7 +19,6 @@ namespace SFML_Game_Engine
         public bool containsGeometry;
         public bool containsFragment;
 
-
         /// <summary>
         /// Creates a shader resource from file paths, pass null to any string to opt out of using it
         /// (i.e null for everything but fragment if your only using a fragment shader)
