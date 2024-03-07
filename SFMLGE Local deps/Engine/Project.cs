@@ -54,7 +54,10 @@ namespace SFML_Game_Engine
             App = app;
             resourceDir = ResourceDir;
             Resources = new ResourceCollection(resourceDir, this);
-            Resources.CollectDir("Engine/Font");
+            if (Directory.Exists("Engine/Font"))
+            {
+                Resources.CollectDir("Engine/Font");
+            }
         }
 
         public T GetResource<T>(string name) where T : Resource

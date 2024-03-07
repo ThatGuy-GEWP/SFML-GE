@@ -39,8 +39,15 @@ namespace SFML_Game_Engine.Editor
             explorer.transform.WorldPosition = new Vector2(5, 5);
             explorer.panel.outlineThickness = 1f;
 
-            extraInfo = new GUIScroller(context, new Vector2(250, 400));
-            extraInfo.transform.WorldPosition = new Vector2(5, 310);
+            GUITextLabel propertiesTabName = new GUITextLabel(context, "GameObject Variables");
+            propertiesTabName.transform.WorldPosition = new Vector2(5, 310);
+            propertiesTabName.transform.size = new Vector2(250, 15);
+            propertiesTabName.charSize = 10;
+
+            propertiesTabName.panel.backgroundColor -= new Color(0, 0, 0, 90);
+
+            extraInfo = new GUIScroller(context, new Vector2(250, 350));
+            extraInfo.transform.WorldPosition = new Vector2(5, 330);
             extraInfo.panel.outlineThickness = 1f;
 
             explorer.charSize = ExplorerCharSize;
@@ -81,7 +88,7 @@ namespace SFML_Game_Engine.Editor
             {
                 (string, int) compInfo = ComponentInfoDump(comp);
 
-                extraInfo.AddContent(compInfo.Item1, ExplorerSpacing * compInfo.Item2);
+                extraInfo.AddContent(compInfo.Item1, 5 + (extraInfo.font.GetLineSpacing(extraInfo.charSize) * compInfo.Item2));
             }
         }
 
@@ -123,7 +130,7 @@ namespace SFML_Game_Engine.Editor
                     property.CanRead
                 ).ToList().ForEach(prop => {
                     
-                    info += $"\n     {prop.Name}:{printValue(prop.GetValue(comp))}";
+                    info += "\n     " + prop.Name+":"+printValue(prop.GetValue(comp));
                     lines += 1;
                 });
             comp.GetType().GetRuntimeFields().Where(
@@ -134,11 +141,11 @@ namespace SFML_Game_Engine.Editor
 
                 ).ToList().ForEach(prop => {
 
-                    info += $"\n     {prop.Name}: {printValue(prop.GetValue(comp))}";
+                    info += "\n     "+prop.Name+":"+printValue(prop.GetValue(comp));
                     lines += 1;
                 });
 
-            lines += 2;
+            lines += 1;
 
             return (info, lines);
         }

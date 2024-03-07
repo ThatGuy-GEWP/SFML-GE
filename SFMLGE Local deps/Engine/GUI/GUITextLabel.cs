@@ -13,10 +13,10 @@ namespace SFML_Game_Engine.GUI
     /// </summary>
     public class GUITextLabel : GUIComponent
     {
-        GUIPanel panel;
-        GUIText text;
+        public GUIPanel panel;
+        public GUIText text;
 
-        public float outlineThickness = 2.0f;
+        public float outlineThickness = 1.0f;
         public float padding = 15;
         public uint charSize = 18;
         public string displayedString = string.Empty;
@@ -28,46 +28,24 @@ namespace SFML_Game_Engine.GUI
             panel = new GUIPanel(context);
             text = new GUIText(context, defaultFontName);
 
-            panel.transform.parent = transform;
+            transform.size = panel.transform.size;
+            panel.transform = transform;
+            panel.transform.origin = new Vector2(0, 0);
+
             text.transform.parent = transform;
-        }
-
-        public GUITextLabel(GUIContext context, string displayedString, Vector2 position) : base(context)
-        {
-            this.displayedString = displayedString;
-
-            panel = new GUIPanel(context);
-            text = new GUIText(context, defaultFontName);
-
-            panel.transform.parent = transform;
-            text.transform.parent = transform;
-
-            transform.WorldPosition = position;
         }
 
         public override void Update()
         {
             if (!visible) { return; }
 
-            transform.size = panel.transform.size;
-
             text.CharSize = charSize;
             text.displayedString = displayedString;
 
-            text.transform.origin = new Vector2(0.5f, 0.5f);
-            text.transform.LocalPosition = panel.transform.size / 2f + new Vector2(0, -2);
+            text.transform.origin = new Vector2(0.5f, 0.35f);
+            text.transform.LocalPosition = panel.transform.size / 2f;
 
             text.Update();
-
-            panel.transform.LocalPosition = new Vector2(0, 0);
-
-            panel.outlineThickness = outlineThickness;
-
-            panel.transform.size = text.transform.size + new Vector2(padding + 1, 0 + padding);
-
-            panel.Update();
-
-            transform.size = panel.transform.size;
         }
 
 

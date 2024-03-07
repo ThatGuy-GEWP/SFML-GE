@@ -50,6 +50,8 @@ namespace SFML_Game_Engine.GUI
 
         public uint charSize = 21;
 
+        public Font font { get; private set; }
+
         List<ScrollerContent> content = new List<ScrollerContent>();
 
         Text labelText;
@@ -82,6 +84,7 @@ namespace SFML_Game_Engine.GUI
             {
                 labelText.Font = context.project.GetResource<FontResource>(defaultFontName);
             }
+            font = labelText.Font;
         }
 
         public override void Update()
