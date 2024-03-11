@@ -7,7 +7,7 @@ namespace SFML_Game_Engine
     /// </summary>
     public class RenderText : Component, IRenderable
     {
-        public static readonly Font defaultFont = new Font("Engine\\Font\\Roboto-Light.ttf");
+        public static readonly Font defaultFont = new Font("Engine\\Font\\Roboto-Regular.ttf");
         public Font font = defaultFont;
 
         public Color color = Color.White;

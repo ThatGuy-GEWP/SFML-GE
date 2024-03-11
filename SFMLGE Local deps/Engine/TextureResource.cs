@@ -22,6 +22,11 @@ namespace SFML_Game_Engine
             Resource = new Texture(path);
         }
 
+        public override string ToString()
+        {
+            return name;
+        }
+
         public override void Dispose()
         {
             Resource.Dispose();

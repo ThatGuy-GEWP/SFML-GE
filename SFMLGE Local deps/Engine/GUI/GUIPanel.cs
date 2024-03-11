@@ -16,9 +16,9 @@ namespace SFML_Game_Engine.GUI
         public Color backgroundColor = GUIComponent.defaultBackground;
         public Color outlineColor = GUIComponent.defaultSecondary;
 
-        public float outlineThickness = 2.0f;
+        public float outlineThickness = 1.0f;
 
-        public bool indentedCorners = false;
+        public bool roundedCorners = false;
 
         public TextureResource panelContent = null!;
 
@@ -28,21 +28,23 @@ namespace SFML_Game_Engine.GUI
 
         static Texture cornerText = null!;
 
-        public GUIPanel(GUIContext context) : base(context)
+        public GUIPanel(GUIContext context, bool roundedCorners = false) : base(context)
         {
             transform.size = new Vector2(150, 50);
-            transform.origin = new Vector2(0.5f, 0.5f);
+            this.roundedCorners = roundedCorners;
         }
 
-        public GUIPanel(GUIContext context, Vector2 size) : base(context)
+        public GUIPanel(GUIContext context, Vector2 size, bool roundedCorners = false) : base(context)
         {
             transform.size = size;
+            this.roundedCorners = roundedCorners;
         }
 
-        public GUIPanel(GUIContext context, Vector2 size, Vector2 position) : base(context)
+        public GUIPanel(GUIContext context, Vector2 size, Vector2 position, bool roundedCorners = false) : base(context)
         {
             transform.size = size;
             transform.WorldPosition = position;
+            this.roundedCorners = roundedCorners;
         }
 
         void generateCornerTexture()
@@ -55,7 +57,7 @@ namespace SFML_Game_Engine.GUI
 
             rt.Draw(tempCircle);
             rt.Display();
-            cornerText = new Texture(rt.Texture); // otherwise rt.dispose would also take away the texture
+            cornerText = new Texture(rt.Texture); // without this, rt.dispose would also take away the texture
             cornerText.Repeated = false;
 
             rt.Dispose();
@@ -74,7 +76,7 @@ namespace SFML_Game_Engine.GUI
         }
 
         RectangleShape recShape = new RectangleShape();
-        void DrawCorners(RenderTarget rt)
+        void DrawCorners(RenderTarget rt, float outlineThickness)
         {
             recShape.FillColor = outlineColor;
             recShape.Texture = cornerText;
@@ -100,19 +102,12 @@ namespace SFML_Game_Engine.GUI
             recShape.Rotation = 180f;
             rt.Draw(recShape);
         }
-        public override void OnRender(RenderTarget rt)
+
+        /// <summary> Draws the lines actually connecting the rounded corners </summary>
+        void DrawCornerConnectors(RenderTarget rt, float outlineThickness)
         {
-            if (cornerText == null)
-            {
-                generateCornerTexture();
-            }
+            outlineRect.FillColor = outlineColor;
 
-            DrawCorners(rt);
-
-            if (panelContent == null)
-            {
-                panelContent = context.project.GetResource<TextureResource>("DefaultSprite");
-            }
 
             outlineRect.Size = new Vector2(panelRect.Size.X, outlineThickness * 2f);
             outlineRect.Position = transform.WorldPosition - new Vector2(0, outlineThickness * 2f);
@@ -129,6 +124,33 @@ namespace SFML_Game_Engine.GUI
             outlineRect.Size = new Vector2(outlineThickness * 2f, panelRect.Size.Y);
             outlineRect.Position = transform.WorldPosition + new Vector2(transform.size.x - 0, 0);
             rt.Draw(outlineRect);
+        }
+
+        public override void OnRender(RenderTarget rt)
+        {
+            if (!context.Started) { return; }
+
+            if (cornerText == null)
+            {
+                generateCornerTexture();
+            }
+
+            if (panelContent == null)
+            {
+                panelContent = context.project.GetResource<TextureResource>("DefaultSprite");
+            }
+
+            if (roundedCorners)
+            {
+                panelRect.OutlineThickness = 0;
+                DrawCorners(rt, outlineThickness / 2f);
+                DrawCornerConnectors(rt, outlineThickness / 2f);
+            }
+            else
+            {
+                panelRect.OutlineThickness = outlineThickness;
+                panelRect.OutlineColor = outlineColor;
+            }
 
             panelRect.Texture = panelContent.Resource;
             //panelRect.TextureRect = new IntRect(0, (int)(transform.size.y / 2f), (int)panelContent.Resource.Size.X, (int)((int)panelContent.Resource.Size.Y - transform.size.y));

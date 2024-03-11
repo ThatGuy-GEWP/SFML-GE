@@ -20,7 +20,7 @@ namespace SFML_Game_Engine.GUI
         {
             panel = new GUIPanel(context);
             button = new GUIButton(context);
-            text = new GUIText(context);
+            text = new GUIText(context, defaultFontName);
 
             text.displayedString = displayedString;
             panel.transform.parent = this.transform;

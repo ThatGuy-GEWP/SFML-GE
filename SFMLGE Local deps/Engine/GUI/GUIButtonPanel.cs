@@ -16,23 +16,10 @@ namespace SFML_Game_Engine.GUI
         public GUIButton button;
         public GUIPanel panel;
 
-        public GUIButtonPanel(GUIContext context) : base(context)
-        {
-            panel = new GUIPanel(context);
-            button = new GUIButton(context);
+        public Color hoverColor = defaultPressed;
+        public Color backgroundColor = defaultBackground;
 
-            transform.size = new Vector2(150, 50);
-
-
-            // shared transforms work here, maybe dont use them anywhere else though
-            panel.transform = transform;
-            button.transform = transform;
-
-            panel.autoQueue = false;
-            EnableHoverEffects();
-        }
-
-        public GUIButtonPanel(GUIContext context, bool useHoverEffects) : base(context)
+        public GUIButtonPanel(GUIContext context, bool useHoverEffects = true) : base(context)
         {
             panel = new GUIPanel(context);
             button = new GUIButton(context);
@@ -56,12 +43,12 @@ namespace SFML_Game_Engine.GUI
         {
             button.OnHoveringStart += (button) =>
             {
-                panel.backgroundColor = defaultPressed;
+                panel.backgroundColor = this.hoverColor;
             };
 
             button.OnHoveringEnd += (button) =>
             {
-                panel.backgroundColor = defaultBackground;
+                panel.backgroundColor = this.backgroundColor;
             };
         }
 

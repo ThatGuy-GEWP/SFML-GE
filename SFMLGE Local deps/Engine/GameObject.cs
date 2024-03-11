@@ -77,6 +77,7 @@
             for (int i = 0; i < Components.Count; i++)
             {
                 Component comp = Components[i];
+                if (!comp.Started) { continue; }
 
                 if (comp as IRenderable != null)
                 {

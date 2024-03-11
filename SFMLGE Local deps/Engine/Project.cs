@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
+using SFML_Game_Engine.Editor;
 using System.Diagnostics;
 
 namespace SFML_Game_Engine
@@ -15,6 +16,8 @@ namespace SFML_Game_Engine
 
         public Scene? ActiveScene;
 
+        public EditorContext? editorContext;
+
         List<Scene> scenes = new List<Scene>();
 
         public RenderWindow App;
@@ -25,8 +28,7 @@ namespace SFML_Game_Engine
             {"move_up" ,   Keyboard.Key.W},
             {"move_down",  Keyboard.Key.S},
             {"move_left",  Keyboard.Key.A},
-            {"move_right", Keyboard.Key.D},
-            {"toggle_camera", Keyboard.Key.Space }
+            {"move_right", Keyboard.Key.D}
         };
 
         Dictionary<string, bool> inputPressed = new Dictionary<string, bool>();
@@ -34,6 +36,11 @@ namespace SFML_Game_Engine
         Dictionary<string, bool> inputJustReleased = new Dictionary<string, bool>();
 
         public bool started { get; private set; } = false;
+
+        /// <summary>
+        /// if false, input querys will always return false.
+        /// </summary>
+        public bool allowInputs = true;
 
         string? resourceDir = null;
 
@@ -46,7 +53,11 @@ namespace SFML_Game_Engine
         {
             App = app;
             resourceDir = ResourceDir;
-            Resources = new ResourceCollection(ResourceDir, this);
+            Resources = new ResourceCollection(resourceDir, this);
+            if (Directory.Exists("Engine/Font"))
+            {
+                Resources.CollectDir("Engine/Font");
+            }
         }
 
         public T GetResource<T>(string name) where T : Resource
@@ -139,6 +150,7 @@ namespace SFML_Game_Engine
 
             InputUpdate();
             ActiveScene.Update();
+            if (editorContext != null) { editorContext.Update(); }
         }
 
         public void Render(RenderTarget rt)
@@ -149,6 +161,7 @@ namespace SFML_Game_Engine
 
         void InputUpdate()
         {
+            if (!allowInputs) { return; }
             foreach (string key in inputs.Keys)
             {
                 if (inputPressed.ContainsKey(key) == false) { inputPressed.Add(key, false); }
@@ -166,19 +179,19 @@ namespace SFML_Game_Engine
 
         public bool IsInputPressed(string inputName)
         {
-            if (!App.HasFocus()) { return false; }
+            if (!App.HasFocus() || !allowInputs) { return false; }
             return inputPressed[inputName];
         }
 
         public bool IsInputJustPressed(string inputName)
         {
-            if (!App.HasFocus()) { return false; }
+            if (!App.HasFocus() || !allowInputs) { return false; }
             return inputJustPressed[inputName];
         }
 
         public bool IsInputJustReleased(string inputName)
         {
-            if (!App.HasFocus()) { return false; }
+            if (!App.HasFocus() || !allowInputs) { return false; }
             return inputJustReleased[inputName];
         }
 

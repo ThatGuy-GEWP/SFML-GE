@@ -14,11 +14,14 @@ namespace SFML_Game_Engine.GUI
         public static readonly Color defaultPrimary = new Color(0x767997FF);
 
         public static readonly Color defaultPressed = new Color(0x2C2D36FF);
+
+        public static readonly string defaultFontName = "Roboto-Regular";
         
 
         public GUIContext context;
         public GUITransform transform = new GUITransform();
 
+        public bool started = false;
         public bool visible = true;
         public bool autoQueue = true;
 
@@ -33,6 +36,11 @@ namespace SFML_Game_Engine.GUI
             to.LocalPosition = from.LocalPosition;
             to.origin = from.origin;
             to.size = from.size;
+        }
+
+        public virtual void Start()
+        {
+            return;
         }
 
         public virtual void Update()
