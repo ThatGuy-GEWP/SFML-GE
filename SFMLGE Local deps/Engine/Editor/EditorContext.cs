@@ -30,6 +30,7 @@ namespace SFML_Game_Engine.Editor
         public EditorContext(Project project)
         {
             this.project = project;
+            project.editorContext = this;
 
             refreshTimer = Stopwatch.StartNew();
 
