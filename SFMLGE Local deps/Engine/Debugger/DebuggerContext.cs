@@ -3,12 +3,12 @@ using SFML_Game_Engine.GUI;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace SFML_Game_Engine.Editor
+namespace SFML_Game_Engine.Debugger
 {
     /// <summary>
-    /// Controls the creation and managing of the Editor's GUI. To use simply add a new <see cref="EditorContext"/> to <see cref="Project.editorContext"/>
+    /// Controls the creation and managing of the Debuggers's GUI. To use simply add a new <see cref="DebuggerContext"/> to <see cref="Project.debuggerContext"/>
     /// </summary>
-    public class EditorContext
+    public class DebuggerContext
     {
         public Project project;
         public string name = "Unnamed Project."; 
@@ -27,10 +27,10 @@ namespace SFML_Game_Engine.Editor
         public float valueRefreshFPS = 30f;
 
         Stopwatch refreshTimer;
-        public EditorContext(Project project)
+        public DebuggerContext(Project project)
         {
             this.project = project;
-            project.editorContext = this;
+            project.debuggerContext = this;
 
             refreshTimer = Stopwatch.StartNew();
 

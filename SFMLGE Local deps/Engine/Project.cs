@@ -1,6 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
-using SFML_Game_Engine.Editor;
+using SFML_Game_Engine.Debugger;
 using System.Diagnostics;
 
 namespace SFML_Game_Engine
@@ -16,7 +16,7 @@ namespace SFML_Game_Engine
 
         public Scene? ActiveScene;
 
-        public EditorContext? editorContext;
+        public DebuggerContext? debuggerContext;
 
         List<Scene> scenes = new List<Scene>();
 
@@ -150,7 +150,7 @@ namespace SFML_Game_Engine
 
             InputUpdate();
             ActiveScene.Update();
-            if (editorContext != null) { editorContext.Update(); }
+            if (debuggerContext != null) { debuggerContext.Update(); }
         }
 
         public void Render(RenderTarget rt)
