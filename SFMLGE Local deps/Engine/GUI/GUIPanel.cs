@@ -22,9 +22,8 @@ namespace SFML_Game_Engine.GUI
 
         public TextureResource panelContent = null!;
 
-        RectangleShape panelRect = new RectangleShape();
-
-        RectangleShape outlineRect = new RectangleShape();
+        static RectangleShape panelRect = new RectangleShape();
+        static RectangleShape outlineRect = new RectangleShape();
 
         static Texture cornerText = null!;
 
@@ -67,12 +66,6 @@ namespace SFML_Game_Engine.GUI
         public override void Update()
         {
             if (!visible) return;
-
-            panelRect.Position = transform.WorldPosition;
-            panelRect.Size = transform.size;
-
-            panelRect.FillColor = backgroundColor;
-            outlineRect.FillColor = outlineColor;
         }
 
         RectangleShape recShape = new RectangleShape();
@@ -151,6 +144,12 @@ namespace SFML_Game_Engine.GUI
                 panelRect.OutlineThickness = outlineThickness;
                 panelRect.OutlineColor = outlineColor;
             }
+
+            panelRect.Position = transform.WorldPosition;
+            panelRect.Size = transform.size;
+
+            panelRect.FillColor = backgroundColor;
+            outlineRect.FillColor = outlineColor;
 
             panelRect.Texture = panelContent.Resource;
             //panelRect.TextureRect = new IntRect(0, (int)(transform.size.y / 2f), (int)panelContent.Resource.Size.X, (int)((int)panelContent.Resource.Size.Y - transform.size.y));
