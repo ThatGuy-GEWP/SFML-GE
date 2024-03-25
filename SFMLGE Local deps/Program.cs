@@ -1,7 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
 using SFML_Game_Engine;
-using System.Text.RegularExpressions;
 
 namespace SFML_Game_Engine
 {
