@@ -26,17 +26,23 @@ namespace SFML_Game_Engine
         /// <param name="VertexShaderPath"></param>
         /// <param name="GeometryShaderPath"></param>
         /// <param name="FragmentShaderPath"></param>
-        public ShaderResource(string name, string VertexShaderPath, string GeometryShaderPath, string FragmentShaderPath)
+        public ShaderResource(string name, string? VertexShaderPath, string? GeometryShaderPath, string? FragmentShaderPath)
         {
             if (VertexShaderPath == null) { containsVertex = false; } else { containsVertex = true; }
             if (GeometryShaderPath == null) { containsGeometry = false; } else { containsGeometry = true; }
             if (FragmentShaderPath == null) { containsFragment = false; } else { containsFragment = true; }
+
+            if(!containsVertex && !containsGeometry && !containsFragment) 
+            {
+                throw new ArgumentException("A shader was created with no shader paths!");
+            }
 
             this.name = name;
 
             Resource = new Shader(VertexShaderPath, GeometryShaderPath, FragmentShaderPath);
         }
 
+        // because its alot nicer to just pass a ShaderResource into App.draw(thing, renderStates)
         public static implicit operator RenderStates(ShaderResource shad) => new RenderStates(shad.Resource);
 
         public override void Dispose()

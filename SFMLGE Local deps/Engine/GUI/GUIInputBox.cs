@@ -143,7 +143,7 @@ namespace SFML_Game_Engine.GUI
 
         public override void Start()
         {
-            context.project.App.KeyPressed += (obj, args) =>
+            context.Project.App.KeyPressed += (obj, args) =>
             {
                 if (!hasFocus) { return; }
                 if (args.Code == Keyboard.Key.BackSpace && ContainedString.Length > 0)
@@ -173,7 +173,7 @@ namespace SFML_Game_Engine.GUI
 
         public override void Update()
         {
-            Vector2 mousePos = context.scene.GetMouseScreenPosition();
+            Vector2 mousePos = context.Scene.GetMouseScreenPosition();
 
             CopyTransformBasic(transform, panel.transform);
 

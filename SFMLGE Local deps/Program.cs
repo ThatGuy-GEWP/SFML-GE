@@ -1,19 +1,20 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
 using SFML_Game_Engine;
+using System.Text.RegularExpressions;
 
 namespace SFML_Game_Engine
 {
     public class Program
     {
-        public static RenderWindow App { get; private set; } = new RenderWindow(new VideoMode(500, 500), "SFML Template", Styles.Close | Styles.Titlebar);
+        public static RenderWindow App { get; private set; } = new RenderWindow(new VideoMode(1280, 720), "SFML Template", Styles.Close | Styles.Titlebar);
 
         static void Main(string[] args)
         {
             bool appOpen = true;
 
             App.Closed += (a, args) => { App.Close(); appOpen = false; };
-            App.SetFramerateLimit(60);
+            App.SetFramerateLimit(144);
 
             Project mainProject = new Project("Res", App);
             Scene scene = mainProject.CreateSceneAndLoad("DefaultScene");

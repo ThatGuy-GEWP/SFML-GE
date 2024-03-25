@@ -82,7 +82,7 @@ namespace SFML_Game_Engine.GUI
         {
             if (labelText.Font == null)
             {
-                labelText.Font = context.project.GetResource<FontResource>(defaultFontName);
+                labelText.Font = context.Project.GetResource<FontResource>(defaultFontName);
             }
             font = labelText.Font;
         }
@@ -93,15 +93,16 @@ namespace SFML_Game_Engine.GUI
 
             if (!setupevent)
             {
-                context.project.App.MouseWheelScrolled += (obj, args) =>
+                context.Project.App.MouseWheelScrolled += (obj, args) =>
                 {
                     scrollDelta = args.Delta;
                 };
                 setupevent = true;
             }
 
+            if (!context.Project.App.HasFocus()) { return; }
 
-            Vector2 mousePos = context.scene.GetMouseScreenPosition();
+            Vector2 mousePos = context.Scene.GetMouseScreenPosition();
 
             bool inXBounds =
                 mousePos.x >= transform.WorldPosition.x &&

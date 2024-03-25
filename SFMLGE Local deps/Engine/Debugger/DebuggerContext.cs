@@ -181,7 +181,7 @@ namespace SFML_Game_Engine.Debugger
             if(refreshTimer.ElapsedMilliseconds * 0.001f > 1f / valueRefreshFPS)
             {
                 explorer.ClearContent();
-                AddGameObjectsToScroller(project.ActiveScene.GetGameObjects(0), ExplorerSpacing, "", 0);
+                AddGameObjectsToScroller(project.ActiveScene!.GetGameObjects(0), ExplorerSpacing, "", 0);
                 if (selectedObj.obj != null) { AddInfoToExtraInfo((selectedObj.obj as GameObject)!); }
                 refreshTimer.Restart();
             }

@@ -130,7 +130,7 @@ namespace SFML_Game_Engine.GUI
 
             if (panelContent == null)
             {
-                panelContent = context.project.GetResource<TextureResource>("DefaultSprite");
+                panelContent = context.Project.GetResource<TextureResource>("DefaultSprite");
             }
 
             if (roundedCorners)

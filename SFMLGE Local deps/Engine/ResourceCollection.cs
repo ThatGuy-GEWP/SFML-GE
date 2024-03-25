@@ -22,7 +22,7 @@ namespace SFML_Game_Engine
         public ResourceCollection(string? dirToCollect, Project project)
         {
             linkedProject = project;
-            CollectDir(dirToCollect);
+            LoadDir(dirToCollect);
 
             Image defaultSpriteImg = new Image(25, 25);
             for (uint x = 0; x < 25; x++)
@@ -37,7 +37,7 @@ namespace SFML_Game_Engine
             defaultSpriteImg.Dispose();
         }
 
-        void searchFolder(string path, bool isRoot)
+        void CollectFolder(string path, bool isRoot)
         {
             if (!Directory.Exists(path)) { return; }
 
@@ -115,13 +115,14 @@ namespace SFML_Game_Engine
             }
         }
 
-        public void CollectDir(string? dirToCollect)
+        public void LoadDir(string? dirToCollect)
         {
             if (dirToCollect == null) { Console.Write("Loading no resources."); return; }
+            int countAtStart = resources.Count;
             rootName = dirToCollect;
 
             Console.WriteLine($"Loading folder {dirToCollect}...");
-            searchFolder(dirToCollect, true);
+            CollectFolder(dirToCollect, true);
             for (int i = 0; i < resources.Count; i++) // duplicates check
             {
                 Resource curRes = resources[i];
@@ -135,7 +136,7 @@ namespace SFML_Game_Engine
                     }
                 }
             }
-            Console.WriteLine($"\rFinished loading " + (resources.Count) + " resources in " + dirToCollect + "!");
+            Console.WriteLine($"\rFinished loading " + (resources.Count - countAtStart) + " resources in " + dirToCollect + "!");
         }
 
         /// <summary>

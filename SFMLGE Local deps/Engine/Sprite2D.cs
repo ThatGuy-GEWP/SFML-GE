@@ -100,7 +100,7 @@ namespace SFML_Game_Engine
         {
             if (Texture is null)
             {
-                Texture = project.GetResource<TextureResource>("DefaultSprite");
+                Texture = Project.GetResource<TextureResource>("DefaultSprite");
             }
             if (fitTexture) { size = new Vector2(Texture.Resource.Size.X, Texture.Resource.Size.Y); }
             shape.Texture = Texture.Resource;

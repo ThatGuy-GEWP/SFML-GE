@@ -39,7 +39,7 @@ namespace SFML_Game_Engine.GUI
         {
             if(font == null && targFont != string.Empty)
             {
-                font = context.project.GetResource<FontResource>(targFont);
+                font = context.Project.GetResource<FontResource>(targFont);
             }
         }
 

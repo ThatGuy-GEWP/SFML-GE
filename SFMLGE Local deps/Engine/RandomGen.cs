@@ -15,7 +15,7 @@ namespace SFML_Game_Engine
             DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + DateTime.Now.Millisecond);
 
         [ThreadStatic]
-        private static Random _local;
+        private static Random _local = null!;
 
         static float Map(float value, float fromSource, float toSource, float fromTarget, float toTarget)
         {

@@ -12,8 +12,8 @@ namespace SFML_Game_Engine.GUI
     /// </summary>
     public class GUISlider : GUIComponent
     {
-        public GUIPanel backgroundPanel;
-        public GUIButtonPanel sliderButton;
+        public GUIPanel backgroundPanel = null!;
+        public GUIButtonPanel sliderButton = null!;
 
         float buttonPadding = 2;
 
@@ -49,7 +49,7 @@ namespace SFML_Game_Engine.GUI
 
             sliderButton.button.OnHold += (but) =>
             {
-                Vector2 mousePos = context.scene.GetMouseWorldPosition();
+                Vector2 mousePos = context.Scene.GetMouseWorldPosition();
 
                 sliderButton.transform.LocalPosition = new Vector2(mousePos.x - transform.WorldPosition.x - (transform.size.y / 2), sliderButton.transform.LocalPosition.y);
                 sliderButton.transform.LocalPosition = sliderButton.transform.LocalPosition.Clamp(0, transform.size.x - transform.size.y);

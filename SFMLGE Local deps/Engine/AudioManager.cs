@@ -121,7 +121,7 @@ namespace SFML_Game_Engine
         /// </summary>
         /// <param name="sound"></param>
         /// <returns><see cref="SoundInstance"/>, or null if active sounds is greater then 200</returns>
-        public SoundInstance CreateSound(SoundResource sound)
+        public SoundInstance? CreateSound(SoundResource sound)
         {
             if (activeSounds.Count > 200) { return null; }
             SoundInstance inst = new SoundInstance(sound.name, sound);
@@ -135,7 +135,7 @@ namespace SFML_Game_Engine
         /// </summary>
         /// <param name="sound"></param>
         /// <returns><see cref="SoundInstance"/>, or null if active sounds is greater then 200</returns>
-        public SoundInstance CreateSound(SoundResource sound, float volume)
+        public SoundInstance? CreateSound(SoundResource sound, float volume)
         {
             if (activeSounds.Count > 200) { return null; }
             SoundInstance inst = new SoundInstance(sound.name, sound);

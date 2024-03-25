@@ -35,7 +35,9 @@ namespace SFML_Game_Engine.GUI
 
         public override void Update()
         {
-            Vector2 mousePos = context.scene.GetMouseScreenPosition();
+            if (!context.Project.App.HasFocus()) { return; }
+
+            Vector2 mousePos = context.Scene.GetMouseScreenPosition();
 
             bool isMousePressed = Mouse.IsButtonPressed(Mouse.Button.Left);
 

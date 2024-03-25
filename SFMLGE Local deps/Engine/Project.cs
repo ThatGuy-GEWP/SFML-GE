@@ -56,7 +56,7 @@ namespace SFML_Game_Engine
             Resources = new ResourceCollection(resourceDir, this);
             if (Directory.Exists("Engine/Font"))
             {
-                Resources.CollectDir("Engine/Font");
+                Resources.LoadDir("Engine/Font");
             }
         }
 

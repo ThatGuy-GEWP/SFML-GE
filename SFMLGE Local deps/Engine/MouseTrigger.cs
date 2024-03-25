@@ -41,19 +41,19 @@ namespace SFML_Game_Engine
         public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;
 
         /// <summary> Called once every time the trigger is clicked. Passes the current <see cref="MouseTrigger"/> </summary>
-        public event Action<MouseTrigger> OnClick;
+        public event Action<MouseTrigger> OnClick = null!;
 
         /// <summary> Called every frame the trigger is held down. Passes the current <see cref="MouseTrigger"/> </summary>
-        public event Action<MouseTrigger> OnHeld;
+        public event Action<MouseTrigger> OnHeld = null!;
 
         /// <summary> Called once every time the trigger is unclicked. Passes the current <see cref="MouseTrigger"/> </summary>
-        public event Action<MouseTrigger> OnRelease;
+        public event Action<MouseTrigger> OnRelease = null!;
 
         /// <summary> Called once the mouse enters the trigger. Passes the current <see cref="MouseTrigger"/> </summary>
-        public event Action<MouseTrigger> OnMouseEnter;
+        public event Action<MouseTrigger> OnMouseEnter = null!;
 
         /// <summary> Called once the mouse leaves the trigger. Passes the current <see cref="MouseTrigger"/> </summary>
-        public event Action<MouseTrigger> OnMouseExit;
+        public event Action<MouseTrigger> OnMouseExit = null!;
 
         public MouseTrigger(Vector2 size, Vector2 origin, Vector2 offset, Mouse.Button button)
         {
@@ -88,7 +88,7 @@ namespace SFML_Game_Engine
 
         public override void Update()
         {
-            if (requireFocus && !project.App.HasFocus()) { return; }
+            if (requireFocus && !Project.App.HasFocus()) { return; }
 
             Vector2 realPosition = gameObject.transform.WorldPosition + Offset;
 
@@ -98,7 +98,7 @@ namespace SFML_Game_Engine
             upperBound -= Size * Origin;
             lowerBound -= Size * Origin;
 
-            Vector2 mousePos = relativeToScreen ? scene.GetMouseScreenPosition() : scene.GetMouseWorldPosition();
+            Vector2 mousePos = relativeToScreen ? Scene.GetMouseScreenPosition() : Scene.GetMouseWorldPosition();
 
             bool withinXBounds = mousePos.x <= upperBound.x && mousePos.x >= lowerBound.x;
             bool withinYBounds = mousePos.y <= upperBound.y && mousePos.y >= lowerBound.y;

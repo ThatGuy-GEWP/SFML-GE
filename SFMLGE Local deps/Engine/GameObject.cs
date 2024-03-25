@@ -105,8 +105,8 @@
 
         void StartComponent(Component comp)
         {
-            comp.scene = Scene;
-            comp.project = Scene.Project;
+            comp.Scene = Scene;
+            comp.Project = Scene.Project;
             if (comp.Started) { return; }
 
             comp.Start();

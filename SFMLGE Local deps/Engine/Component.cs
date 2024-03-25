@@ -18,7 +18,7 @@ namespace SFML_Game_Engine
 
         public float deltaTime
         {
-            get { return scene.deltaTime; }
+            get { return Scene.deltaTime; }
         }
 
         public bool Started
@@ -42,12 +42,11 @@ namespace SFML_Game_Engine
         Scene _scene = null!;
 
         /// <summary>
-        /// The <see cref="Project"/> this component is within.
+        /// The <see cref="SFML_Game_Engine.Project"/> this component is within.
         /// Null on component creation.
         /// </summary>
 
-#pragma warning disable IDE1006 // Disables "waa this does not start with an uppercase letter!!1!1!" i know, i just dont care.
-        public Project project {
+        public Project Project {
             get { 
                 if (_project == null) 
                 {
@@ -62,14 +61,13 @@ namespace SFML_Game_Engine
         }
 
         /// <summary>
-        /// The <see cref="Scene"/> this component is within.
+        /// The <see cref="SFML_Game_Engine.Scene"/> this component is within.
         /// Null on component creation.
         /// </summary>
-        public Scene scene {
+        public Scene Scene {
             get { return _scene; }
             set { _scene = value; }
         }
-#pragma warning restore IDE1006 // Renables naming warnings.
 
         public virtual void Update() { return; }
 
