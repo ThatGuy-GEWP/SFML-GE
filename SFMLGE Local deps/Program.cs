@@ -6,7 +6,7 @@ namespace SFML_Game_Engine
 {
     public class Program
     {
-        public static RenderWindow App { get; private set; } = new RenderWindow(new VideoMode(1280, 720), "SFML Template", Styles.Close | Styles.Titlebar);
+        public static RenderWindow App { get; private set; } = new RenderWindow(new VideoMode(1280, 720), "SFML-GE Template", Styles.Close | Styles.Titlebar);
 
         static void Main(string[] args)
         {
