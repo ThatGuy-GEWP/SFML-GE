@@ -1,5 +1,5 @@
 # About the project
-SFML-GE is my handmade game engine, I use it for all my games written in C#, and for a lot of my projects as well  
+SFML-GE is my handmade game engine, I use it for all my games written in C#, and for a lot of my projects as well.  
 Over time what started as just a Scene with objects in it quickly turned into an engine.
 
 The layout of SFML-GE is that of an ECS (Entity Component System) with wording similar to unity  
