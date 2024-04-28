@@ -21,11 +21,10 @@ namespace SFML_Game_Engine
             mainProject.Start();
             while (appOpen)
             {
-                App.Clear();
-
                 mainProject.Update();
-                mainProject.Render(App);
 
+                App.Clear();
+                mainProject.Render(App);
                 App.Display();
             }
         }
