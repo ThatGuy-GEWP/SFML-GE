@@ -5,7 +5,7 @@ Over time what started as just a Scene with objects in it quickly turned into an
 The layout of SFML-GE is that of an ECS (Entity Component System) with wording similar to unity  
 Where a Project holds all resources and multiple scenes, and each scene has its own GameObjects.  
   
-![image](https://github.com/ThatGuy-GEWP/SFML-GE/assets/24467262/dadd881b-e26a-4bce-819b-3490d621952a)
+![graph1](https://github.com/ThatGuy-GEWP/SFML-GE/assets/24467262/49245733-0017-4859-837f-a696390d128d)
 
   
 Every component including the built-in ones derive from the same Abstract class [Component](SFMLGE%20Local%20deps/Engine/Component.cs), which includes many expected functions like
