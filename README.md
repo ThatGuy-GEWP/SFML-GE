@@ -22,7 +22,7 @@ Making components that can draw/render things is also easy, and just requires a 
 Opening with Visual Studio is recommended, as this is a Visual Studio 2022 Project.  
 ![image](https://github.com/ThatGuy-GEWP/SFML-GE/assets/24467262/68d8fee3-651e-4319-8e01-9cae8c7c4124)
 ### Manual
-Simply cloning the repo should work fine, as for dependencies this project is built on [SFML.Net](https://www.sfml-dev.org/download/sfml.net/) as the main dependency
+Simply cloning the repo should work fine, as for dependencies this project is built on [SFML.Net](https://www.sfml-dev.org/download/sfml.net/) [(NuGet package here)](https://www.nuget.org/packages/SFML.Net) as the main dependency
 
 ## Your First Project
 ```cs
@@ -94,6 +94,10 @@ sprite.Texture = mainProject.GetResource<TextureResource>("testimg");
 // Forces a sprites Size to the size of the texture.
 sprite.fitTexture = true;
 ```
+> [!CAUTION]
+> By default all image resources are loaded as a "Texture" class and may not load if the image is too large,
+> you can use Texture.MaximumSize to get the maximum size of any texture and this **WILL** vary from card to card.
+> on my RTX 3050 its 32768x32768, but you should expect 8192x8192 or lower for most cards.
 
 ## Your First Component
 For custom behaviour like a script, you should make a new class that inherits from [Component](SFMLGE%20Local%20deps/Engine/Component.cs),  
@@ -155,10 +159,5 @@ public class ExampleComponent : Component, IRenderable
 }
 ```
 Before being drawn to the screen all IRenderables are collected, sorted by ZOrder then drawn.  
-  
-Below is an example graph to show the rendering process. 
-  
-![graph](https://github.com/ThatGuy-GEWP/SFML-GE/assets/24467262/71b1901a-9be9-4569-9689-4800af22ef6c)
-
 > [!NOTE]
 > If ``AutoQueue`` is ``false`` then you will have to manually add the component to the RenderQueue.
