@@ -3,9 +3,12 @@ using SFML_Game_Engine;
 
 namespace SFML_Game_Engine
 {
-    // Should probably replace with a TextureResource variant that handles all this but oh well.
+    [Obsolete("AnimatedTexture is deprecated, please use AnimatedFrames instead.")]
+    // jokes on that old comment, i replaced it with a manager class instead, get bent nerd
     public class AnimatedTexture : Component, IRenderable
     {
+        // Should probably replace with a TextureResource variant that handles all this but oh well.
+
         public sbyte ZOrder { get; set; } = 0;
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = true;

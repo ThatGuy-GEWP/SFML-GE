@@ -217,11 +217,23 @@
             if (child == parent)
             {
                 throw new ArgumentException(
-                    $"Cannot add parent to self as a child! |!| {name} tried to add {child.name} as a child"
+                    $"Cannot add parent to self as a child! |!| \"{name}\" tried to add \"{child.name}\" as a child"
                     );
             }
 
             if (child.parent == this) { return child; }
+            
+            if(child.parent != null)
+            {
+                if (child.parent.HasChild(child))
+                {
+                    if(child.parent.RemoveChild(child) == null)
+                    {
+                        throw new Exception($"Could not remove child \"{child.name}\" from old parent \"{child.parent.name}\"!");
+                    }
+                }
+            }
+
             child.parent = this;
             Children.Add(child);
             return child;
@@ -232,6 +244,63 @@
             return Children.ToArray();
         }
 
+        public GameObject? GetChild(string name)
+        {
+            foreach (GameObject child in Children)
+            {
+                if(child.name == name) { return child; }
+            }
+            return null;
+        }
+        
+        public bool HasChild(string name)
+        {
+            foreach (GameObject child in Children)
+            {
+                if (child.name == name) { return true; }
+            }
+            return false;
+        }
+
+        public bool HasChild(GameObject child)
+        {
+            foreach (GameObject schild in Children)
+            {
+                if(schild == child) { return true; }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Removes then returns removed child, null if child was not removed
+        /// </summary>
+        /// <param name="name">name of the child</param>
+        public GameObject? RemoveChild(string name)
+        {
+            GameObject? child = GetChild(name);
+            if(child != null)
+            {
+                if (Children.Remove(child))
+                {
+                    return child;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Removes then returns removed child, null if child was not removed
+        /// </summary>
+        /// <param name="name">name of the child</param>
+        public GameObject? RemoveChild(GameObject child)
+        {
+            if (Children.Remove(child))
+            {
+                return child;
+            }
+            return null;
+        }
+
         public T AddComponent<T>(T comp) where T : Component
         {
             comp.gameObject = this;
@@ -239,11 +308,50 @@
             return comp;
         }
 
-        public T GetComponent<T>() where T : Component
+        /// <summary>
+        /// Returns the first component that is a <typeparamref name="T"/> type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T? GetComponent<T>() where T : Component
         {
             foreach (Component component in Components)
             {
                 if (component.GetType() == typeof(T))
+                {
+                    return (T)component;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the first component that is a subclass of the type <typeparamref name="T"/> or is a <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T? GetComponentOfSubclass<T>() where T : Component
+        {
+            foreach (Component component in Components)
+            {
+                if (component.GetType().IsSubclassOf(typeof(T)) || component.GetType() == typeof(T))
+                {
+                    return (T)component;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the first component that is a subclass only, will not return anything of the type <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T? GetComponentOfSubclassOnly<T>() where T : Component
+        {
+            foreach (Component component in Components)
+            {
+                if (component.GetType().IsSubclassOf(typeof(T)))
                 {
                     return (T)component;
                 }

@@ -86,6 +86,26 @@
         }
 
         /// <summary>
+        /// the sine of x from between 0.0 and 1.0, equal to MathF.Sin(x)*0.5 + 0.5
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static float ZeroSin(float x)
+        {
+            return (MathF.Sin(x)/2f) + 0.5f;
+        }
+
+        /// <summary>
+        /// the cosine of x from between 0.0 and 1.0, equal to MathF.Cos(x)*0.5 + 0.5
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static float ZeroCos(float x)
+        {
+            return (MathF.Cos(x) / 2f) + 0.5f;
+        }
+
+        /// <summary>
         /// Converts radians to degrees
         /// </summary>
         /// <param name="radians"></param>

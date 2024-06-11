@@ -1,6 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
-using SFML_Game_Engine.Debugger;
+using SFML_Game_Engine.GUI;
 using System.Diagnostics;
 
 namespace SFML_Game_Engine
@@ -15,8 +15,6 @@ namespace SFML_Game_Engine
         public ResourceCollection Resources;
 
         public Scene? ActiveScene;
-
-        public DebuggerContext? debuggerContext;
 
         List<Scene> scenes = new List<Scene>();
 
@@ -35,14 +33,27 @@ namespace SFML_Game_Engine
         Dictionary<string, bool> inputJustPressed = new Dictionary<string, bool>();
         Dictionary<string, bool> inputJustReleased = new Dictionary<string, bool>();
 
-        public bool started { get; private set; } = false;
+        public float ScrollDelta = 0.0f;
 
-        /// <summary>
-        /// if false, input querys will always return false.
-        /// </summary>
+        public bool Started { get; private set; } = false;
+
+        Dictionary<Mouse.Button, bool> pressedDict = new Dictionary<Mouse.Button, bool>();
+        Dictionary<Mouse.Button, bool> releasedDict = new Dictionary<Mouse.Button, bool>();
+        Dictionary<Mouse.Button, bool> heldDict = new Dictionary<Mouse.Button, bool>();
+
+        /// <summary>Called the first frame a mouse button is pressed.</summary>
+        public event Action<Mouse.Button>? OnMouseButtonPressed;
+
+        /// <summary>Called the first frame a mouse button is released.</summary>
+        public event Action<Mouse.Button>? OnMouseButtonReleased;
+
+        /// <summary>Called every frame a mouse button is held down.</summary>
+        public event Action<Mouse.Button>? OnMouseButtonHeld;
+
+        /// <summary> if false, input querys will always return false. </summary>
         public bool allowInputs = true;
 
-        string? resourceDir = null;
+        public string? ResourceDir { get; private set; } = null;
 
         /// <summary>
         /// Creates a new project and loads a directory of resources.
@@ -52,12 +63,29 @@ namespace SFML_Game_Engine
         public Project(string ResourceDir, RenderWindow app)
         {
             App = app;
-            resourceDir = ResourceDir;
-            Resources = new ResourceCollection(resourceDir, this);
+            this.ResourceDir = ResourceDir;
+            Resources = new ResourceCollection(this.ResourceDir, this);
             if (Directory.Exists("Engine/Font"))
             {
                 Resources.LoadDir("Engine/Font");
             }
+            
+            app.MouseWheelScrolled += (sender, args) =>
+            {
+                ScrollDelta = args.Delta;
+            };
+
+            pressedDict[Mouse.Button.Left] = false;
+            pressedDict[Mouse.Button.Right] = false;
+            pressedDict[Mouse.Button.Middle] = false;
+
+            releasedDict[Mouse.Button.Left] = false;
+            releasedDict[Mouse.Button.Right] = false;
+            releasedDict[Mouse.Button.Middle] = false;
+
+            heldDict[Mouse.Button.Left] = false;
+            heldDict[Mouse.Button.Right] = false;
+            heldDict[Mouse.Button.Middle] = false;
         }
 
         public T GetResource<T>(string name) where T : Resource
@@ -65,28 +93,14 @@ namespace SFML_Game_Engine
             return Resources.GetResource<T>(name);
         }
 
-        public Scene CreateScene()
-        {
-            Scene scn = new Scene("Untitled", this);
-            scenes.Add(scn);
-            return scn;
-        }
-
-        public Scene CreateScene(string sceneName)
+        public Scene CreateScene(string sceneName = "Untitled")
         {
             Scene scn = new Scene(sceneName, this);
             scenes.Add(scn);
             return scn;
         }
 
-        public Scene CreateSceneAndLoad()
-        {
-            ActiveScene = CreateScene();
-            ActiveScene.LoadScene();
-            return ActiveScene;
-        }
-
-        public Scene CreateSceneAndLoad(string sceneName)
+        public Scene CreateSceneAndLoad(string sceneName = "Untitled")
         {
             ActiveScene = CreateScene(sceneName);
             ActiveScene.LoadScene();
@@ -99,13 +113,13 @@ namespace SFML_Game_Engine
             {
                 ActiveScene = scene;
                 ActiveScene.LoadScene();
-                if (started) { ActiveScene.Start(); }
+                if (Started) { ActiveScene.Start(); }
                 return;
             }
             ActiveScene.UnloadScene();
             ActiveScene = scene;
             ActiveScene.LoadScene();
-            if (started) { ActiveScene.Start(); }
+            if (Started) { ActiveScene.Start(); }
         }
 
         public void LoadScene(string sceneName)
@@ -129,14 +143,14 @@ namespace SFML_Game_Engine
         public void Start()
         {
             InputUpdate();
-            started = true;
+            Started = true;
             if (ActiveScene is null) { return; }
             ActiveScene.Start();
         }
 
         public void Update()
         {
-            if(!started) 
+            if (!Started) 
             {
                 Start();
                 return; 
@@ -150,7 +164,7 @@ namespace SFML_Game_Engine
 
             InputUpdate();
             ActiveScene.Update();
-            if (debuggerContext != null) { debuggerContext.Update(); }
+            ScrollDelta = 0;
         }
 
         public void Render(RenderTarget rt)
@@ -159,9 +173,82 @@ namespace SFML_Game_Engine
             ActiveScene.Render(rt);
         }
 
+        void MouseInputUpdate()
+        {
+            foreach(KeyValuePair<Mouse.Button, bool> kvp in pressedDict)
+            {
+                Mouse.Button curButton = kvp.Key;
+                bool curPressed = kvp.Value;
+                bool curReleased = releasedDict[curButton];
+                bool curHeld = heldDict[curButton];
+
+                bool mouseState = Mouse.IsButtonPressed(curButton);
+
+                releasedDict[curButton] = false;
+
+                if (mouseState && curPressed && curHeld) 
+                {
+                    pressedDict[curButton] = false;
+                }
+
+                if (mouseState && !curPressed && !curHeld)
+                {
+                    pressedDict[curButton] = true;
+                    OnMouseButtonPressed?.Invoke(curButton);
+                }
+
+                if (!Mouse.IsButtonPressed(curButton) && heldDict[curButton])
+                {
+                    OnMouseButtonReleased?.Invoke(curButton);
+                    releasedDict[curButton] = true;
+                    pressedDict[curButton] = false;
+                    heldDict[curButton] = false;
+                }
+
+                heldDict[curButton] = mouseState;
+
+                if (heldDict[curButton])
+                {
+                    OnMouseButtonHeld?.Invoke(curButton);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns true the first frame a mouse button is pressed down
+        /// </summary>
+        /// <param name="button">the button to check</param>
+        /// <returns></returns>
+        public bool IsMouseButtonPressed(Mouse.Button button)
+        {
+            return pressedDict[button];
+        }
+
+        /// <summary>
+        /// Returns true the first frame a mouse button is released
+        /// </summary>
+        /// <param name="button">the button to check</param>
+        /// <returns></returns>
+        public bool IsMouseButtonReleased(Mouse.Button button)
+        {
+            return releasedDict[button];
+        }
+
+        /// <summary>
+        /// Returns true while a mouse button is pressed
+        /// </summary>
+        /// <param name="button">the button to check</param>
+        /// <returns></returns>
+        public bool IsMouseButtonHeld(Mouse.Button button)
+        {
+            return Mouse.IsButtonPressed(button);
+        }
+
         void InputUpdate()
         {
             if (!allowInputs) { return; }
+            MouseInputUpdate();
+
             foreach (string key in inputs.Keys)
             {
                 if (inputPressed.ContainsKey(key) == false) { inputPressed.Add(key, false); }
@@ -177,18 +264,33 @@ namespace SFML_Game_Engine
             }
         }
 
+        /// <summary>
+        /// Returns true while the input <paramref name="inputName"/> is held down.
+        /// </summary>
+        /// <param name="inputName"></param>
+        /// <returns></returns>
         public bool IsInputPressed(string inputName)
         {
             if (!App.HasFocus() || !allowInputs) { return false; }
             return inputPressed[inputName];
         }
 
+        /// <summary>
+        /// Returns true every time the input <paramref name="inputName"/> has just been pressed down
+        /// </summary>
+        /// <param name="inputName"></param>
+        /// <returns></returns>
         public bool IsInputJustPressed(string inputName)
         {
             if (!App.HasFocus() || !allowInputs) { return false; }
             return inputJustPressed[inputName];
         }
 
+        /// <summary>
+        /// Returns true every time the input <paramref name="inputName"/> has been released
+        /// </summary>
+        /// <param name="inputName"></param>
+        /// <returns></returns>
         public bool IsInputJustReleased(string inputName)
         {
             if (!App.HasFocus() || !allowInputs) { return false; }
@@ -196,7 +298,7 @@ namespace SFML_Game_Engine
         }
 
         /// <summary>
-        /// Returns a normalized vector2 based on the provided inputs
+        /// Returns a normalized vector2 based on the provided input names
         /// </summary>
         /// <param name="xminus">the negative x axis input</param>
         /// <param name="xplus">the positive x axis input</param>

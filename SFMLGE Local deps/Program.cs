@@ -2,7 +2,7 @@
 using SFML.Window;
 using SFML_Game_Engine;
 
-namespace SFML_Game_Engine
+namespace SFMLGE_Local_deps
 {
     public class Program
     {
@@ -17,6 +17,7 @@ namespace SFML_Game_Engine
 
             Project mainProject = new Project("Res", App);
             Scene scene = mainProject.CreateSceneAndLoad("DefaultScene");
+
 
             mainProject.Start();
             while (appOpen)

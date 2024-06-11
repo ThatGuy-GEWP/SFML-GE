@@ -3,7 +3,7 @@ using SFML.Window;
 
 namespace SFML_Game_Engine.GUI
 {
-    internal class GUIInputBox : GUIComponent
+    public class GUIInputBox : GUILabel
     {
         public static readonly Dictionary<Keyboard.Key, char> KeyToChar = new Dictionary<Keyboard.Key, char>()
         {
@@ -17,10 +17,11 @@ namespace SFML_Game_Engine.GUI
             {Keyboard.Key.Num8, '8'},
             {Keyboard.Key.Num9, '9'},
             {Keyboard.Key.Num0, '0'},
-            {Keyboard.Key.Dash, '-'},
+            {Keyboard.Key.Hyphen, '-'},
             {Keyboard.Key.Equal, '='},
             {Keyboard.Key.LBracket, '{' },
             {Keyboard.Key.RBracket, '}' },
+            {Keyboard.Key.Backslash, '\\'},
 
 
             {Keyboard.Key.A, 'a'},
@@ -67,9 +68,10 @@ namespace SFML_Game_Engine.GUI
             {Keyboard.Key.Num8, '*'},
             {Keyboard.Key.Num9, '('},
             {Keyboard.Key.Num0, ')'},
-            {Keyboard.Key.Dash, '_'},
+            {Keyboard.Key.Hyphen, '_'},
             {Keyboard.Key.Equal, '+'},
             {Keyboard.Key.LBracket, '[' },
+            {Keyboard.Key.Backslash, '|' },
             {Keyboard.Key.RBracket, ']' },
 
             {Keyboard.Key.A, 'A'},
@@ -101,53 +103,25 @@ namespace SFML_Game_Engine.GUI
             {Keyboard.Key.Space, ' '},
             {Keyboard.Key.Comma, '<'},
             {Keyboard.Key.Period, '>'},
-            {Keyboard.Key.Slash, '?'}
+            {Keyboard.Key.Slash, '?'},
         };
 
-        public bool hasFocus = false;
-
-        public GUIPanel panel;
-
-        GUIText text;
-
-        public uint characterSize = 25;
-
-        public bool fitText = true;
-
-        string _contained = "0";
-        public string ContainedString { 
-            get { return _contained; } 
-            set { _contained = value; TextChanged?.Invoke(ContainedString); } 
-        }
-
-        public event Action<string> TextChanged = null!;
-        public event Action<string> GainedFocus = null!;
-        public event Action<string> LostFocus = null!;
-        public event Action<string> TextFinished = null!;
-
-        public GUIInputBox(GUIContext context) : base(context)
+        public GUIInputBox(string displayedString = "Testing", uint charSize = 15)
         {
-            panel = new GUIPanel(context);
-            panel.autoQueue = false;
-            text = new GUIText(context, defaultFontName);
-            text.transform.parent = transform;
-
-            transform.size = new Vector2(150, characterSize*1.5f);
-
-            panel.backgroundColor -= new Color(0, 0, 0, 90);
-
-            text.CharSize = characterSize;
-            text.transform.LocalPosition = new Vector2(5, transform.size.y/2f);
-            text.transform.origin = new Vector2(0, 0.5f);
+            textAnchor = new Vector2(0, 0.5f);
+            textPosition = new UDim2(0, 0.5f, 0, 0);
+            this.displayedString = displayedString;
+            this.charSize = charSize;
         }
 
         public override void Start()
         {
-            context.Project.App.KeyPressed += (obj, args) =>
+            base.Start();
+            Project.App.KeyPressed += (obj, args) =>
             {
-                if (!hasFocus) { return; }
-                if (args.Code == Keyboard.Key.BackSpace && ContainedString.Length > 0)
-                { ContainedString = ContainedString.Remove(ContainedString.Length - 1); }
+                if (!focused) { return; }
+                if (args.Code == Keyboard.Key.Backspace && displayedString.Length > 0)
+                { displayedString = displayedString.Remove(displayedString.Length - 1); }
 
                 if (args.Shift)
                 {
@@ -156,7 +130,7 @@ namespace SFML_Game_Engine.GUI
                         char c = KeyToCharUpper[args.Code];
 
                         if (args.Shift) { c = c.ToString().ToUpper()[0]; }
-                        ContainedString += c;
+                        displayedString += c;
                     }
                 }
                 else
@@ -164,64 +138,55 @@ namespace SFML_Game_Engine.GUI
                     if (KeyToChar.ContainsKey(args.Code))
                     {
                         char c = KeyToChar[args.Code];
-                        ContainedString += c;
+                        displayedString += c;
                     }
                 }
                 //Console.WriteLine(containedString);
             };
         }
 
+        public bool focused = false;
+        public bool autofocus = true;
+
+        public bool Hovering { get; private set; } = false;
+
         public override void Update()
         {
-            Vector2 mousePos = context.Scene.GetMouseScreenPosition();
+            Vector2 size = GetSize();
+            BoundBox bounds = GetBounds();
+            Vector2 mousePos = Scene.GetMouseScreenPosition();
 
-            CopyTransformBasic(transform, panel.transform);
-
-            bool inXBounds =
-                mousePos.x >= transform.WorldPosition.x &&
-                mousePos.x <= transform.WorldPosition.x + transform.size.x;
-            bool inYBounds =
-                mousePos.y >= transform.WorldPosition.y &&
-                mousePos.y <= transform.WorldPosition.y + transform.size.y;
-
-            if (!(inXBounds && inYBounds) && hasFocus && Mouse.IsButtonPressed(Mouse.Button.Left) || (hasFocus && Keyboard.IsKeyPressed(Keyboard.Key.Return)))
+            if(Hovering && !bounds.WithinBounds(mousePos))
             {
-                hasFocus = false;
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Return))
-                {
-                    TextFinished?.Invoke(ContainedString);
-                }
-                else
-                {
-                    LostFocus?.Invoke(ContainedString);
-                }
+                Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow));
+                Hovering = false;
             }
 
-            if (inXBounds && inYBounds) 
-            { 
-                if(!hasFocus && Mouse.IsButtonPressed(Mouse.Button.Left))
-                {
-                    hasFocus = true;
-                    GainedFocus?.Invoke(ContainedString);
-                }
-            }
-
-            text.displayedString = ContainedString;
-            if (fitText)
+            if (!Hovering && bounds.WithinBounds(mousePos))
             {
-                text.Update();
-                if (panel.transform.size.x < (text.transform.size.x + 5))
-                {
-                    panel.transform.size = new Vector2(text.transform.size.x + 15, transform.size.y);
-                }
-                panel.Update();
+                Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Text));
+                Hovering = true;
             }
-        }
+            
+            if(bounds.WithinBounds(mousePos) && Project.IsMouseButtonPressed(Mouse.Button.Left) && autofocus)
+            {
+                focused = true;
+                outlineColor = Color.White;
+            }
+            if(!bounds.WithinBounds(mousePos) && Project.IsMouseButtonPressed(Mouse.Button.Left) && autofocus)
+            {
+                focused = false;
+                outlineColor = GUIPanel.defaultSecondary;
+            }
 
+            if (focused)
+            {
+                BoundBox textBounds = GetTextBounds();
 
-        public override void OnRender(RenderTarget rt)
-        {
-            panel.OnRender(rt);
+                float distFromEdge = textBounds.Rect.Width/2 - (size.x);
+
+                textPosition = new UDim2(textPosition.scale, new Vector2(-Math.Max(distFromEdge, 0), 0));
+            } else { textPosition = new UDim2(textPosition.scale, Vector2.zero); }
         }
     }
 }

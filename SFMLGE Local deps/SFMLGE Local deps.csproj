@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,7 +30,13 @@
     <None Update="openal32.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Res\devtext.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Res\funny.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Res\largeImgTest.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Res\thenerve.png">
@@ -38,12 +45,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Res\" />
     <Folder Include="Scripts\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SFML.Net" Version="2.5.1" />
+    <PackageReference Include="SFML.Net" Version="2.6.0" />
   </ItemGroup>
 
 </Project>

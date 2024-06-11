@@ -127,7 +127,7 @@ namespace SFML_Game_Engine
                 IsMouseHeld = true;
             } else { IsMouseHeld = false; }
 
-            if (debugDraw)
+            if (debugDraw && !AutoQueue)
             {
                 QueueType = relativeToScreen ? RenderQueueType.OverlayQueue : RenderQueueType.DefaultQueue;
                 AutoQueue = true;

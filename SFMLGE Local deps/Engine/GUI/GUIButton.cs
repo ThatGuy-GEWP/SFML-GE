@@ -6,7 +6,7 @@ namespace SFML_Game_Engine.GUI
     /// <summary>
     /// An interactable button, does not actually draw anything to the screen by itself, see <see cref="GUIButtonPanel"/> for that.
     /// </summary>
-    public class GUIButton : GUIComponent
+    public class GUIButton : GUIPanel
     {
         public event Action<GUIButton> OnClick = null!;
         public event Action<GUIButton> OnHold = null!;
@@ -15,73 +15,81 @@ namespace SFML_Game_Engine.GUI
         public event Action<GUIButton> OnHoveringStart = null!;
         public event Action<GUIButton> OnHoveringEnd = null!;
 
+        /// <summary>
+        /// If false, the button will not respond to clicks.
+        /// </summary>
+        public bool interactable = true;
+
+        /// <summary>
+        /// If false, the button will not have hovering effects.
+        /// </summary>
+        public bool useHoverEffects = true;
+
+        /// <summary>
+        /// If true, the cursor will switch to a pointing image when hovering
+        /// </summary>
+        public bool changeCuror = true;
+
+        public Color hoverColor = defaultSecondary;
+        public Color heldColor = defaultPressed;
+
+        Color currentColor;
+
         public bool Hovering { get; private set; } = false;
         public bool HeldDown { get; private set; } = false;
 
         bool lastClickState = false;
         bool clickedThis = false;
 
-        public GUIButton(GUIContext context) : base(context)
-        {
-            transform.size = new Vector2(150, 50);
-            transform.origin = new Vector2(0.0f, 0.0f);
-        }
-
-        public GUIButton(GUIContext context, Vector2 size) : base(context)
-        {
-            transform.size = size;
-            transform.origin = new Vector2(0.0f, 0.0f);
-        }
-
         public override void Update()
         {
-            if (!context.Project.App.HasFocus()) { return; }
+            if (!Project.App.HasFocus()) { return; }
 
-            Vector2 mousePos = context.Scene.GetMouseScreenPosition();
+            Vector2 mousePos = Scene.GetMouseScreenPosition();
 
-            bool isMousePressed = Mouse.IsButtonPressed(Mouse.Button.Left);
-
-            bool inXBounds =
-                mousePos.x >= transform.WorldPosition.x &&
-                mousePos.x <= transform.WorldPosition.x + transform.size.x;
-            bool inYBounds =
-                mousePos.y >= transform.WorldPosition.y &&
-                mousePos.y <= transform.WorldPosition.y + transform.size.y;
+            BoundBox bounds = GetBounds();
+            bool isMousePressed = Project.IsMouseButtonHeld(Mouse.Button.Left);
 
             bool wasHovering = Hovering;
 
-            if(inXBounds && inYBounds)
+            if (bounds.WithinBounds(mousePos))
             {
                 Hovering = true;
-            } else { Hovering = false; }
-
-            if(!wasHovering && Hovering)
-            {
-                OnHoveringStart?.Invoke(this);
+                if (useHoverEffects) { currentColor = hoverColor; }
             }
-            if(wasHovering && !Hovering)
+            else { Hovering = false; if (useHoverEffects) { currentColor = backgroundColor; } }
+
+            if (!wasHovering && Hovering)
             {
-                OnHoveringEnd?.Invoke(this);
+                Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Hand));
+                if (interactable) { OnHoveringStart?.Invoke(this); }
+            }
+            if (wasHovering && !Hovering)
+            {
+                Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow));
+                if (interactable) { OnHoveringEnd?.Invoke(this); }
             }
 
             if (Hovering)
             {
                 if (lastClickState == false && isMousePressed)
                 {
-                    OnClick?.Invoke(this);
+                    if (interactable) { OnClick?.Invoke(this); }
                     clickedThis = true;
                 }
             }
 
-            if(clickedThis && lastClickState == true && isMousePressed)
+            if (Hovering && isMousePressed)
             {
-                OnHold?.Invoke(this);
+                if (interactable) { OnHold?.Invoke(this); }
                 HeldDown = true;
-            } else { HeldDown = false; }
+                currentColor = heldColor;
+            }
+            else { HeldDown = false; }
 
             if (lastClickState == true && !isMousePressed && clickedThis)
             {
-                OnRelease?.Invoke(this);
+                if (interactable) { OnRelease?.Invoke(this); }
                 clickedThis = false;
             }
 
@@ -90,17 +98,25 @@ namespace SFML_Game_Engine.GUI
 
         RectangleShape debugRect = new RectangleShape(new Vector2(50, 50));
 
-        public override void OnRender(RenderTarget rt)
+
+        protected override void PrePass(RenderTarget rt)
         {
-            debugRect.Position = transform.WorldPosition;
-            debugRect.Size = transform.size;
+            backgroundPanelRect.FillColor = currentColor;
+        }
+
+
+        protected override void PostPass(RenderTarget rt)
+        {
+            debugRect.Position = GetPosition();
+            debugRect.Size = GetSize();
             debugRect.OutlineThickness = 1;
             debugRect.FillColor = Color.Transparent;
-            
-            if(!Hovering )
+
+            if (!Hovering)
             {
                 debugRect.OutlineColor = Color.Green;
-            } else
+            }
+            else
             {
                 debugRect.OutlineColor = Color.Yellow;
             }

@@ -22,6 +22,9 @@ namespace SFML_Game_Engine
         public ResourceCollection(string? dirToCollect, Project project)
         {
             linkedProject = project;
+
+            Console.WriteLine("Max Texture size is : " + SFML.Graphics.Texture.MaximumSize+ "x" + SFML.Graphics.Texture.MaximumSize);
+
             LoadDir(dirToCollect);
 
             Image defaultSpriteImg = new Image(25, 25);
@@ -73,17 +76,28 @@ namespace SFML_Game_Engine
 
                 if (extension == ".png" || extension == ".jpg" || extension == ".jpeg")
                 {
-                    Console.Write("" + name);
-                    resources.Add(new TextureResource(file, name));
-                    loadedSomething = true;
+                    Console.Write("" + name + " as TextureResource");
+
+                    try
+                    {
+                        TextureResource res = new TextureResource(file, name);
+                        resources.Add(new TextureResource(file, name));
+                        loadedSomething = true;
+                        // Console.Write(" " + (res.Resource.Size.X + "x" + res.Resource.Size.Y) + "|" + MathF.Round(((res.Resource.Size.X + res.Resource.Size.Y)*4f)/1000f) + " megabytes");
+                        // above just in case you need to keep track of mem usage.
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Write("Failed to load " + name + "! Exception:" + ex.ToString());
+                    }
                 }
 
                 if (extension == ".wav" || extension == ".ogg")
                 {
-                    Console.Write("" + name);
+                    Console.Write("" + name + " as SoundResource");
                     if (extension == ".wav")
                     {
-                        Console.Write(" | Warning! .wav files are slow to load, use .ogg instead!");
+                        Console.Write(" | Warning! .wav files are uncompressed and slow to load, use .ogg for faster loading!");
                     }
 
                     resources.Add(new SoundResource(file, name));
@@ -95,12 +109,12 @@ namespace SFML_Game_Engine
                     if (extension == ".frag")
                     {
                         resources.Add(new ShaderResource(name + ".f", null, null, file));
-                        Console.Write("" + name + ".f");
+                        Console.Write("" + name + " as a Fragment only ShaderResource");
                     }
                     if (extension == ".vert")
                     {
                         resources.Add(new ShaderResource(name + ".v", file, null, null));
-                        Console.Write("" + name + ".v");
+                        Console.Write("" + name + " as a Vertex only ShaderResource");
                     }
                 }
 
@@ -164,6 +178,7 @@ namespace SFML_Game_Engine
                 {
                     if (resource is T)
                     {
+                        resource.requests++;
                         return (T)resource;
                     }
                 }
@@ -171,12 +186,14 @@ namespace SFML_Game_Engine
                 {
                     if (resource is T)
                     {
+                        resource.requests++;
                         secondaryMatch = resource;
                     }
                 }
             }
             if (secondaryMatch != null)
             {
+                secondaryMatch.requests++;
                 return (T)secondaryMatch;
             }
 

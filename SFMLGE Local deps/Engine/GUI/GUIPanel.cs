@@ -1,50 +1,74 @@
 ﻿using SFML.Audio;
 using SFML.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SFML_Game_Engine.GUI
 {
     /// <summary>
-    /// A fancy panel, acts as a background base for other components, but can be used by itself.
+    /// A Panel, can be used to hold other GUI Components inside of it. also used as a base for every GUI Component
     /// </summary>
-    public class GUIPanel : GUIComponent
+    public class GUIPanel : Component, IRenderable
     {
-        public Color backgroundColor = GUIComponent.defaultBackground;
-        public Color outlineColor = GUIComponent.defaultSecondary;
+        // Defaults are fine.
+        internal static Color defaultForeground = new Color(0xE0EBF1FF);
+        internal static Color defaultBackground = new Color(0x474859FF);
 
-        public float outlineThickness = 1.0f;
+        internal static Color defaultSecondary = new Color(0x61637BFF);
+        internal static Color defaultPrimary = new Color(0x767997FF);
 
+        internal static Color defaultPressed = new Color(0x2C2D36FF);
+
+        internal static string defaultFontName = "Roboto-Regular";
+
+        public Color backgroundColor = defaultBackground - new Color(0,0,0,125);
+        public Color outlineColor = defaultSecondary;
+
+        /// <summary>Controls the thickness of the outline, values less then 0 will not render with rounded corners. 0 to disable the outline.</summary>
+        public float outlineThickness = 2.0f;
+
+        /// <summary>If false, outline corners will not be rounded.</summary>
         public bool roundedCorners = false;
 
+        /// <summary> The texture displayed in the background of this <see cref="GUIPanel"/> </summary>
         public TextureResource panelContent = null!;
 
-        static RectangleShape panelRect = new RectangleShape();
-        static RectangleShape outlineRect = new RectangleShape();
+        /// <summary> The background panel rectangle from <see cref="GUIPanel"/>, can be
+        /// altered right before its drawn in the <see cref="PrePass(RenderTarget)"/> </summary>
+        protected RectangleShape backgroundPanelRect = new RectangleShape();
 
+        RectangleShape outlineRect = new RectangleShape();
+
+        /// <summary> controls whether or not the background from <see cref="GUIPanel"/> is drawn or not.</summary>
+        protected bool renderBackgroundPanel = true;
+
+        /// <summary> controls whether or not the outline from <see cref="GUIPanel"/> is drawn or not.</summary>
+        protected bool renderOutline = true;
+
+
+
+        // used to pre-render the corner texture, should only be generated once at the start of the engine if any GUIPanels exist.
         static Texture cornerText = null!;
 
-        public GUIPanel(GUIContext context, bool roundedCorners = false) : base(context)
-        {
-            transform.size = new Vector2(150, 50);
-            this.roundedCorners = roundedCorners;
-        }
+        /// <summary>
+        /// Controls where <see cref="Position"/> is, 0,0 would be the top left and 1,1 would be the bottom right
+        /// </summary>
+        public Vector2 Anchor = Vector2.zero;
+        /// <summary>
+        /// The position of this GUI object.
+        /// </summary>
+        public UDim2 Position = UDim2.zero;
+        /// <summary>
+        /// The size of this GUI object.
+        /// </summary>
+        public UDim2 Size = new UDim2(0.0f, 0.0f, 150f, 50f);
 
-        public GUIPanel(GUIContext context, Vector2 size, bool roundedCorners = false) : base(context)
-        {
-            transform.size = size;
-            this.roundedCorners = roundedCorners;
-        }
 
-        public GUIPanel(GUIContext context, Vector2 size, Vector2 position, bool roundedCorners = false) : base(context)
-        {
-            transform.size = size;
-            transform.WorldPosition = position;
-            this.roundedCorners = roundedCorners;
-        }
+        // public float Rotation = 45f; to be added when i feel like messing with it :sob:
+
+        public sbyte ZOrder { get; set; } = 0;
+        public bool Visible { get; set; } = true;
+        public bool AutoQueue { get; set; } = true;
+        public RenderQueueType QueueType { get; set; } = RenderQueueType.OverlayQueue;
 
         void generateCornerTexture()
         {
@@ -63,100 +87,197 @@ namespace SFML_Game_Engine.GUI
             tempCircle.Dispose();
         }
 
-        public override void Update()
+
+        public GUIPanel()
         {
-            if (!visible) return;
+            if(cornerText == null)
+            {
+                generateCornerTexture();
+            }
+        }
+
+        public override void Start()
+        {
+            if(ZOrder == 0)
+            {
+                if (gameObject.parent == null) { return; }
+
+
+                GUIPanel? panelParent = gameObject.parent.GetComponentOfSubclass<GUIPanel>();
+                if (panelParent != null)
+                {
+                    ZOrder = (sbyte)(panelParent.ZOrder + 1);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the scalar used for <see cref="Size"/>'s <see cref="UDim2.GetVector(Vector2)"/>
+        /// </summary>
+        Vector2 ParentScale()
+        {
+            if (gameObject.parent == null) { return (Vector2)Project.App.Size; }
+
+
+            GUIPanel? panelParent = gameObject.parent.GetComponentOfSubclass<GUIPanel>();
+            if (panelParent != null)
+            {
+                return panelParent.GetSize();
+            }
+
+            return (Vector2)Project.App.Size;
+        }
+
+        /// <summary>
+        /// Gets the position of the Parent <see cref="GUIPanel"/>, returns <see cref="Vector2.zero"/> if there is no <see cref="GUIPanel"/> parent.
+        /// </summary>
+        Vector2 ParentPosition()
+        {
+            if (gameObject.parent == null) { return Vector2.zero; }
+
+
+            GUIPanel? panelParent = gameObject.parent.GetComponentOfSubclass<GUIPanel>();
+            if (panelParent != null)
+            {
+                return panelParent.GetPosition();
+            }
+
+            return Vector2.zero;
+        }
+
+        /// <summary>
+        /// Gets the size of this <see cref="GUIPanel"/>
+        /// </summary>
+        public Vector2 GetSize()
+        {
+            return Size.GetVector(ParentScale());
+        }
+
+        /// <summary>
+        /// Gets the position of this <see cref="GUIPanel"/> (relative to the <see cref="Anchor"/>)
+        /// </summary>
+        public Vector2 GetPosition()
+        {
+            Vector2 curSize = GetSize();
+            Vector2 pos = ParentPosition() + Position.GetVector(ParentScale());
+
+            Vector2 finalPos = pos - (curSize * Anchor);
+
+            return finalPos;
+        }
+        
+        /// <summary>
+        /// Gets the bounds of a <see cref="GUIPanel"/>.
+        /// </summary>
+        /// <returns></returns>
+        public BoundBox GetBounds()
+        {
+            Vector2 curSize = GetSize();
+            Vector2 pos = Position.GetVector(ParentScale()) + ParentPosition();
+
+            return new BoundBox(new FloatRect(pos - (curSize * Anchor), curSize));
         }
 
         RectangleShape recShape = new RectangleShape();
-        void DrawCorners(RenderTarget rt, float outlineThickness)
+
+        // with the corner and connectors code if it aint broke, dont fix it!
+        /// <summary> Draws the corners of the outline </summary>
+        void DrawCorners(Vector2 pos, Vector2 size, RenderTarget rt, float outlineThickness)
         {
             recShape.FillColor = outlineColor;
             recShape.Texture = cornerText;
-            recShape.Size = new Vector2(outlineThickness, outlineThickness) * 2f;
+            recShape.Size = new Vector2(outlineThickness, outlineThickness);
 
-            recShape.Position = new Vector2(transform.WorldPosition.x, transform.WorldPosition.y);
-            recShape.Origin = new Vector2(outlineThickness, outlineThickness) * 2f;
+            recShape.Position = new Vector2(pos.x, pos.y);
+            recShape.Origin = new Vector2(outlineThickness, outlineThickness);
             recShape.Rotation = 0f;
             rt.Draw(recShape);
 
-            recShape.Position = new Vector2(transform.WorldPosition.x + transform.size.x, transform.WorldPosition.y);
-            recShape.Origin = new Vector2(outlineThickness, outlineThickness) * 2f;
+            recShape.Position = new Vector2(pos.x + size.x, pos.y);
+            recShape.Origin = new Vector2(outlineThickness, outlineThickness);
             recShape.Rotation = 90f;
             rt.Draw(recShape);
 
-            recShape.Position = new Vector2(transform.WorldPosition.x, transform.WorldPosition.y + transform.size.y);
-            recShape.Origin = new Vector2(outlineThickness, outlineThickness) * 2f;
+            recShape.Position = new Vector2(pos.x, pos.y + size.y);
+            recShape.Origin = new Vector2(outlineThickness, outlineThickness);
             recShape.Rotation = -90f;
             rt.Draw(recShape);
 
-            recShape.Position = new Vector2(transform.WorldPosition.x + transform.size.x, transform.WorldPosition.y + transform.size.y);
-            recShape.Origin = new Vector2(outlineThickness, outlineThickness) * 2f;
+            recShape.Position = new Vector2(pos.x + size.x, pos.y + size.y);
+            recShape.Origin = new Vector2(outlineThickness, outlineThickness);
             recShape.Rotation = 180f;
             rt.Draw(recShape);
         }
 
         /// <summary> Draws the lines actually connecting the rounded corners </summary>
-        void DrawCornerConnectors(RenderTarget rt, float outlineThickness)
+        void DrawCornerConnectors(Vector2 pos, Vector2 size, RenderTarget rt, float outlineThickness)
         {
             outlineRect.FillColor = outlineColor;
 
-
-            outlineRect.Size = new Vector2(panelRect.Size.X, outlineThickness * 2f);
-            outlineRect.Position = transform.WorldPosition - new Vector2(0, outlineThickness * 2f);
+            outlineRect.Size = new Vector2(backgroundPanelRect.Size.X, outlineThickness);
+            outlineRect.Position = pos - new Vector2(0, outlineThickness);
             rt.Draw(outlineRect);
 
-            outlineRect.Size = new Vector2(panelRect.Size.X, (outlineThickness * 2f));
-            outlineRect.Position = transform.WorldPosition + new Vector2(0, transform.size.y);
+            outlineRect.Size = new Vector2(backgroundPanelRect.Size.X, (outlineThickness));
+            outlineRect.Position = pos + new Vector2(0, size.y);
             rt.Draw(outlineRect);
 
-            outlineRect.Size = new Vector2(outlineThickness * 2f, panelRect.Size.Y);
-            outlineRect.Position = transform.WorldPosition - new Vector2(outlineThickness * 2f, 0);
+            outlineRect.Size = new Vector2(outlineThickness, backgroundPanelRect.Size.Y);
+            outlineRect.Position = pos - new Vector2(outlineThickness, 0);
             rt.Draw(outlineRect);
 
-            outlineRect.Size = new Vector2(outlineThickness * 2f, panelRect.Size.Y);
-            outlineRect.Position = transform.WorldPosition + new Vector2(transform.size.x - 0, 0);
+            outlineRect.Size = new Vector2(outlineThickness, backgroundPanelRect.Size.Y);
+            outlineRect.Position = pos + new Vector2(size.x - 0, 0);
             rt.Draw(outlineRect);
         }
 
-        public override void OnRender(RenderTarget rt)
+        public void OnRender(RenderTarget rt)
         {
-            if (!context.Started) { return; }
+            Vector2 pos = GetPosition();
+            Vector2 size = GetSize();
 
-            if (cornerText == null)
+            backgroundPanelRect.FillColor = backgroundColor;
+            backgroundPanelRect.Size = size;
+            backgroundPanelRect.Position = pos;
+
+            if (panelContent != null)
             {
-                generateCornerTexture();
+                backgroundPanelRect.Texture = panelContent.Resource;
             }
 
-            if (panelContent == null)
+            PrePass(rt);
+
+            if(backgroundColor.A > 0) { rt.Draw(backgroundPanelRect); }
+
+            if (MathF.Abs(outlineThickness) != 0 && outlineColor.A > 0)
             {
-                panelContent = context.Project.GetResource<TextureResource>("DefaultSprite");
+                if(outlineThickness < 0 || !roundedCorners)
+                {
+                    backgroundPanelRect.OutlineColor = outlineColor;
+                    backgroundPanelRect.OutlineThickness = outlineThickness;
+                } 
+                else
+                {
+                    backgroundPanelRect.OutlineThickness = 0;
+
+                    DrawCorners(pos, size, rt, outlineThickness);
+                    DrawCornerConnectors(pos, size, rt, outlineThickness);
+                }
             }
 
-            if (roundedCorners)
-            {
-                panelRect.OutlineThickness = 0;
-                DrawCorners(rt, outlineThickness / 2f);
-                DrawCornerConnectors(rt, outlineThickness / 2f);
-            }
-            else
-            {
-                panelRect.OutlineThickness = outlineThickness;
-                panelRect.OutlineColor = outlineColor;
-            }
-
-            panelRect.Position = transform.WorldPosition;
-            panelRect.Size = transform.size;
-
-            panelRect.FillColor = backgroundColor;
-            outlineRect.FillColor = outlineColor;
-
-            panelRect.Texture = panelContent.Resource;
-            //panelRect.TextureRect = new IntRect(0, (int)(transform.size.y / 2f), (int)panelContent.Resource.Size.X, (int)((int)panelContent.Resource.Size.Y - transform.size.y));
-
-            rt.Draw(panelRect);
+            PostPass(rt);
         }
 
+        /// <summary>
+        /// Gets run before anything is drawn to the screen, and right after panelRect gets all its values set.
+        /// </summary>
+        /// <param name="rt"></param>
+        protected virtual void PrePass(RenderTarget rt) { return; }
 
+        /// <summary>
+        /// Gets after the base panel is drawn to the screen.
+        /// </summary>
+        /// <param name="rt"></param>
+        protected virtual void PostPass(RenderTarget rt) { return; }
     }
 }

@@ -24,6 +24,8 @@ namespace SFML_Game_Engine
 
         public RenderManager renderManager { get; private set; } = new RenderManager();
 
+        public event Action<Scene>? OnStart;
+
         public Camera camera { get; private set; }
 
         Stopwatch deltaWatch = new Stopwatch();
@@ -48,8 +50,10 @@ namespace SFML_Game_Engine
             return instance;
         }
 
-        public GameObject CreateGameObject(string name)
+        public GameObject CreateGameObject(string name = "")
         {
+            if(name == "" || name == null || name == string.Empty) { name = "Unnamed"; }
+
             GameObject go = new GameObject(Project, this, root);
             root.AddChild(go);
             go.name = name;
@@ -60,6 +64,8 @@ namespace SFML_Game_Engine
         {
             if(parent == null) { return null; }
             if(parent.Scene != this) { return null; }
+
+            if (name == "" || name == null || name == string.Empty) { name = "Unnamed"; }
 
             GameObject go = new GameObject(Project, this, parent);
             go.name = name;
@@ -127,6 +133,8 @@ namespace SFML_Game_Engine
             }
             root.Start();
             started = true;
+
+            OnStart?.Invoke(this);
         }
 
         public void UnloadScene()

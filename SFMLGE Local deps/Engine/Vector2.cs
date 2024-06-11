@@ -14,10 +14,28 @@ namespace SFML_Game_Engine
          *  Something something its good practice
          *  Apparently it can cause issues if i dont do this, sorry
          *  i personally liked when you could do vector2.x += 1 but now you cant!
-         *  but il take losing that if it means the memory usage of 
-         *  this is basically 1/16th then when it was a class
+         *  but il take losing that if it means the memory usage of this struct is
+         *  basically 1/16th then when it was a class
          *  
          *  the garbage collector also did a collection like 20 times a second when it was a class lollololo
+         */
+
+        // for anyone wondering why there is almost two of every math operation
+        /*
+         *  (for all examples below, {SFMLVector2f} is a variable made of {SFML.System.Vector2f})
+         * 
+         *  Mostly for implicit conversions, its way easier to do
+         *  { Vector2.Floor(SFMLVector2f) }
+         *  instead of
+         *  { (SFMLVector2f as Vector2).Floor() }
+         *  or even worse if your newer/dont know about as
+         *  {
+         *    Vector2 floored = (Vector2)SFMLVector2f
+         *    floored = floored.Floor()
+         *  }
+         *  and for some reason { (Vector2)(SFMLVector2f).Floor() } was not working
+         * 
+         * 
          */
 
         public Vector2(float x, float y)
@@ -28,9 +46,20 @@ namespace SFML_Game_Engine
 
         public static readonly Vector2 zero = new Vector2(0f, 0f);
 
-        public float Magnitude()
+        /// <summary>
+        /// Converts a Vector2 to a new (float, float) tuple
+        /// </summary>
+        public static (float, float) ToTuple(Vector2 vec)
         {
-            return MathF.Sqrt(x * x + y * y);
+            return (vec.x, vec.y);
+        }
+
+        /// <summary>
+        /// Converts a (float, float) Tuple into a Vector2
+        /// </summary>
+        public static Vector2 FromTuple((float x, float y) tuple)
+        {
+            return new Vector2(tuple.x, tuple.y);
         }
 
         /// <summary>
@@ -63,62 +92,171 @@ namespace SFML_Game_Engine
             return (Rotate(point - origin, degrees) + origin);
         }
 
+        /// <summary>
+        /// Returns the absolute value of a vector.
+        /// </summary>
         public static Vector2 Abs(Vector2 a)
         {
             return new Vector2(MathF.Abs(a.x), MathF.Abs(a.y));
         }
-        
+
         /// <summary>
-        /// Swaps x and y in a vector.
+        /// Returns the absolute value of a vector.
         /// </summary>
-        public static Vector2 Flip(Vector2 vec)
+        public readonly Vector2 Abs()
         {
-            // im looking at this and, im not sure if this is the correct name? whatever
-            return new Vector2(vec.y, vec.x);
+            return new Vector2(MathF.Abs(x), MathF.Abs(y));
         }
 
         /// <summary>
-        /// Normalizes a Vector
+        /// Swaps x and y in the given <paramref name="vector"/> and returns a new vector with the result.
         /// </summary>
-        /// <param name="v"></param>
+        public static Vector2 Flip(Vector2 vector)
+        {
+            return new Vector2(vector.y, vector.x);
+        }
+
+        /// <summary>
+        /// Swaps x and y in the given <paramref name="vector"/> and returns a new vector with the result.
+        /// </summary>
+        public readonly Vector2 Flip()
+        {
+            return new Vector2(y, x);
+        }
+
+        /// <summary>
+        /// Returns a new normalized Vector from <paramref name="vec"/>
+        /// </summary>
+        /// <param name="vec">The vector to normalize</param>
         /// <returns></returns>
-        public static Vector2 Normalize(Vector2 v)
+        public static Vector2 Normalize(Vector2 vec)
         {
-            float mag = MathF.Sqrt(v.x * v.x + v.y * v.y);
-            if (mag == 0 || mag == float.NaN) { return v; }
-            return v / mag;
+            float mag = MathF.Sqrt(vec.x * vec.x + vec.y * vec.y);
+            if (mag == 0 || mag == float.NaN) { return vec; }
+            return vec / mag;
         }
 
+        /// <summary>
+        /// Returns a new normalized Vector from <paramref name="vec"/>
+        /// </summary>
+        /// <param name="vec">The vector to normalize</param>
+        /// <returns></returns>
+        public readonly Vector2 Normalize()
+        {
+            float mag = MathF.Sqrt(x * x + y * y);
+            if (mag == 0 || mag == float.NaN) { return this; }
+            return this / mag;
+        }
+
+        /// <summary>
+        /// Lerps <paramref name="A"/> to <paramref name="B"/> lineraly using <paramref name="T"/>
+        /// </summary>
+        /// <param name="A">The vector to lerp from</param>
+        /// <param name="B">The vector to lerp to</param>
+        /// <param name="T">Time where 0.0f is A, and 1.0f is B</param>
+        /// <returns></returns>
         public static Vector2 Lerp(Vector2 A, Vector2 B, float T)
         {
-            //a + (b - a) * x
             return A + (B - A) * T;
         }
 
+        /// <summary>
+        /// Gets the distance between <paramref name="A"/> and <paramref name="B"/>
+        /// </summary>
+        /// <param name="A"></param>
+        /// <param name="B"></param>
+        /// <returns></returns>
         public static float Distance(Vector2 A, Vector2 B)
         {
             return MathF.Sqrt(MathF.Pow(B.x - A.x, 2) + MathF.Pow(B.y - A.y, 2));
         }
 
-        public Vector2 Clamp(float min, float max)
+        public readonly Vector2 Clamp(Vector2 min, Vector2 max)
+        {
+            return new Vector2(MathF.Min(MathF.Max(min.x, x), max.x), MathF.Min(MathF.Max(min.x, y), max.y));
+        }
+
+        public readonly Vector2 Clamp(float min, float max)
         {
             return new Vector2(MathF.Min(MathF.Max(min, x), max), MathF.Min(MathF.Max(min, y), max));
         }
 
-        public Vector2 Clamp(float xMin, float xMax, float yMin, float yMax)
+        /// <summary>
+        /// Gets the Magnitude of a vector
+        /// </summary>
+        /// <returns></returns>
+        public readonly float Magnitude(Vector2 vec)
+        {
+            return MathF.Sqrt(vec.x * vec.x + vec.y * vec.y);
+        }
+
+        public readonly Vector2 Clamp(float xMin, float xMax, float yMin, float yMax)
         {
             return new Vector2(MathF.Min(MathF.Max(xMin, x), xMax), MathF.Min(MathF.Max(yMin, y), yMax));
         }
 
-        public static float Cross(Vector2 a, Vector2 b)
+        /// <summary>
+        /// Gets the cross product of two Vector2's <paramref name="A"/> and <paramref name="B"/>
+        /// </summary>
+        /// <param name="A"></param>
+        /// <param name="B"></param>
+        /// <returns></returns>
+        public static float Cross(Vector2 A, Vector2 B)
         {
-            return (a.x * b.y) - (a.y * b.x);
+            return (A.x * B.y) - (A.y * B.x);
         }
 
+        /// <summary>
+        /// Returns a new Floored Vector2 from <paramref name="vec"/>
+        /// </summary>
         public static Vector2 Floor(Vector2 vec)
         {
             return new Vector2(MathF.Floor(vec.x), MathF.Floor(vec.y));
         }
+
+        /// <summary>
+        /// Returns a new Floored Vector2 from the current vector
+        /// </summary>
+        public readonly Vector2 Floor()
+        {
+            return new Vector2(MathF.Floor(x), MathF.Floor(y));
+        }
+
+        /// <summary>
+        /// Returns a new Ceil'ed? Vector2 from <paramref name="vec"/>
+        /// </summary>
+        public static Vector2 Ceil(Vector2 vec)
+        {
+            return new Vector2(MathF.Ceiling(vec.x), MathF.Ceiling(vec.y));
+        }
+
+        /// <summary>
+        /// Returns a new Ceil'ed? Vector2 from the current vector
+        /// </summary>
+        public readonly Vector2 Ceil()
+        {
+            return new Vector2(MathF.Ceiling(x), MathF.Ceiling(y));
+        }
+
+        /// <summary>
+        /// Returns a new Rounded Vector2 from <paramref name="vec"/>
+        /// </summary>
+        public static Vector2 Round(Vector2 vec)
+        {
+            return new Vector2(MathF.Round(vec.x), MathF.Round(vec.y));
+        }
+
+        /// <summary>
+        /// Returns a new Rounded Vector2 from the current vector
+        /// </summary>
+        public readonly Vector2 Round()
+        {
+            return new Vector2(MathF.Round(x), MathF.Round(y));
+        }
+
+
+
+
 
         public override string ToString()
         {
@@ -131,14 +269,9 @@ namespace SFML_Game_Engine
             if (obj is Vector2)
             {
                 Vector2 ob = (Vector2)obj;
-                return x == ob.x && y == ob.y;
+                return ob.x == x && ob.y == y;
             }
             return base.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
         }
 
         public static Vector2 operator +(Vector2 a, Vector2 b) => new Vector2(a.x + b.x, a.y + b.y);
@@ -149,6 +282,8 @@ namespace SFML_Game_Engine
 
         public static Vector2 operator *(Vector2 a, Vector2 b) => new Vector2(a.x * b.x, a.y * b.y);
 
+        // Summary here since i dont really think a float multiplied by a vector is that common, normally is the other way around
+        /// <summary> returns a new vector of (a * b.x, a * b.y) </summary>
         public static Vector2 operator *(float a, Vector2 b) => new Vector2(a * b.x, a * b.y);
 
         public static Vector2 operator -(Vector2 a, float b) => new Vector2(a.x - b, a.y - b);
@@ -178,5 +313,16 @@ namespace SFML_Game_Engine
         public static explicit operator Vector2(Vector2u v) => new Vector2(v.X, v.Y);
 
         public static implicit operator Vertex(Vector2 v) => new Vertex(v);
+
+        public override int GetHashCode() // https://stackoverflow.com/questions/7813687/right-way-to-implement-gethashcode-for-this-struct
+        {
+            unchecked // Overflow is fine, just wrap | no idea what that means! thank you random internet person!!!
+            {
+                int hash = 17;
+                hash = hash * 23 + x.GetHashCode();
+                hash = hash * 23 + y.GetHashCode();
+                return hash;
+            }
+        }
     }
 }
