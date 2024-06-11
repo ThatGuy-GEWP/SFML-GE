@@ -1,11 +1,11 @@
 # About the project
-SFML-GE is my handmade game engine, I use it for all my games written in C#, and for a lot of my projects as well  
-Over time what started as just a Scene with objects in it quickly turned into an engine.
+SFML-GE is my handmade game engine, I use it for all my games written in C#, and for a lot of my non-game projects as well.  
+Over time what started as just a Scene with GameObjects quickly turned into an engine through various project requirements.
 
-The layout of SFML-GE is that of an ECS (Entity Component System) with wording similar to unity  
+SFML-GE uses an ECS (Entity Component System) with wording similar to unity  
 Where a Project holds all resources and multiple scenes, and each scene has its own GameObjects.  
   
-![image](https://github.com/ThatGuy-GEWP/SFML-GE/assets/24467262/dadd881b-e26a-4bce-819b-3490d621952a)
+![graph1](https://github.com/ThatGuy-GEWP/SFML-GE/assets/24467262/49245733-0017-4859-837f-a696390d128d)
 
   
 Every component including the built-in ones derive from the same Abstract class [Component](SFMLGE%20Local%20deps/Engine/Component.cs), which includes many expected functions like
@@ -14,7 +14,7 @@ Awake, Start, Update, OnDestroy, OnUnload, etc.
 > [!NOTE]
 > Almost all components and functions have XML Comments that work nicely with Visual Studio's Documentation Generation
 
-Making components that can draw/render things is also easy, and just requires a [Component](SFMLGE%20Local%20deps/Engine/Component.cs) subclass to also use the [IRenderable](SFMLGE%20Local%20deps/Engine/IRenderable.cs) interface.
+Making components that can draw/render things is also easy, and requires a [Component](SFMLGE%20Local%20deps/Engine/Component.cs) subclass to also use the [IRenderable](SFMLGE%20Local%20deps/Engine/IRenderable.cs) interface.
 
 # Getting started
 ## Installation
@@ -22,7 +22,7 @@ Making components that can draw/render things is also easy, and just requires a 
 Opening with Visual Studio is recommended, as this is a Visual Studio 2022 Project.  
 ![image](https://github.com/ThatGuy-GEWP/SFML-GE/assets/24467262/68d8fee3-651e-4319-8e01-9cae8c7c4124)
 ### Manual
-Simply cloning the repo should work fine, as for dependencies this project is built on [SFML.Net](https://www.sfml-dev.org/download/sfml.net/) as the main dependency
+Simply cloning the repo to a local project should work fine, releases also include a template for Visual Studio. As for dependencies, [SFML.Net 2.6.0](https://www.sfml-dev.org/download/sfml.net/)  [(NuGet package here)]([https://www.nuget.org/packages/SFML.Net](https://www.nuget.org/packages/SFML.Net/2.6.0)) is the main and only dependency.
 
 ## Your First Project
 ```cs
@@ -94,6 +94,10 @@ sprite.Texture = mainProject.GetResource<TextureResource>("testimg");
 // Forces a sprites Size to the size of the texture.
 sprite.fitTexture = true;
 ```
+> [!CAUTION]
+> By default all image resources are loaded as a "Texture" class and may not load if the image is too large,
+> you can use Texture.MaximumSize to get the maximum size of any texture and this **WILL** vary from card to card.
+> on my RTX 3050 its 32768x32768, but you should expect 8192x8192 or lower for most cards.
 
 ## Your First Component
 For custom behaviour like a script, you should make a new class that inherits from [Component](SFMLGE%20Local%20deps/Engine/Component.cs),  
@@ -155,10 +159,5 @@ public class ExampleComponent : Component, IRenderable
 }
 ```
 Before being drawn to the screen all IRenderables are collected, sorted by ZOrder then drawn.  
-  
-Below is an example graph to show the rendering process. 
-  
-![graph](https://github.com/ThatGuy-GEWP/SFML-GE/assets/24467262/71b1901a-9be9-4569-9689-4800af22ef6c)
-
 > [!NOTE]
 > If ``AutoQueue`` is ``false`` then you will have to manually add the component to the RenderQueue.
