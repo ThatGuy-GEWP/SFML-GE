@@ -30,9 +30,6 @@
     <None Update="openal32.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Res\devtext.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Res\funny.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -45,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Res\" />
     <Folder Include="Scripts\" />
   </ItemGroup>
 
