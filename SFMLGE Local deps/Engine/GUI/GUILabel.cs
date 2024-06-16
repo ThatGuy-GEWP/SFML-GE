@@ -12,32 +12,57 @@ namespace SFML_Game_Engine.GUI
     /// </summary>
     public class GUILabel : GUIPanel 
     {
-        public uint charSize = 18;
+        /// <summary>The character size, not in pixels</summary>
+        public uint charSize = 16;
+        /// <summary>The string that will be displayed</summary>
         public string displayedString;
-        public Color fontColor = Color.White;
+
+        /// <summary>The color of the text.</summary>
+        public Color textFillColor = Color.White;
+
+        /// <summary>When true all text will be bold, false can still contain bold text from <see cref="richEnabled"/>.</summary>
+        public bool isBold = false;
+
         public FontResource font = null!;
 
-        /// <summary>
-        /// Hides overflow when true. might be a tiny bit costly
-        /// </summary>
+        /// <summary>Hides overflow when true by rendering to an internal texture.</summary>
         public bool hideOverflow = true;
 
+        public TextAlignment textAlignment = TextAlignment.Center;
+
+        /// <summary>
+        /// Controls where the center of the text is.
+        /// </summary>
         public Vector2 textAnchor = new Vector2(0.5f, 0.5f);
 
+        /// <summary>
+        /// Controls where in the label the text is.
+        /// </summary>
         public UDim2 textPosition = new UDim2(0.5f, 0.5f, 0, 0);
 
-        Text text = new Text();
+        /// <summary>
+        /// When false, rich text formatting is disabled
+        /// </summary>
+        public bool richEnabled = true;
 
-        RenderTexture internalText = null!;
+        RenderTexture internalRenderTexture = null!; // used for hideOverflow
 
-        Vector2 lastSize = new Vector2(0, 0);
+        Vector2 lastSize = new Vector2(0, 0); // used to update internalRenderTexture's size
 
-        public GUILabel() : base() { displayedString = string.Empty; }
+        protected RichText text = null!;
 
-        public GUILabel(string displayedString, uint characterSize = 18) : base()
+        public GUILabel() : base() 
+        { 
+            displayedString = string.Empty;  
+        }
+
+        public GUILabel(FontResource font, string displayedString, uint characterSize = 16) : base()
         {
+            this.font = font;
             this.displayedString = displayedString;
             charSize = characterSize;
+
+            text = new RichText(font.resource, displayedString, characterSize);
         }
 
         public override void Start()
@@ -48,67 +73,72 @@ namespace SFML_Game_Engine.GUI
             font ??= Project.GetResource<FontResource>(defaultFontName);
 
             lastSize = GetSize();
-            internalText ??= new RenderTexture((uint)lastSize.x, (uint)lastSize.y);
+            internalRenderTexture ??= new RenderTexture((uint)lastSize.x, (uint)lastSize.y);
 
             GUIPanel pan = new GUIPanel();
         }
 
-        public BoundBox GetTextBounds()
+        /// <summary>
+        /// Gets the local bounds of the text.
+        /// </summary>
+        public BoundBox GetTextLocalBounds()
         {
-            FloatRect a = text.GetGlobalBounds();
-            FloatRect b = text.GetLocalBounds();
-            return new BoundBox(new FloatRect(a.Left + b.Left, a.Top + b.Top, a.Width + b.Width, a.Height + b.Height));
+            return text.GetLocalBounds();
+        }
+
+        /// <summary>
+        /// Gets the global bounds of the text.
+        /// </summary>
+        public BoundBox GetTextGlobalBounds()
+        {
+            return text.GetGlobalBounds();
         }
 
         Sprite drawSpr = new Sprite();
 
         protected override void PostPass(RenderTarget rt)
         {
+            if(font == null) { return; }
+            if(font != null && text == null) { text = new RichText(font.resource, displayedString, charSize); }
+
             if (hideOverflow)
             {
                 if (lastSize != GetSize())
                 {
-                    internalText.Dispose();
+                    internalRenderTexture.Dispose();
                     lastSize = GetSize();
-                    internalText = new RenderTexture((uint)lastSize.x, (uint)lastSize.y);
+                    internalRenderTexture = new RenderTexture((uint)lastSize.x, (uint)lastSize.y);
                 }
-                internalText.Clear(Color.Transparent);
+                internalRenderTexture.Clear(Color.Transparent);
             }
 
-            text.Font = font;
+            text.RichEnabled = richEnabled;
+            text.Font = font!;
             text.CharacterSize = charSize;
             text.DisplayedString = displayedString;
+            text.FillColor = textFillColor;
+            text.IsBold = isBold;
 
             if (hideOverflow)
             {
-                text.Position = (GetSize() * textPosition.scale) + textPosition.offset;
-            } 
+                text.position = textPosition.GetVector(GetSize());
+            }
             else
             {
-                text.Position = (GetPosition() + GetSize() * textPosition.scale) + textPosition.offset;
+                text.position = GetPosition() + textPosition.GetVector(GetSize());
             }
 
-            Vector2 centeredReg = new Vector2(text.GetGlobalBounds().Width, text.GetGlobalBounds().Height) * textAnchor;
-            Vector2 centerOffset = new Vector2(text.GetLocalBounds().Left, text.GetLocalBounds().Top);
+            text.position -= text.GetLocalBounds().Size * textAnchor;
 
-            //https://learnsfml.com/basics/graphics/how-to-center-text/#example-code
-            // HOLY SHIT why is it not mentioned ANYWHERE in the offical docs that GetLocalBounds() is shifted to help align the baseline on text,
-            // I TRIED SO MANY TIMES MONTHS AGO TO THE POINT WHERE I WAS REMAKING THE TEXT CLASS THEN JUST LIVED WITH IT WHYYYYYYY
-
-            // Laurent i am rapidy approaching your location, and you should be scared.
-
-            text.Origin = Vector2.Round(centeredReg + centerOffset);
-            text.Position = Vector2.Round(text.Position);
-
-            text.FillColor = fontColor;
+            text.position = Vector2.Round(text.position); // keep that text *crispy*
 
             if (hideOverflow)
             {
-                drawSpr.Position = GetPosition();
-                internalText.Draw(text);
+                drawSpr.Position = GetPosition().Round();
+                internalRenderTexture.Draw(text);
                 drawSpr.TextureRect = new IntRect(0, 0, (int)lastSize.x, (int)lastSize.y);
-                internalText.Display();
-                drawSpr.Texture = internalText.Texture;
+                internalRenderTexture.Display();
+                drawSpr.Texture = internalRenderTexture.Texture;
 
                 rt.Draw(drawSpr);
             } else

@@ -1,13 +1,14 @@
-﻿namespace SFML_Game_Engine.GUI
+﻿using SFML_Game_Engine.GUI;
+
+namespace SFML_Game_Engine.Editor
 {
     [Obsolete("This component isnt finished yet, and has minimal functionality as a result")]
     internal class GUIEditor : GUIInteractiveWindow
     {
-        public GUIEditor(Project project) 
-        { 
+        public GUIEditor(Project project)
+        {
             Project = project;
         }
-
 
         GUIList GameObjectScroller = new GUIList();
         GUIList ResourceScroller = new GUIList();
@@ -30,7 +31,7 @@
             allowResizeTop = false;
             allowResizeBottom = true;
 
-            ZOrder = 90;
+            gameObject.ZOrder = 90;
 
             minSize = new Vector2(-10, -10);
             maxSize = new Vector2(250, 100);
@@ -51,19 +52,20 @@
             ResourceInfo.textPosition = new UDim2(0, 0, 2, 5);
             ResourceInfo.charSize = 14;
             ResourceInfo.font = Project.GetResource<FontResource>("Roboto-Regular");
+            ResourceInfo.isBold = true;
 
-            GameObjectScroller.content = new List<ScrollerEntry>();
-            ResourceScroller.content = new List<ScrollerEntry>();
+            GameObjectScroller.content = new List<GUIListEntry>();
+            ResourceScroller.content = new List<GUIListEntry>();
 
-            foreach(GameObject go in Scene.GetGameObjects(0))
+            foreach (GameObject go in Scene.GetGameObjects(0))
             {
-                GameObjectScroller.content.Add(new ScrollerEntry(35, go.name, 0));
+                GameObjectScroller.content.Add(new GUIListEntry(35, go.name, 0));
                 AddChildren(go, 30, 5);
             }
 
-            foreach(Resource res in Project.Resources.resources)
+            foreach (Resource res in Project.Resources.resources)
             {
-                ScrollerEntry entry = new ScrollerEntry(25, res.name + "| uses:"+ res.requests + " : " + res.GetType().Name, 0);
+                GUIListEntry entry = new GUIListEntry(25, res.name + "| uses:" + res.requests + " : " + res.GetType().Name, 0);
                 entry.textPosition = new Vector2(0.05f, 0.5f);
                 entry.textAnchor = new Vector2(0f, 0.5f);
 
@@ -75,9 +77,9 @@
         public override void Update()
         {
             base.Update();
-            updateWait += deltaTime;
+            updateWait += DeltaTime;
 
-            if(updateWait >= 0.0333f)
+            if (updateWait >= 0.0333f)
             {
                 updateWait = 0.0f;
                 GameObjectScroller.content.Clear();
@@ -85,13 +87,13 @@
 
                 foreach (GameObject go in Scene.GetGameObjects(0))
                 {
-                    GameObjectScroller.content.Add(new ScrollerEntry(35, go.name, 0));
+                    GameObjectScroller.content.Add(new GUIListEntry(35, go.name, 0));
                     AddChildren(go, 30, 5);
                 }
 
                 foreach (Resource res in Project.Resources.resources)
                 {
-                    ScrollerEntry entry = new ScrollerEntry(25, res.name + " : " + res.GetType().Name, 0);
+                    GUIListEntry entry = new GUIListEntry(25, res.name + " : " + res.GetType().Name, 0);
                     entry.textPosition = new Vector2(0.05f, 0.5f);
                     entry.textAnchor = new Vector2(0f, 0.5f);
                     entry.val = res;
@@ -101,9 +103,9 @@
                 }
 
                 int sel = ResourceScroller.SelectedEntry;
-                if(sel != -1)
+                if (sel != -1)
                 {
-                    ScrollerEntry entry = ResourceScroller.content[sel];
+                    GUIListEntry entry = ResourceScroller.content[sel];
 
                     Resource asRes = (Resource)entry.val!;
 
@@ -120,8 +122,8 @@
         {
             foreach (GameObject child in from.GetChildren())
             {
-                GameObjectScroller.content.Add(new ScrollerEntry(lastSize, child.name, lastOffset));
-                AddChildren(child, lastSize-5, lastOffset + 5);
+                GameObjectScroller.content.Add(new GUIListEntry(lastSize, child.name, lastOffset));
+                AddChildren(child, lastSize - 5, lastOffset + 5);
             }
         }
 

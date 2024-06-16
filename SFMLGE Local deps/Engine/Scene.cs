@@ -26,9 +26,16 @@ namespace SFML_Game_Engine
 
         public event Action<Scene>? OnStart;
 
+        public ShaderResource? overlayShader = null;
+
         public Camera camera { get; private set; }
 
+        // This MIGHT be hacky AF but *might* be better then constantly re-sorting all game objects when a ZOrder is changed.
+        public Dictionary<int, List<GameObject>> ZTree { get; private set; } = new Dictionary<int, List<GameObject>>();
+
         Stopwatch deltaWatch = new Stopwatch();
+
+        List<GameObject> gameObjects = new List<GameObject>();
 
         public float deltaTime { get; private set; } = 0;
 
@@ -47,6 +54,7 @@ namespace SFML_Game_Engine
             GameObject? instance = prefab.CreatePrefab?.Invoke(Project, this);
             if (instance == null) { return null; }
             root.AddChild(instance);
+            gameObjects.Add(instance);
             return instance;
         }
 
@@ -57,6 +65,7 @@ namespace SFML_Game_Engine
             GameObject go = new GameObject(Project, this, root);
             root.AddChild(go);
             go.name = name;
+            gameObjects.Add(go);
             return go;
         }
 
@@ -69,6 +78,7 @@ namespace SFML_Game_Engine
 
             GameObject go = new GameObject(Project, this, parent);
             go.name = name;
+            gameObjects.Add(go);
             return go;
         }
 
@@ -108,6 +118,24 @@ namespace SFML_Game_Engine
             GetObjectsAt(root, children, depth);
 
             return children.ToArray();
+        }
+
+        /// <summary>
+        /// Updates a <see cref="GameObject"/>'s ZOrder in the <see cref="ZTree"/>
+        /// </summary>
+        public void ZOrderGameObjectUpdate(GameObject go, int newZOrder, int oldZOrder)
+        {
+            if (ZTree.ContainsKey(newZOrder))
+            {
+                ZTree[newZOrder].Add(go);
+                if(newZOrder == oldZOrder) { return; } else { ZTree[oldZOrder].Remove(go); }
+            } 
+            else
+            {
+                ZTree.Add(newZOrder, new List<GameObject>());
+                ZTree[newZOrder].Add(go);
+                if (newZOrder == oldZOrder) { return; } else { ZTree[oldZOrder].Remove(go); }
+            }
         }
 
         void GetObjectsAt(GameObject from, List<GameObject> sofar, int depth)
@@ -159,29 +187,69 @@ namespace SFML_Game_Engine
 
             root.Update();
 
+            for(int i = 0; i < gameObjects.Count; i++)
+            {
+                GameObject go = gameObjects[i];
+                if(go.ShouldCleanup == true)
+                {
+                    gameObjects.RemoveAt(i);
+                    if (ZTree.ContainsKey(go.ZOrder)) { ZTree[go.ZOrder].Remove(go); }
+                    i--;
+                }
+            }
+
             deltaTime = deltaWatch.ElapsedMilliseconds * 0.001f;
             deltaWatch.Restart();
             audioManager.Update();
             camera.Update();
         }
 
+        RenderTexture? screenText = null;
+        Sprite drawSprite = new Sprite();
+
         public void Render(RenderTarget rt)
         {
             if (!isLoaded) { return; }
+
+            if(screenText == null || screenText.Size != Project.App.Size)
+            {
+                screenText?.Dispose();
+                screenText = new RenderTexture(Project.App.Size.X, Project.App.Size.Y);
+                drawSprite.TextureRect = new IntRect(0, 0, (int)screenText.Size.X, (int)screenText.Size.Y);
+            }
+
+            screenText.Clear();
+            screenText.SetView(camera.cameraView);
 
             foreach (GameObject gm in root.GetChildren())
             {
                 gm.GetRenderables(renderManager);
             }
 
-            renderManager.Render(rt);
+            
+            renderManager.Render(screenText);
 
-            View oldView = new View(rt.GetView());
+            View oldView = new View(screenText.GetView());
+            screenText.SetView(screenText.DefaultView);
+
+            renderManager.RenderOverlay(screenText);
+
+            screenText.Display();
+            drawSprite.Texture = screenText.Texture;
+            drawSprite.Position = new Vector2(0, 0);
+
+            oldView = rt.GetView();
             rt.SetView(rt.DefaultView);
-
-            renderManager.RenderOverlay(rt);
-
+            if (overlayShader != null)
+            {
+                rt.Draw(drawSprite, overlayShader);
+            }
+            else
+            {
+                rt.Draw(drawSprite);
+            }
             rt.SetView(oldView);
+            screenText.SetView(oldView);
         }
 
         /// <summary> Gets the mouse position in Screen space </summary>

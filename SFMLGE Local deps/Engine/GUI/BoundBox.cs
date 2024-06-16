@@ -14,6 +14,9 @@ namespace SFML_Game_Engine.GUI
         public Vector2 BottomLeft { get; }
         public Vector2 BottomRight { get; }
         public Vector2 Center { get; }
+        public Vector2 Size { get; } // simply so i dont have to keep getting stupid "Vector2f + Vector2 is ambiguiosososasasd" garbage
+        public Vector2 Position { get; } // simply so i dont have to keep getting stupid "Vector2f + Vector2 is ambiguiosososasasd" garbage
+
 
         /// <summary>
         /// Creates a BoundBox from a <see cref="FloatRect"/>.
@@ -27,6 +30,8 @@ namespace SFML_Game_Engine.GUI
             BottomLeft = new Vector2(rect.Left, rect.Top + rect.Height);
             BottomRight = new Vector2(rect.Left + rect.Width, rect.Top + rect.Height);
             Center = new Vector2(rect.Left + (rect.Width / 2), rect.Top + (rect.Height / 2));
+            Size = Rect.Size;
+            Position = Rect.Position;
         }
 
         /// <summary>
@@ -44,6 +49,8 @@ namespace SFML_Game_Engine.GUI
             this.BottomLeft = BottomLeft;
             this.BottomRight = BottomRight;
             Center = new Vector2(Rect.Left + (Rect.Width / 2), Rect.Top + (Rect.Height / 2));
+            Size = Rect.Size;
+            Position = Rect.Position;
         }
         
         /// <summary>
@@ -80,6 +87,20 @@ namespace SFML_Game_Engine.GUI
                 BottomLeft - new Vector2(widthOffset, -heightOffset),
                 BottomRight - new Vector2(-widthOffset, -heightOffset)
             );
+        }
+
+        /// <summary>
+        /// Sets a rectangle shapes position, size, fill color, outline thickness and outline color for debug viewing of bound boxes.
+        /// does not actually draw the rectangle shape
+        /// </summary>
+        /// <param name="shape"></param>
+        public readonly void SetRect(RectangleShape shape)
+        {
+            shape.FillColor = Color.Transparent;
+            shape.OutlineColor = Color.Red; 
+            shape.OutlineThickness = 1;
+            shape.Position = Rect.Position;
+            shape.Size = Rect.Size;
         }
     }
 }

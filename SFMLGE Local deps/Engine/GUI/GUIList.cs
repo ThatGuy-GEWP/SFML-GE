@@ -3,7 +3,7 @@ using SFML.Window;
 
 namespace SFML_Game_Engine.GUI
 {
-    public class ScrollerEntry
+    public class GUIListEntry
     {
         public int YOrder;
         public float YSize;
@@ -28,16 +28,16 @@ namespace SFML_Game_Engine.GUI
         /// </summary>
         public Vector2 textAnchor = new Vector2(0.5f, 0.5f);
 
-        public ScrollerEntry() {}
+        public GUIListEntry() {}
 
-        public ScrollerEntry(float ySize, string displayedText, int xOffset = 0)
+        public GUIListEntry(float ySize, string displayedText, int xOffset = 0)
         {
             this.YSize = ySize;
             this.DisplayedText = displayedText;
             this.xOffset = xOffset;
         }
 
-        public ScrollerEntry(int yOrder, float ySize, bool clickable, string displayedText)
+        public GUIListEntry(int yOrder, float ySize, bool clickable, string displayedText)
         {
             YOrder = yOrder;
             YSize = ySize;
@@ -46,9 +46,12 @@ namespace SFML_Game_Engine.GUI
         }
     }
 
+    /// <summary>
+    /// A GUIPanel that contains a list of <see cref="GUIListEntry"/>'s that can be selected and scrolled too.
+    /// </summary>
     public class GUIList : GUIPanel
     {
-        public List<ScrollerEntry> content = null!;
+        public List<GUIListEntry> content = null!;
 
         public float entrySpacing = 2;
 
@@ -80,11 +83,11 @@ namespace SFML_Game_Engine.GUI
             // REMOVE WHEN DONE!!!
             if(content == null) 
             {
-                content = new List<ScrollerEntry>();
+                content = new List<GUIListEntry>();
 
                 for (int i = 0; i < 5; i++)
                 {
-                    content.Add(new ScrollerEntry(0, RandomGen.Next(15f, 45f), true, "Test!! " + i));
+                    content.Add(new GUIListEntry(0, RandomGen.Next(15f, 45f), true, "Test!! " + i));
                 }
             }
         }
@@ -98,15 +101,7 @@ namespace SFML_Game_Engine.GUI
 
             bool isMousePressed = Mouse.IsButtonPressed(Mouse.Button.Left);
 
-
-            bool inXBounds =
-                mousePos.x >= bounds.TopLeft.x &&
-                mousePos.x <= bounds.BottomRight.x;
-            bool inYBounds =
-                mousePos.y >= bounds.TopLeft.y &&
-                mousePos.y <= bounds.BottomRight.y;
-
-            if(inXBounds && inYBounds)
+            if(bounds.WithinBounds(mousePos))
             {
                 Hovering = true;
             } else { Hovering = false; }
@@ -128,7 +123,7 @@ namespace SFML_Game_Engine.GUI
             {
                 Vector2 contSize = new Vector2(lastSize.x - entrySpacing, content[i].YSize - entrySpacing);
 
-                ScrollerEntry entry = content[i];
+                GUIListEntry entry = content[i];
 
                 contentRect.Origin = new Vector2(contSize.x / 2f, 0);
 
@@ -161,14 +156,7 @@ namespace SFML_Game_Engine.GUI
                     Vector2 offsetMousePos = mousePos - bounds.TopLeft;
                     BoundBox contentBounds = new BoundBox(contentRect.GetGlobalBounds());
 
-                    bool inContentXBounds =
-                         offsetMousePos.x >= contentBounds.TopLeft.x &&
-                         offsetMousePos.x <= contentBounds.BottomRight.x;
-                    bool inContentYBounds =
-                        offsetMousePos.y >= contentBounds.TopLeft.y &&
-                        offsetMousePos.y <= contentBounds.BottomRight.y;
-
-                    if(inContentXBounds && inContentYBounds)
+                    if(contentBounds.WithinBounds(mousePos))
                     {
                         hoveredEntry = i;
                         contentRect.FillColor = GUIPanel.defaultPrimary;

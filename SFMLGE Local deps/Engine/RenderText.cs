@@ -45,7 +45,7 @@ namespace SFML_Game_Engine
             this.font = font;
         }
 
-        public sbyte ZOrder { get; set; } = 0;
+        
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = true;
         public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;

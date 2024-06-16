@@ -9,9 +9,9 @@ namespace SFML_Game_Engine.GUI
     /// </summary>
     public class GUIPanel : Component, IRenderable
     {
-        // Defaults are fine.
+        // works for now, should be configurable later.
         internal static Color defaultForeground = new Color(0xE0EBF1FF);
-        internal static Color defaultBackground = new Color(0x474859FF);
+        internal static Color defaultBackground = new Color(0x474859FF) - new Color(0,0,0,125);
 
         internal static Color defaultSecondary = new Color(0x61637BFF);
         internal static Color defaultPrimary = new Color(0x767997FF);
@@ -20,7 +20,14 @@ namespace SFML_Game_Engine.GUI
 
         internal static string defaultFontName = "Roboto-Regular";
 
-        public Color backgroundColor = defaultBackground - new Color(0,0,0,125);
+        /// <summary>
+        /// The background color of this GUI object
+        /// </summary>
+        public Color backgroundColor = defaultBackground;
+
+        /// <summary>
+        /// The outline color of this GUI object
+        /// </summary>
         public Color outlineColor = defaultSecondary;
 
         /// <summary>Controls the thickness of the outline, values less then 0 will not render with rounded corners. 0 to disable the outline.</summary>
@@ -44,28 +51,28 @@ namespace SFML_Game_Engine.GUI
         /// <summary> controls whether or not the outline from <see cref="GUIPanel"/> is drawn or not.</summary>
         protected bool renderOutline = true;
 
-
-
-        // used to pre-render the corner texture, should only be generated once at the start of the engine if any GUIPanels exist.
+        // used to pre-render the corner texture, should only be generated once at the start of the engine if any GUIPanels are created.
         static Texture cornerText = null!;
 
         /// <summary>
-        /// Controls where <see cref="Position"/> is, 0,0 would be the top left and 1,1 would be the bottom right
+        /// Controls where <see cref="Position"/> is. <para/> 0,0 would be the top left and 1,1 would be the bottom right
         /// </summary>
         public Vector2 Anchor = Vector2.zero;
+
         /// <summary>
         /// The position of this GUI object.
         /// </summary>
         public UDim2 Position = UDim2.zero;
+
         /// <summary>
         /// The size of this GUI object.
         /// </summary>
         public UDim2 Size = new UDim2(0.0f, 0.0f, 150f, 50f);
 
+        GameObject? lastParent = null;
+        GUIPanel? lastGUIPanel = null;
 
-        // public float Rotation = 45f; to be added when i feel like messing with it :sob:
-
-        public sbyte ZOrder { get; set; } = 0;
+        
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = true;
         public RenderQueueType QueueType { get; set; } = RenderQueueType.OverlayQueue;
@@ -87,6 +94,16 @@ namespace SFML_Game_Engine.GUI
             tempCircle.Dispose();
         }
 
+        void ParentCheck() // prob increases performance by a bit!
+        {
+            if (lastParent != gameObject.Parent)
+            {
+                if (gameObject.Parent == null) { lastGUIPanel = lastGUIPanel == null ? lastGUIPanel : null; }
+                lastGUIPanel = gameObject.Parent!.GetComponentOfSubclass<GUIPanel>();
+                lastParent = gameObject.Parent;
+            }
+        }
+
 
         public GUIPanel()
         {
@@ -98,15 +115,15 @@ namespace SFML_Game_Engine.GUI
 
         public override void Start()
         {
-            if(ZOrder == 0)
+            if(gameObject.ZOrder == 0)
             {
-                if (gameObject.parent == null) { return; }
+                if (gameObject.Parent == null) { return; }
 
 
-                GUIPanel? panelParent = gameObject.parent.GetComponentOfSubclass<GUIPanel>();
+                GUIPanel? panelParent = gameObject.Parent.GetComponentOfSubclass<GUIPanel>();
                 if (panelParent != null)
                 {
-                    ZOrder = (sbyte)(panelParent.ZOrder + 1);
+                    gameObject.ZOrder = (sbyte)(panelParent.gameObject.ZOrder + 1);
                 }
             }
         }
@@ -116,16 +133,53 @@ namespace SFML_Game_Engine.GUI
         /// </summary>
         Vector2 ParentScale()
         {
-            if (gameObject.parent == null) { return (Vector2)Project.App.Size; }
+            ParentCheck();
 
-
-            GUIPanel? panelParent = gameObject.parent.GetComponentOfSubclass<GUIPanel>();
-            if (panelParent != null)
+            if (lastGUIPanel != null)
             {
-                return panelParent.GetSize();
+                return lastGUIPanel.GetSize();
             }
 
             return (Vector2)Project.App.Size;
+        }
+
+        protected BoundBox ParentBounds()
+        {
+            ParentCheck();
+
+            if (lastGUIPanel != null)
+            {
+                return lastGUIPanel.GetBounds();
+            }
+
+            return new BoundBox(new FloatRect(0, 0, (int)Project.App.Size.X, (int)Project.App.Size.Y));
+        }
+
+        protected GUIPanel? GUIParent()
+        {
+            ParentCheck();
+            return lastGUIPanel;
+        }
+
+        /// <summary>
+        /// Gets the base <see cref="GUIPanel"/> that holds this ones bounds. 
+        /// </summary>
+        protected BoundBox? ContainerBounds()
+        {
+            GUIPanel? foundPan = null;
+            GUIPanel? lastPan = this;
+            int searchIndx = 0;
+            while(searchIndx < 100)
+            {
+                searchIndx++;
+                GUIPanel? curPan = lastPan.GUIParent();
+                if (curPan != null) // meaning we are at the top
+                {
+                    lastPan = curPan;
+                } else { foundPan = lastPan; break; }
+            }
+
+            return foundPan?.GetBounds();
         }
 
         /// <summary>
@@ -133,13 +187,11 @@ namespace SFML_Game_Engine.GUI
         /// </summary>
         Vector2 ParentPosition()
         {
-            if (gameObject.parent == null) { return Vector2.zero; }
+            ParentCheck();
 
-
-            GUIPanel? panelParent = gameObject.parent.GetComponentOfSubclass<GUIPanel>();
-            if (panelParent != null)
+            if (lastGUIPanel != null)
             {
-                return panelParent.GetPosition();
+                return lastGUIPanel.GetPosition();
             }
 
             return Vector2.zero;
@@ -245,9 +297,7 @@ namespace SFML_Game_Engine.GUI
                 backgroundPanelRect.Texture = panelContent.Resource;
             }
 
-            PrePass(rt);
-
-            if(backgroundColor.A > 0) { rt.Draw(backgroundPanelRect); }
+            PrePass(rt, in pos, in size);
 
             if (MathF.Abs(outlineThickness) != 0 && outlineColor.A > 0)
             {
@@ -265,14 +315,16 @@ namespace SFML_Game_Engine.GUI
                 }
             }
 
+            rt.Draw(backgroundPanelRect);
+
             PostPass(rt);
         }
 
         /// <summary>
-        /// Gets run before anything is drawn to the screen, and right after panelRect gets all its values set.
+        /// Gets run before anything is drawn to the screen, allows you to change the position and size variables before being drawn.
         /// </summary>
         /// <param name="rt"></param>
-        protected virtual void PrePass(RenderTarget rt) { return; }
+        protected virtual void PrePass(RenderTarget rt, in Vector2 pos, in Vector2 size) { return; }
 
         /// <summary>
         /// Gets after the base panel is drawn to the screen.

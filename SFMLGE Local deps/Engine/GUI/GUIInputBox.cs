@@ -5,6 +5,9 @@ namespace SFML_Game_Engine.GUI
 {
     public class GUIInputBox : GUILabel
     {
+        /// <summary>
+        /// Contains the lowercase variants of every <see cref="Keyboard.Key"/> as a <c>char</c>
+        /// </summary>
         public static readonly Dictionary<Keyboard.Key, char> KeyToChar = new Dictionary<Keyboard.Key, char>()
         {
             {Keyboard.Key.Num1, '1'},
@@ -22,6 +25,9 @@ namespace SFML_Game_Engine.GUI
             {Keyboard.Key.LBracket, '{' },
             {Keyboard.Key.RBracket, '}' },
             {Keyboard.Key.Backslash, '\\'},
+            {Keyboard.Key.Semicolon, ';'},
+            {Keyboard.Key.Apostrophe, '\''},
+            {Keyboard.Key.Grave, '`'},
 
 
             {Keyboard.Key.A, 'a'},
@@ -56,6 +62,9 @@ namespace SFML_Game_Engine.GUI
             {Keyboard.Key.Slash, '/' }
         };
 
+        /// <summary>
+        /// Contains the upper variants of every <see cref="Keyboard.Key"/> as a <c>char</c>
+        /// </summary>
         public static readonly Dictionary<Keyboard.Key, char> KeyToCharUpper = new Dictionary<Keyboard.Key, char>()
         {
             {Keyboard.Key.Num1, '!'},
@@ -73,6 +82,9 @@ namespace SFML_Game_Engine.GUI
             {Keyboard.Key.LBracket, '[' },
             {Keyboard.Key.Backslash, '|' },
             {Keyboard.Key.RBracket, ']' },
+            {Keyboard.Key.Semicolon, ':'},
+            {Keyboard.Key.Apostrophe, '\"'},
+            {Keyboard.Key.Grave, '~'},
 
             {Keyboard.Key.A, 'A'},
             {Keyboard.Key.B, 'B'},
@@ -106,12 +118,28 @@ namespace SFML_Game_Engine.GUI
             {Keyboard.Key.Slash, '?'},
         };
 
+        /// <summary>
+        /// Called every time text is inputed from a user.
+        /// </summary>
+        public event Action<string, GUILabel> OnTextInput = null!;
+
         public GUIInputBox(string displayedString = "Testing", uint charSize = 15)
         {
             textAnchor = new Vector2(0, 0.5f);
-            textPosition = new UDim2(0, 0.5f, 0, 0);
+            textPosition = new UDim2(0, 0.5f, 5, 0);
             this.displayedString = displayedString;
             this.charSize = charSize;
+            richEnabled = false;
+        }
+
+        /// <summary>
+        /// Sets the text inside the label if its not focused.
+        /// </summary>
+        public bool SetTextIfNotFocused(string to)
+        {
+            if (focused) { return false; }
+            displayedString = to;
+            return true;
         }
 
         public override void Start()
@@ -121,7 +149,7 @@ namespace SFML_Game_Engine.GUI
             {
                 if (!focused) { return; }
                 if (args.Code == Keyboard.Key.Backspace && displayedString.Length > 0)
-                { displayedString = displayedString.Remove(displayedString.Length - 1); }
+                { displayedString = displayedString.Remove(displayedString.Length - 1); OnTextInput?.Invoke(displayedString, this); }
 
                 if (args.Shift)
                 {
@@ -131,6 +159,8 @@ namespace SFML_Game_Engine.GUI
 
                         if (args.Shift) { c = c.ToString().ToUpper()[0]; }
                         displayedString += c;
+
+                        OnTextInput?.Invoke(displayedString, this);
                     }
                 }
                 else
@@ -139,54 +169,94 @@ namespace SFML_Game_Engine.GUI
                     {
                         char c = KeyToChar[args.Code];
                         displayedString += c;
+                        OnTextInput?.Invoke(displayedString, this);
                     }
                 }
                 //Console.WriteLine(containedString);
             };
         }
 
+        /// <summary>
+        /// if <c>true</c>, text can be inputed
+        /// </summary>
         public bool focused = false;
+
+        /// <summary>
+        /// If <c>true</c>, the input will not autofocus from clicks outside the base parent container.
+        /// </summary>
+        public bool clipInteraction = true;
+
+        /// <summary>
+        /// When true, clicking on the InputBox will set <see cref="focused"/> to <c>true</c>
+        /// </summary>
         public bool autofocus = true;
 
+        /// <summary>
+        /// <c>true</c> while the GUIInputBox is being hovered over.
+        /// </summary>
         public bool Hovering { get; private set; } = false;
 
         public override void Update()
         {
-            Vector2 size = GetSize();
             BoundBox bounds = GetBounds();
             Vector2 mousePos = Scene.GetMouseScreenPosition();
 
-            if(Hovering && !bounds.WithinBounds(mousePos))
+            bool withinBounds = bounds.WithinBounds(mousePos);
+            bool canClick = true;
+
+            if (clipInteraction)
+            {
+                BoundBox? ownerBounds = ContainerBounds();
+                if (ownerBounds != null)
+                {
+                    if (!((BoundBox)ownerBounds).WithinBounds(mousePos))
+                    {
+                        canClick = false;
+                    }
+                }
+            }
+
+            if (Hovering && !bounds.WithinBounds(mousePos))
             {
                 Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow));
                 Hovering = false;
             }
 
-            if (!Hovering && bounds.WithinBounds(mousePos))
+            if (!Hovering && withinBounds)
             {
                 Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Text));
                 Hovering = true;
             }
             
-            if(bounds.WithinBounds(mousePos) && Project.IsMouseButtonPressed(Mouse.Button.Left) && autofocus)
+            if(withinBounds && Project.IsMouseButtonPressed(Mouse.Button.Left) && autofocus && canClick)
             {
                 focused = true;
+                Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Text));
                 outlineColor = Color.White;
             }
-            if(!bounds.WithinBounds(mousePos) && Project.IsMouseButtonPressed(Mouse.Button.Left) && autofocus)
+            if(!withinBounds && Project.IsMouseButtonPressed(Mouse.Button.Left) && autofocus)
             {
                 focused = false;
                 outlineColor = GUIPanel.defaultSecondary;
+                Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow));
             }
+        }
+
+        protected override void PostPass(RenderTarget rt)
+        {
+            UDim2 oldPos = textPosition;
 
             if (focused)
             {
-                BoundBox textBounds = GetTextBounds();
+                BoundBox textBounds = GetTextLocalBounds();
 
-                float distFromEdge = textBounds.Rect.Width/2 - (size.x);
+                float distFromEdge = ((textBounds.Rect.Width + oldPos.offset.x) - (GetSize().x));
 
-                textPosition = new UDim2(textPosition.scale, new Vector2(-Math.Max(distFromEdge, 0), 0));
-            } else { textPosition = new UDim2(textPosition.scale, Vector2.zero); }
+                textPosition = new UDim2(textPosition.scale, oldPos.offset + new Vector2(-Math.Max(distFromEdge, 0), 0));
+            }
+            else { textPosition = new UDim2(textPosition.scale, textPosition.offset); }
+            base.PostPass(rt);
+            textPosition = oldPos;
         }
     }
 }

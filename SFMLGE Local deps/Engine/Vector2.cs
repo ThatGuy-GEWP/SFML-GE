@@ -6,19 +6,10 @@ namespace SFML_Game_Engine
 {
     public struct Vector2
     {
-        public float x { get; }
-        public float y { get; }
+        public float x;
+        public float y;
 
-        // for ANYONE who wants to know why these are read only
-        /*
-         *  Something something its good practice
-         *  Apparently it can cause issues if i dont do this, sorry
-         *  i personally liked when you could do vector2.x += 1 but now you cant!
-         *  but il take losing that if it means the memory usage of this struct is
-         *  basically 1/16th then when it was a class
-         *  
-         *  the garbage collector also did a collection like 20 times a second when it was a class lollololo
-         */
+        // used to be a thing here complaining about readonly X and Y, but its no longer read only, get bent C# nerds im still on the stack!
 
         // for anyone wondering why there is almost two of every math operation
         /*
@@ -179,6 +170,17 @@ namespace SFML_Game_Engine
         public readonly Vector2 Clamp(float min, float max)
         {
             return new Vector2(MathF.Min(MathF.Max(min, x), max), MathF.Min(MathF.Max(min, y), max));
+        }
+
+        //https://stackoverflow.com/questions/10163083/parse-method-for-the-custom-class-c-sharp
+        public static Vector2 Parse(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) throw new ArgumentException(input);
+
+            string[] vars = input.Replace(" ", string.Empty).Split(',');
+            if(vars.Length != 2) { throw new ArgumentException(input); }
+
+            return new Vector2(float.Parse(vars[0]), float.Parse(vars[1]));
         }
 
         /// <summary>

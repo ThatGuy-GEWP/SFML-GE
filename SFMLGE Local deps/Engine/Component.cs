@@ -16,7 +16,7 @@ namespace SFML_Game_Engine
             set { _gameObject = value; OnAdded(value); }
         }
 
-        public float deltaTime
+        public float DeltaTime
         {
             get { return Scene.deltaTime; }
         }
@@ -30,7 +30,7 @@ namespace SFML_Game_Engine
         public bool Enabled
         {
             get { return _enabled; }
-            set { _enabled = value; if (value) { Awake(); } }
+            set { if (!_enabled && value) { Awake(); } _enabled = value; }
         }
 
         bool _started = false;
@@ -45,13 +45,12 @@ namespace SFML_Game_Engine
         /// The <see cref="SFML_Game_Engine.Project"/> this component is within.
         /// Null on component creation.
         /// </summary>
-
         public Project Project {
             get { 
                 if (_project == null) 
                 {
                     throw new NullReferenceException("\n"+
-                        "->  A component is trying to access Component.project before its initialized!"+"\n"+
+                        "->  A component is trying to access Component.Project before its initialized!"+"\n"+
                         " -> Component.project should only be accessed during and after Component.Start()"
                         );
                 } 
@@ -65,25 +64,38 @@ namespace SFML_Game_Engine
         /// Null on component creation.
         /// </summary>
         public Scene Scene {
-            get { return _scene; }
+            get { 
+                if(_scene == null)
+                {
+                    throw new NullReferenceException("\n" +
+                        "->  A component is trying to access Component.Scene before its initialized!" + "\n" +
+                        " -> Component.Scene should only be accessed during and after Component.Start()"
+                        );
+                }
+                return _scene; 
+            }
             set { _scene = value; }
         }
 
+        /// <summary>Called every <see cref="SFML_Game_Engine.Project.Update"/></summary>
         public virtual void Update() { return; }
 
-        public virtual void Start()
-        {
-            return;
-        }
-        /// <summary> Run when component is enabled after being disabled.</summary>
+        /// <summary>Called once the <see cref="SFML_Game_Engine.Scene"/> this component is in has loaded.</summary>
+        public virtual void Start() { return; }
+
+        /// <summary> Called when a component is enabled after being disabled.</summary>
         public virtual void Awake() { return; }
 
+        /// <summary> Called when a component is just added to a <see cref="GameObject"/>.</summary>
         public virtual void OnAdded(GameObject gameObject) { return; }
 
+        /// <summary> Called when this Component or <see cref="gameObject"/> is destroyed.</summary>
         public virtual void OnDestroy(GameObject gameObject) { return; }
 
+        /// <summary> Called when this <see cref="gameObject"/>'s scene is unloaded</summary>
         public virtual void OnUnload() { return; }
 
+        /// <summary> Called when this <see cref="gameObject"/>'s scene is loaded</summary>
         public virtual void OnLoad() { return; }
     }
 }

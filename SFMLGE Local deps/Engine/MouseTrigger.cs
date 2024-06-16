@@ -8,7 +8,6 @@ namespace SFML_Game_Engine
     /// </summary>
     public class MouseTrigger : Component, IRenderable
     {
-        public sbyte ZOrder { get; set; } = 127;
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = false;
 

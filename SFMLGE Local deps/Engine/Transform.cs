@@ -26,17 +26,17 @@ namespace SFML_Game_Engine
         {
             get
             {
-                if (owner.parent != null)
+                if (owner.Parent != null)
                 {
-                    return _position + owner.parent.transform.WorldPosition;
+                    return _position + owner.Parent.transform.WorldPosition;
                 }
                 return _position;
             }
             set
             {
-                if (owner.parent != null)
+                if (owner.Parent != null)
                 {
-                    Vector2 c = value - owner.parent.transform.WorldPosition;
+                    Vector2 c = value - owner.Parent.transform.WorldPosition;
                     _position = c;
                 }
                 else

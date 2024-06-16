@@ -65,9 +65,9 @@ namespace SFML_Game_Engine
             App = app;
             this.ResourceDir = ResourceDir;
             Resources = new ResourceCollection(this.ResourceDir, this);
-            if (Directory.Exists("Engine/Font"))
+            if (Directory.Exists("Engine"))
             {
-                Resources.LoadDir("Engine/Font");
+                Resources.LoadDir("Engine");
             }
             
             app.MouseWheelScrolled += (sender, args) =>

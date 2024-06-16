@@ -44,7 +44,6 @@ namespace SFML_Game_Engine
 
         RectangleShape shape = new RectangleShape();
 
-        public sbyte ZOrder { get; set; } = 5;
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = true;
         public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;

@@ -26,7 +26,11 @@ namespace SFML_Game_Engine
 
         string getTextureInfo()
         {
-            return "Texture Size:"+Resource.Size.X+"x"+Resource.Size.Y+"\nRepeated? "+Resource.Repeated+"\nSmooth? "+Resource.Smooth+"\nSRGB Enabled? "+Resource.Srgb;
+            return 
+                "Texture Size:"+Resource.Size.X+"x"+Resource.Size.Y+
+                "\nRepeated? "+Resource.Repeated+
+                "\nSmooth? "+ "<crgb86,154,175>" + Resource.Smooth+"<r>"+
+                "\nSRGB Enabled? "+Resource.Srgb;
         }
 
         public override string ToString()

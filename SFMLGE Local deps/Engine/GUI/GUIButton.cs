@@ -4,42 +4,73 @@ using SFML.Window;
 namespace SFML_Game_Engine.GUI
 {
     /// <summary>
-    /// An interactable button, does not actually draw anything to the screen by itself, see <see cref="GUIButtonPanel"/> for that.
+    /// An Interactable GUI button.
     /// </summary>
     public class GUIButton : GUIPanel
     {
+        /// <summary> Called when the button is clicked </summary>
         public event Action<GUIButton> OnClick = null!;
+
+        /// <summary> Called while the button is held </summary>
         public event Action<GUIButton> OnHold = null!;
+
+        /// <summary> Called when the button is released </summary>
         public event Action<GUIButton> OnRelease = null!;
 
+        /// <summary> Called when the button is being hovered over </summary>
         public event Action<GUIButton> OnHoveringStart = null!;
+
+        /// <summary> Called when the button is no longer being hovered over </summary>
         public event Action<GUIButton> OnHoveringEnd = null!;
 
         /// <summary>
-        /// If false, the button will not respond to clicks.
+        /// If <c>false</c>, the button will not respond to clicks.
         /// </summary>
         public bool interactable = true;
 
         /// <summary>
-        /// If false, the button will not have hovering effects.
+        /// If <c>true</c>, the button will not respond to clicks outside the base parent container.
+        /// </summary>
+        public bool clipInteraction = true;
+
+        /// <summary>
+        /// If <c>false</c>, the button will not have hovering effects.
         /// </summary>
         public bool useHoverEffects = true;
 
         /// <summary>
-        /// If true, the cursor will switch to a pointing image when hovering
+        /// If <c>true</c>, the cursor will switch to a pointer when hovering
         /// </summary>
         public bool changeCuror = true;
 
+        /// <summary>
+        /// The color to switch to when hovering, requires <see cref="useHoverEffects"/> to be true
+        /// </summary>
         public Color hoverColor = defaultSecondary;
+
+        /// <summary>
+        /// The color to switch to when pressed down, requires <see cref="useHoverEffects"/> to be true
+        /// </summary>
         public Color heldColor = defaultPressed;
 
-        Color currentColor;
-
+        /// <summary>
+        /// <c>true</c> while the mouse is hovering over this button.
+        /// </summary>
         public bool Hovering { get; private set; } = false;
+
+        /// <summary>
+        /// <c>true</c> while the mouse is holding down this button.
+        /// </summary>
         public bool HeldDown { get; private set; } = false;
 
+        Color currentColor;
         bool lastClickState = false;
         bool clickedThis = false;
+
+        public override void Start()
+        {
+            base.Start();
+        }
 
         public override void Update()
         {
@@ -52,6 +83,20 @@ namespace SFML_Game_Engine.GUI
 
             bool wasHovering = Hovering;
 
+            bool lastInerac = interactable;
+            if (clipInteraction)
+            {
+                BoundBox? ownerBounds = ContainerBounds();
+                if (ownerBounds != null)
+                {
+                    if (!((BoundBox)ownerBounds).WithinBounds(mousePos))
+                    {
+                        interactable = false;
+                    }
+                }
+            }
+
+
             if (bounds.WithinBounds(mousePos))
             {
                 Hovering = true;
@@ -59,12 +104,12 @@ namespace SFML_Game_Engine.GUI
             }
             else { Hovering = false; if (useHoverEffects) { currentColor = backgroundColor; } }
 
-            if (!wasHovering && Hovering)
+            if (!wasHovering && Hovering && interactable)
             {
                 Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Hand));
                 if (interactable) { OnHoveringStart?.Invoke(this); }
             }
-            if (wasHovering && !Hovering)
+            if (wasHovering && !Hovering && interactable)
             {
                 Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow));
                 if (interactable) { OnHoveringEnd?.Invoke(this); }
@@ -83,28 +128,26 @@ namespace SFML_Game_Engine.GUI
             {
                 if (interactable) { OnHold?.Invoke(this); }
                 HeldDown = true;
-                currentColor = heldColor;
+                if (useHoverEffects && interactable) { currentColor = heldColor; };
             }
             else { HeldDown = false; }
 
             if (lastClickState == true && !isMousePressed && clickedThis)
             {
-                if (interactable) { OnRelease?.Invoke(this); }
+                if (interactable && interactable) { OnRelease?.Invoke(this); }
                 clickedThis = false;
             }
 
             lastClickState = isMousePressed;
+            interactable = lastInerac;
         }
 
-        RectangleShape debugRect = new RectangleShape(new Vector2(50, 50));
-
-
-        protected override void PrePass(RenderTarget rt)
+        protected override void PrePass(RenderTarget rt, in Vector2 pos, in Vector2 size)
         {
-            backgroundPanelRect.FillColor = currentColor;
+            backgroundPanelRect.FillColor = useHoverEffects ? currentColor : backgroundColor;
         }
 
-
+        /*RectangleShape debugRect = new RectangleShape(new Vector2(50, 50));
         protected override void PostPass(RenderTarget rt)
         {
             debugRect.Position = GetPosition();
@@ -126,7 +169,7 @@ namespace SFML_Game_Engine.GUI
                 debugRect.OutlineColor = Color.Cyan;
             }
 
-            //rt.Draw(debugRect);
-        }
+            rt.Draw(debugRect);
+        }*/
     }
 }

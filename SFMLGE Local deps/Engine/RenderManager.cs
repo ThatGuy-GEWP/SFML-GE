@@ -2,39 +2,49 @@
 
 namespace SFML_Game_Engine
 {
+    // Does not yet take advantage of the new ZTree, should fix later!
+
     /// <summary>
     /// Top level class that handles all rendering calls.
-    /// allows for stuff like Z-Ordering and such.
+    /// Expects all <see cref="Component"/>'s given to implment <see cref="IRenderable"/>
     /// </summary>
     public class RenderManager
     {
         /// <summary>
         /// A List of <see cref="IRenderable"/>'s to be rendered next frame, Cleared after every <see cref="Render(RenderWindow)"/>
         /// </summary>
-        List<IRenderable> renderQueue = new List<IRenderable>();
+        List<Component> renderQueue = new List<Component>();
 
         /// <summary>
         /// A List of <see cref="IRenderable"/>'s to be rendered next frame, Cleared after every <see cref="Render(RenderWindow)"/>
         /// </summary>
-        List<IRenderable> overlayQueue = new List<IRenderable>();
+        List<Component> overlayQueue = new List<Component>();
 
         public RenderManager() { }
 
         /// <summary>
-        /// Adds an <see cref="IRenderable"/> to the renderQueue
+        /// Adds a <see cref="Component"/> to <see cref="renderQueue"/>
         /// </summary>
         /// <param name="renderableComponent"></param>
-        public void AddToQueue(IRenderable renderableComponent)
+        public void AddToQueue(Component renderableComponent)
         {
+            if (!typeof(IRenderable).IsAssignableFrom(renderableComponent.GetType()))
+            {
+                throw new ArgumentException(renderableComponent.GetType().FullName + " does not implment the IRenderable interface.");
+            }
             renderQueue.Add(renderableComponent);
         }
 
         /// <summary>
-        /// Adds an <see cref="IRenderable"/> to the GUI renderQueue
+        /// Adds a <see cref="Component"/> to <see cref="overlayQueue"/>
         /// </summary>
         /// <param name="renderableComponent"></param>
-        public void AddToGUIQueue(IRenderable renderableComponent)
+        public void AddToOverlayQueue(Component renderableComponent)
         {
+            if (!typeof(IRenderable).IsAssignableFrom(renderableComponent.GetType())) 
+            {
+                throw new ArgumentException(renderableComponent.GetType().FullName + " does not implment the IRenderable interface.");
+            }
             overlayQueue.Add(renderableComponent);
         }
 
@@ -47,12 +57,12 @@ namespace SFML_Game_Engine
         {
             if (renderQueue.Count > 0)
             {
-                renderQueue.Sort((x, y) => { return x.ZOrder - y.ZOrder; });
+                renderQueue.Sort((x, y) => { return x.gameObject.ZOrder - y.gameObject.ZOrder; });
 
                 for (int i = 0; i < renderQueue.Count; i++)
                 {
-                    if (!renderQueue[i].Visible) { continue; }
-                    renderQueue[i].OnRender(target);
+                    if (!((IRenderable)renderQueue[i]).Visible) { continue; }
+                    ((IRenderable)renderQueue[i]).OnRender(target);
                 }
 
                 renderQueue.Clear();
@@ -70,12 +80,12 @@ namespace SFML_Game_Engine
         {
             if (overlayQueue.Count > 0)
             {
-                overlayQueue.Sort((x, y) => { return x.ZOrder - y.ZOrder; });
+                overlayQueue.Sort((x, y) => { return x.gameObject.ZOrder - y.gameObject.ZOrder; });
 
                 for (int i = 0; i < overlayQueue.Count; i++)
                 {
-                    if (!overlayQueue[i].Visible) { continue; }
-                    overlayQueue[i].OnRender(target);
+                    if (!((IRenderable)overlayQueue[i]).Visible) { continue; }
+                    ((IRenderable)overlayQueue[i]).OnRender(target);
                 }
 
                 overlayQueue.Clear();

@@ -9,7 +9,6 @@ namespace SFML_Game_Engine
     {
         // Should probably replace with a TextureResource variant that handles all this but oh well.
 
-        public sbyte ZOrder { get; set; } = 0;
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = true;
         public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;
@@ -98,7 +97,7 @@ namespace SFML_Game_Engine
         public override void Update()
         {
             if(!playing) { return; }
-            curTime += deltaTime;
+            curTime += DeltaTime;
 
             if (curTime >= frametime)
             {

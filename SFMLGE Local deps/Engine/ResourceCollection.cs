@@ -159,6 +159,7 @@ namespace SFML_Game_Engine
         /// <param name="resource"></param>
         public void AddResource(Resource resource)
         {
+            Console.WriteLine("(Runtime) Loaded "+resource.name +" as "+resource.GetType().Name);
             resources.Add(resource);
         }
 
