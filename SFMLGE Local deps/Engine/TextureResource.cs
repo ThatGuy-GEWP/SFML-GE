@@ -29,7 +29,7 @@ namespace SFML_Game_Engine
             return 
                 "Texture Size:"+Resource.Size.X+"x"+Resource.Size.Y+
                 "\nRepeated? "+Resource.Repeated+
-                "\nSmooth? "+ "<crgb86,154,175>" + Resource.Smooth+"<r>"+
+                "\nSmooth? "+ Resource.Smooth +
                 "\nSRGB Enabled? "+Resource.Srgb;
         }
 

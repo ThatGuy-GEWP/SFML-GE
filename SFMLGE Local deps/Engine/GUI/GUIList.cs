@@ -71,6 +71,8 @@ namespace SFML_Game_Engine.GUI
 
         RectangleShape contentRect = new RectangleShape();
 
+        public event Action<GUIListEntry> EntrySelected = null!;
+
         Text contentText = new Text();
 
         public override void Start()
@@ -156,12 +158,12 @@ namespace SFML_Game_Engine.GUI
                     Vector2 offsetMousePos = mousePos - bounds.TopLeft;
                     BoundBox contentBounds = new BoundBox(contentRect.GetGlobalBounds());
 
-                    if(contentBounds.WithinBounds(mousePos))
+                    if(contentBounds.WithinBounds(offsetMousePos))
                     {
                         hoveredEntry = i;
                         contentRect.FillColor = GUIPanel.defaultPrimary;
                     }
-                    if (hoveredEntry == i && (isMousePressed && !pressed) && content[i].clickable) { SelectedEntry = i; }
+                    if (hoveredEntry == i && (isMousePressed && !pressed) && content[i].clickable) { SelectedEntry = i; EntrySelected?.Invoke(entry); }
                 }
 
                 if(i == SelectedEntry) { contentRect.FillColor = GUIPanel.defaultPressed; }

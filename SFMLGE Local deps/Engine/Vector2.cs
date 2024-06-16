@@ -164,7 +164,7 @@ namespace SFML_Game_Engine
 
         public readonly Vector2 Clamp(Vector2 min, Vector2 max)
         {
-            return new Vector2(MathF.Min(MathF.Max(min.x, x), max.x), MathF.Min(MathF.Max(min.x, y), max.y));
+            return new Vector2(MathF.Min(MathF.Max(min.x, x), max.x), MathF.Min(MathF.Max(min.y, y), max.y));
         }
 
         public readonly Vector2 Clamp(float min, float max)
