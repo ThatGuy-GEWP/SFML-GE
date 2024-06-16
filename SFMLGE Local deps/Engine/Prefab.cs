@@ -21,7 +21,7 @@
 
         public Prefab(string name, Func<Project, Scene, GameObject> createPrefab)
         {
-            this.name = name;
+            this.Name = name;
             CreatePrefab = createPrefab;
         }
 

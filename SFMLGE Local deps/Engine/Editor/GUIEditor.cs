@@ -65,7 +65,7 @@ namespace SFML_Game_Engine.Editor
 
             foreach (Resource res in Project.Resources.resources)
             {
-                GUIListEntry entry = new GUIListEntry(25, res.name + "| uses:" + res.requests + " : " + res.GetType().Name, 0);
+                GUIListEntry entry = new GUIListEntry(25, res.Name + "| uses:" + res.requests + " : " + res.GetType().Name, 0);
                 entry.textPosition = new Vector2(0.05f, 0.5f);
                 entry.textAnchor = new Vector2(0f, 0.5f);
 
@@ -93,7 +93,7 @@ namespace SFML_Game_Engine.Editor
 
                 foreach (Resource res in Project.Resources.resources)
                 {
-                    GUIListEntry entry = new GUIListEntry(25, res.name + " : " + res.GetType().Name, 0);
+                    GUIListEntry entry = new GUIListEntry(25, res.Name + " : " + res.GetType().Name, 0);
                     entry.textPosition = new Vector2(0.05f, 0.5f);
                     entry.textAnchor = new Vector2(0f, 0.5f);
                     entry.val = res;
@@ -110,7 +110,7 @@ namespace SFML_Game_Engine.Editor
                     Resource asRes = (Resource)entry.val!;
 
                     ResourceInfo.displayedString =
-                        "Resource name: " + asRes.name + "\n" +
+                        "Resource name: " + asRes.Name + "\n" +
                         "Resource Type: " + entry.valType!.Name + "\n" + "\n" +
                         "Get Requests: " + asRes.requests + "\n" +
                         asRes.Description;

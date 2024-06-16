@@ -160,7 +160,7 @@ namespace SFML_Game_Engine
 
             if (ActiveScene is null) { return; }
 
-            if (!ActiveScene.started) { ActiveScene.Start(); return; }
+            if (!ActiveScene.Started) { ActiveScene.Start(); return; }
 
             InputUpdate();
             ActiveScene.Update();

@@ -1,11 +1,23 @@
 ﻿namespace SFML_Game_Engine
 {
+    /// <summary>
+    /// A GameObject, can contain any number of <see cref="Component"/>'s and children.
+    /// </summary>
     public class GameObject
     {
+        /// <summary>
+        /// The name of this GameObject
+        /// </summary>
         public string name;
-
+        
+        /// <summary>
+        /// If false, <see cref="GameObject.Start"/> has not ran yet
+        /// </summary>
         public bool started = false;
 
+        /// <summary>
+        /// If false, <see cref="Update"/> will not be called.
+        /// </summary>
         public bool enabled = true;
 
         /// <summary>Indicates to the current <see cref="Scene"/> that this gameobject is fully destroyed.</summary>
@@ -25,6 +37,7 @@
         /// <summary>The children of this GameObject</summary>
         public List<GameObject> Children { get; private set; } = new List<GameObject>();
 
+        /// <summary>The components attached to this GameObject</summary>
         public List<Component> Components { get; private set; } = new List<Component>();
 
         int _zOrder = 0;
@@ -32,12 +45,10 @@
         /// <summary>Controls how GameObjects will be drawn on top of each other, and which ones are closest to the screen </summary>
         public int ZOrder { get { return _zOrder; } set { if (value != _zOrder) { ZOrderChanged(value); } } }
 
-        public Transform transform;
-
         /// <summary>
-        /// if true, when <see cref="Position"/> is changes, children will be moved.
+        /// This GameObjects Transform
         /// </summary>
-        public bool moveChildren = true;
+        public Transform transform;
 
         /// <summary>
         /// <see cref="Scene.CreateGameObject(string)"/> should be used instead.
@@ -57,12 +68,6 @@
         {
             Scene.ZOrderGameObjectUpdate(this, to, _zOrder);
             _zOrder = to;
-        }
-
-
-        public GameObject CreateChild(string name)
-        {
-            return AddChild(new GameObject(Project, Scene));
         }
 
         /// <summary>
@@ -145,6 +150,9 @@
             comp.Started = true;
         }
 
+        /// <summary>
+        /// Starts the current GameObject, its <see cref="Components"/> and its <see cref="Children"/>
+        /// </summary>
         public void Start()
         {
             if (started) return;
@@ -186,6 +194,9 @@
             enabled = false;
         }
 
+        /// <summary>
+        /// Updates the current GameObject, its <see cref="Components"/> and its <see cref="Children"/>
+        /// </summary>
         public void Update()
         {
             if (!enabled) return;
@@ -286,11 +297,20 @@
             return child;
         }
 
+        /// <summary>
+        /// Gets the array version of the list <see cref="GameObject.Children"/>
+        /// </summary>
+        /// <returns></returns>
         public GameObject[] GetChildren()
         {
             return Children.ToArray();
         }
 
+        /// <summary>
+        /// Gets the first child whos name matches <paramref name="name"/>
+        /// </summary>
+        /// <param name="name">the name of the child to find</param>
+        /// <returns><see cref="GameObject"/> if found, <c>null</c> otherwise</returns>
         public GameObject? GetChild(string name)
         {
             foreach (GameObject child in Children)
@@ -299,7 +319,12 @@
             }
             return null;
         }
-        
+
+        /// <summary>
+        /// Checks if the child <paramref name="name"/> is within this GameObject
+        /// </summary>
+        /// <param name="name">the name of the child to check</param>
+        /// <returns><c>true</c> if found, <c>false</c> otherwise</returns>
         public bool HasChild(string name)
         {
             foreach (GameObject child in Children)
@@ -309,6 +334,11 @@
             return false;
         }
 
+        /// <summary>
+        /// Checks if the <see cref="GameObject"/> instance <paramref name="child"/> is within this GameObject
+        /// </summary>
+        /// <param name="child">the instance to check</param>
+        /// <returns><c>true</c> if found, <c>false</c> otherwise</returns>
         public bool HasChild(GameObject child)
         {
             foreach (GameObject schild in Children)
@@ -321,7 +351,7 @@
         /// <summary>
         /// Removes then returns removed child, null if child was not removed
         /// </summary>
-        /// <param name="name">name of the child</param>
+        /// <param name="name">the name of the child</param>
         public GameObject? RemoveChild(string name)
         {
             GameObject? child = GetChild(name);
@@ -338,7 +368,7 @@
         /// <summary>
         /// Removes then returns removed child, null if child was not removed
         /// </summary>
-        /// <param name="name">name of the child</param>
+        /// <param name="child">the child instance to remove</param>
         public GameObject? RemoveChild(GameObject child)
         {
             if (Children.Remove(child))
@@ -348,6 +378,10 @@
             return null;
         }
 
+        /// <summary>
+        /// Adds a <see cref="Component"/>, <typeparamref name="T"/> to this GameObjects <see cref="Components"/>
+        /// </summary>
+        /// <returns>The added <typeparamref name="T"/> instance</returns>
         public T AddComponent<T>(T comp) where T : Component
         {
             comp.gameObject = this;
@@ -359,7 +393,7 @@
         /// Returns the first component that is a <typeparamref name="T"/> type
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <returns><typeparamref name="T"/> instance if found, null otherwise</returns>
         public T? GetComponent<T>() where T : Component
         {
             foreach (Component component in Components)
@@ -377,7 +411,7 @@
         /// <para>See <see cref="GetComponentOfSubclassOnly{T}"/> to get a class that inherits <typeparamref name="T"/> but isnt an instance of <typeparamref name="T"/> itself.</para>
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <returns><typeparamref name="T"/> instance if found, null otherwise</returns>
         public T? GetComponentOfSubclass<T>() where T : Component
         {
             foreach (Component component in Components)
@@ -395,7 +429,7 @@
         /// will not return an instance of <typeparamref name="T"/> itself, only classes that inherit from it.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <returns><typeparamref name="T"/> instance if found, null otherwise</returns>
         public T? GetComponentOfSubclassOnly<T>() where T : Component
         {
             foreach (Component component in Components)

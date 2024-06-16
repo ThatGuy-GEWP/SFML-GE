@@ -4,33 +4,57 @@ using System.Runtime.ConstrainedExecution;
 
 namespace SFML_Game_Engine
 {
-    public class SoundInstance : IDisposable
+    /// <summary>
+    /// An instance of a <see cref="Sound"/>
+    /// </summary>
+    public class ManagedSound : IDisposable
     {
+        /// <summary>
+        /// The <see cref="Sound"/> within this instance
+        /// </summary>
         public Sound sound;
+        /// <summary>
+        /// The name of this sound
+        /// </summary>
         public string name;
-        public bool Disposed = false;
+
+        /// <summary>
+        /// false while the sound has yet to be disposed
+        /// </summary>
+        public bool Disposed { get; private set; } = false;
 
         /// <summary>
         /// If true, this instance will be automatically disposed of.
         /// </summary>
         public bool allowCleanup = true;
 
-        public SoundInstance(string name, Sound sound) { this.name = name; this.sound = sound; }
+        /// <summary>
+        /// Creates a ManagedSound from a <paramref name="name"/> and a <see cref="Sound"/>
+        /// </summary>
+        public ManagedSound(string name, Sound sound) { this.name = name; this.sound = sound; }
 
-        public SoundInstance(string name, SoundResource sound)
+        /// <summary>
+        /// Creates a ManagedSound from a <paramref name="name"/> and a <see cref="SoundResource"/>
+        /// </summary>
+        public ManagedSound(string name, SoundResource sound)
         {
             this.name = name;
             this.sound = new Sound(sound);
         }
 
+        /// <summary> Plays the current <see cref="sound"/> </summary>
         public void Play()
         {
             sound.Play();
         }
+
+        /// <summary> Stops the current <see cref="sound"/> </summary>
         public void Stop()
         {
             sound.Stop();
         }
+
+        /// <summary> Sets the volume of the current <see cref="sound"/> </summary>
         public void SetVolume(float volume)
         {
             sound.Volume = volume;
@@ -54,7 +78,7 @@ namespace SFML_Game_Engine
     /// </summary>
     public class AudioManager
     {
-        List<SoundInstance> activeSounds = new List<SoundInstance>(200);
+        List<ManagedSound> activeSounds = new List<ManagedSound>(200);
         Scene ownerScene;
 
         public AudioManager(Scene owner)
@@ -62,12 +86,15 @@ namespace SFML_Game_Engine
             ownerScene = owner;
         }
 
+        /// <summary>
+        /// Updates the internal state of this <see cref="AudioManager"/>
+        /// </summary>
         public void Update()
         {
-            List<SoundInstance> stillPlayingSounds = new List<SoundInstance>();
+            List<ManagedSound> stillPlayingSounds = new List<ManagedSound>();
             for (int i = 0; i < activeSounds.Count; i++)
             {
-                SoundInstance cur = activeSounds[i];
+                ManagedSound cur = activeSounds[i];
 
                 if (cur.Disposed) { continue; }
                 if (cur.sound == null) { continue; }
@@ -82,11 +109,14 @@ namespace SFML_Game_Engine
             activeSounds = stillPlayingSounds;
         }
 
+        /// <summary>
+        /// Called when the <see cref="Scene"/> this AudioManager is attached to is unloaded
+        /// </summary>
         public void OnUnload()
         {
             for (int i = 0; i < activeSounds.Count; i++)
             {
-                SoundInstance cur = activeSounds[i];
+                ManagedSound cur = activeSounds[i];
                 cur.Stop();
             }
         }
@@ -98,7 +128,7 @@ namespace SFML_Game_Engine
         public void PlaySound(SoundResource sound)
         {
             if (activeSounds.Count > 200) { return; }
-            SoundInstance inst = new SoundInstance(sound.name, sound);
+            ManagedSound inst = new ManagedSound(sound.Name, sound);
             inst.sound.Play();
             activeSounds.Add(inst);
         }
@@ -110,35 +140,35 @@ namespace SFML_Game_Engine
         public void PlaySound(SoundResource sound, float volume)
         {
             if (activeSounds.Count > 200) { return; }
-            SoundInstance inst = new SoundInstance(sound.name, sound);
+            ManagedSound inst = new ManagedSound(sound.Name, sound);
             inst.sound.Volume = volume;
             inst.sound.Play();
             activeSounds.Add(inst);
         }
 
         /// <summary>
-        /// Creates a <see cref="SoundInstance"/> from a given <see cref="SoundResource"/>
+        /// Creates a <see cref="ManagedSound"/> from a given <see cref="SoundResource"/>
         /// </summary>
         /// <param name="sound"></param>
-        /// <returns><see cref="SoundInstance"/>, or null if active sounds is greater then 200</returns>
-        public SoundInstance? CreateSound(SoundResource sound)
+        /// <returns><see cref="ManagedSound"/>, or null if active sounds is greater then 200</returns>
+        public ManagedSound? CreateSound(SoundResource sound)
         {
             if (activeSounds.Count > 200) { return null; }
-            SoundInstance inst = new SoundInstance(sound.name, sound);
+            ManagedSound inst = new ManagedSound(sound.Name, sound);
             inst.allowCleanup = false;
             activeSounds.Add(inst);
             return inst;
         }
 
         /// <summary>
-        /// Creates a <see cref="SoundInstance"/> from a given <see cref="SoundResource"/>
+        /// Creates a <see cref="ManagedSound"/> from a given <see cref="SoundResource"/>
         /// </summary>
         /// <param name="sound"></param>
-        /// <returns><see cref="SoundInstance"/>, or null if active sounds is greater then 200</returns>
-        public SoundInstance? CreateSound(SoundResource sound, float volume)
+        /// <returns><see cref="ManagedSound"/>, or null if active sounds is greater then 200</returns>
+        public ManagedSound? CreateSound(SoundResource sound, float volume)
         {
             if (activeSounds.Count > 200) { return null; }
-            SoundInstance inst = new SoundInstance(sound.name, sound);
+            ManagedSound inst = new ManagedSound(sound.Name, sound);
             inst.allowCleanup = false;
             inst.sound.Volume = volume;
             activeSounds.Add(inst);

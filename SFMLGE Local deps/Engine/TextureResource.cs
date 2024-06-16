@@ -12,14 +12,14 @@ namespace SFML_Game_Engine
 
         public TextureResource(Texture text, string name)
         {
-            base.name = name;
+            base.Name = name;
             Resource = text;
             Description = "path to: "+ "Generated at Runtime.\n"+ getTextureInfo();
         }
 
         public TextureResource(string path, string name)
         {
-            base.name = name;
+            base.Name = name;
             Resource = new Texture(path);
             base.Description = "path to: "+path + "\n" + getTextureInfo();
         }
@@ -35,7 +35,7 @@ namespace SFML_Game_Engine
 
         public override string ToString()
         {
-            return name;
+            return Name;
         }
 
         public override void Dispose()

@@ -18,7 +18,7 @@ namespace SFML_Game_Engine
 
         public float DeltaTime
         {
-            get { return Scene.deltaTime; }
+            get { return Scene.DeltaTime; }
         }
 
         public bool Started

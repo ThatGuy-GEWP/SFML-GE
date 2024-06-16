@@ -8,7 +8,7 @@ namespace SFML_Game_Engine
 
         public SoundResource(string path, string name)
         {
-            this.name = name;
+            this.Name = name;
             Resource = new SoundBuffer(path);
         }
 

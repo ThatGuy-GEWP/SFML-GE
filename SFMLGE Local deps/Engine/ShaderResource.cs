@@ -9,23 +9,28 @@ namespace SFML_Game_Engine
     /// </summary>
     public class ShaderResource : Resource
     {
+        /// <summary>
+        /// The <see cref="Shader"/> this Resource contains
+        /// </summary>
         public Shader Resource
         {
             get;
             set;
         }
 
+        /// <summary> True if the <see cref="Shader"/> contains a Vertex Shader program in it. </summary>
         public bool containsVertex;
+
+        /// <summary> True if the <see cref="Shader"/> contains a Geometry Shader program in it. </summary>
         public bool containsGeometry;
+
+        /// <summary> True if the <see cref="Shader"/> contains a Fragment Shader program in it. </summary>
         public bool containsFragment;
 
         /// <summary>
         /// Creates a shader resource from file paths, pass null to any string to opt out of using it
         /// (i.e null for everything but fragment if your only using a fragment shader)
         /// </summary>
-        /// <param name="VertexShaderPath"></param>
-        /// <param name="GeometryShaderPath"></param>
-        /// <param name="FragmentShaderPath"></param>
         public ShaderResource(string name, string? VertexShaderPath, string? GeometryShaderPath, string? FragmentShaderPath)
         {
             if (VertexShaderPath == null) { containsVertex = false; } else { containsVertex = true; }
@@ -37,14 +42,20 @@ namespace SFML_Game_Engine
                 throw new ArgumentException("A shader was created with no shader paths!");
             }
 
-            this.name = name;
+            this.Name = name;
 
             Resource = new Shader(VertexShaderPath, GeometryShaderPath, FragmentShaderPath);
         }
 
         // because its alot nicer to just pass a ShaderResource into App.draw(thing, renderStates)
-        public static implicit operator RenderStates(ShaderResource shad) => new RenderStates(shad.Resource);
+        /// <summary>
+        /// Creates a new <see cref="RenderStates"/> used to apply this <see cref="Shader"/>
+        /// </summary>
+        public static explicit operator RenderStates(ShaderResource shad) => new RenderStates(shad.Resource);
 
+        /// <summary>
+        /// Disposes of the <see cref="Shader"/> within this resource
+        /// </summary>
         public override void Dispose()
         {
             Resource.Dispose();

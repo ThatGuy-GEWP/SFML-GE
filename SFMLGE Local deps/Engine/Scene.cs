@@ -10,25 +10,55 @@ namespace SFML_Game_Engine
 {
     public class Scene
     {
+        /// <summary>
+        /// The name of this scene.
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// The <see cref="SFML_Game_Engine.Project"/> this scene is within
+        /// </summary>
         public Project Project { get; private set; }
 
-        GameObject root;
+        /// <summary>
+        /// The root GameObject that all other gameObjects are attached too.
+        /// </summary>
+        readonly GameObject root;
 
-        public bool started = false;
+        /// <summary>
+        /// If true, the scene has been started.
+        /// </summary>
+        public bool Started { get; private set; } = false;
 
-        public bool isLoaded { get; private set; } = false;
+        /// <summary>
+        /// If true, the scene is currently loaded and running
+        /// </summary>
+        public bool IsLoaded { get; private set; } = false;
 
-        public AudioManager audioManager { get; private set; }
+        /// <summary>
+        /// The <see cref="SFML_Game_Engine.AudioManager"/> this scene controls
+        /// </summary>
+        public AudioManager AudioManager { get; private set; }
 
-        public RenderManager renderManager { get; private set; } = new RenderManager();
+        /// <summary>
+        /// The <see cref="SFML_Game_Engine.RenderManager"/> this scene controls
+        /// </summary>
+        public RenderManager RenderManager { get; private set; } = new RenderManager();
 
+        /// <summary>
+        /// Called once the scene starts
+        /// </summary>
         public event Action<Scene>? OnStart;
 
+        /// <summary>
+        /// A Shader thats applied to the scene when its rendered
+        /// </summary>
         public ShaderResource? overlayShader = null;
 
-        public Camera camera { get; private set; }
+        /// <summary>
+        /// The <see cref="Camera"/> this scene is viewed from
+        /// </summary>
+        public Camera Camera { get; private set; }
 
         // This MIGHT be hacky AF but *might* be better then constantly re-sorting all game objects when a ZOrder is changed.
         public Dictionary<int, List<GameObject>> ZTree { get; private set; } = new Dictionary<int, List<GameObject>>();
@@ -37,18 +67,29 @@ namespace SFML_Game_Engine
 
         List<GameObject> gameObjects = new List<GameObject>();
 
-        public float deltaTime { get; private set; } = 0;
+        /// <summary>
+        /// The time in seconds since the last frame
+        /// </summary>
+        public float DeltaTime { get; private set; } = 0;
 
+        /// <summary>
+        /// Creates a new <see cref="Scene"/> and adds it to a given <paramref name="project"/>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="project"></param>
         public Scene(string name, Project project)
         {
             this.Name = name;
             Project = project;
-            camera = new Camera(project.App);
-            audioManager = new AudioManager(this);
+            Camera = new Camera(project.App);
+            AudioManager = new AudioManager(this);
             root = new GameObject(project, this);
             root.name = "ROOT";
         }
 
+        /// <summary>
+        /// Instances a given <paramref name="prefab"/>
+        /// </summary>
         public GameObject InstancePrefab(Prefab prefab)
         {
             GameObject? instance = prefab.CreatePrefab?.Invoke(Project, this);
@@ -58,6 +99,11 @@ namespace SFML_Game_Engine
             return instance;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="GameObject"/> instance with a given <paramref name="name"/>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public GameObject CreateGameObject(string name = "")
         {
             if(name == "" || name == null || name == string.Empty) { name = "Unnamed"; }
@@ -69,6 +115,12 @@ namespace SFML_Game_Engine
             return go;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="GameObject"/> instance, and parents it to <paramref name="parent"/>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="parent"></param>
+        /// <returns></returns>
         public GameObject CreateGameObject(string name, GameObject parent)
         {
             if(parent == null) { return null; }
@@ -106,6 +158,11 @@ namespace SFML_Game_Engine
             return null;
         }
 
+        /// <summary>
+        /// Gets an array of <see cref="GameObject"/>'s, and stopping after a given <paramref name="depth"/>
+        /// </summary>
+        /// <param name="depth"></param>
+        /// <returns></returns>
         public GameObject[] GetGameObjects(int depth = 0)
         {
             if(depth == 0)
@@ -138,6 +195,9 @@ namespace SFML_Game_Engine
             }
         }
 
+        /// <summary>
+        /// Gets all GameObjects from <paramref name="from"/>, and adds then to <paramref name="sofar"/>, stopping at <paramref name="depth"/>
+        /// </summary>
         void GetObjectsAt(GameObject from, List<GameObject> sofar, int depth)
         {
             sofar.AddRange(from.GetChildren());
@@ -153,6 +213,9 @@ namespace SFML_Game_Engine
             }
         }
 
+        /// <summary>
+        /// Starts the scene and its gameObjects
+        /// </summary>
         public void Start()
         {
             if (!deltaWatch.IsRunning)
@@ -160,30 +223,33 @@ namespace SFML_Game_Engine
                 deltaWatch.Start();
             }
             root.Start();
-            started = true;
+            Started = true;
 
             OnStart?.Invoke(this);
         }
 
+        /// <summary>
+        /// Unloads the scene
+        /// </summary>
         public void UnloadScene()
         {
             deltaWatch.Stop();
-            isLoaded = false;
-            audioManager.OnUnload();
+            IsLoaded = false;
+            AudioManager.OnUnload();
 
             root.OnUnload();
         }
 
         public void LoadScene()
         {
-            isLoaded = true;
+            IsLoaded = true;
             root.OnLoad();
         }
 
         public void Update()
         {
-            if (!isLoaded) { return; }
-            if (!started) { Start(); return; }
+            if (!IsLoaded) { return; }
+            if (!Started) { Start(); return; }
 
             root.Update();
 
@@ -198,10 +264,10 @@ namespace SFML_Game_Engine
                 }
             }
 
-            deltaTime = deltaWatch.ElapsedMilliseconds * 0.001f;
+            DeltaTime = deltaWatch.ElapsedMilliseconds * 0.001f;
             deltaWatch.Restart();
-            audioManager.Update();
-            camera.Update();
+            AudioManager.Update();
+            Camera.Update();
         }
 
         RenderTexture? screenText = null;
@@ -209,7 +275,7 @@ namespace SFML_Game_Engine
 
         public void Render(RenderTarget rt)
         {
-            if (!isLoaded) { return; }
+            if (!IsLoaded) { return; }
 
             if(screenText == null || screenText.Size != Project.App.Size)
             {
@@ -219,20 +285,20 @@ namespace SFML_Game_Engine
             }
 
             screenText.Clear();
-            screenText.SetView(camera.cameraView);
+            screenText.SetView(Camera.cameraView);
 
             foreach (GameObject gm in root.GetChildren())
             {
-                gm.GetRenderables(renderManager);
+                gm.GetRenderables(RenderManager);
             }
 
             
-            renderManager.Render(screenText);
+            RenderManager.Render(screenText);
 
             View oldView = new View(screenText.GetView());
             screenText.SetView(screenText.DefaultView);
 
-            renderManager.RenderOverlay(screenText);
+            RenderManager.RenderOverlay(screenText);
 
             screenText.Display();
             drawSprite.Texture = screenText.Texture;
@@ -242,7 +308,7 @@ namespace SFML_Game_Engine
             rt.SetView(rt.DefaultView);
             if (overlayShader != null)
             {
-                rt.Draw(drawSprite, overlayShader);
+                rt.Draw(drawSprite, (RenderStates)overlayShader);
             }
             else
             {

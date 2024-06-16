@@ -143,9 +143,9 @@ namespace SFML_Game_Engine
                 for (int j = 0; j < resources.Count; j++)
                 {
                     if (j == i) { continue; }
-                    if (resources[j].name == curRes.name)
+                    if (resources[j].Name == curRes.Name)
                     {
-                        Console.WriteLine("Duplicate " + resources[j].name + ", removing...");
+                        Console.WriteLine("Duplicate " + resources[j].Name + ", removing...");
                         resources.RemoveAt(j);
                     }
                 }
@@ -159,7 +159,7 @@ namespace SFML_Game_Engine
         /// <param name="resource"></param>
         public void AddResource(Resource resource)
         {
-            Console.WriteLine("(Runtime) Loaded "+resource.name +" as "+resource.GetType().Name);
+            Console.WriteLine("(Runtime) Loaded "+resource.Name +" as "+resource.GetType().Name);
             resources.Add(resource);
         }
 
@@ -175,7 +175,7 @@ namespace SFML_Game_Engine
 
             foreach (Resource resource in resources)
             {
-                if (resource.name == name)
+                if (resource.Name == name)
                 {
                     if (resource is T)
                     {
@@ -183,7 +183,7 @@ namespace SFML_Game_Engine
                         return (T)resource;
                     }
                 }
-                if (resource.name.Contains(name))
+                if (resource.Name.Contains(name))
                 {
                     if (resource is T)
                     {
@@ -213,7 +213,7 @@ namespace SFML_Game_Engine
 
             resources.ForEach(r =>
             {
-                if (r.GetType() == typeof(T) && r.name.Contains(filter))
+                if (r.GetType() == typeof(T) && r.Name.Contains(filter))
                 {
                     foundResources.Add((T)r);
                 }
