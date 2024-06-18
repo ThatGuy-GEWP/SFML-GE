@@ -121,7 +121,14 @@ namespace SFML_Game_Engine.GUI
         /// <summary>
         /// Called every time text is inputed from a user.
         /// </summary>
-        public event Action<string, GUILabel> OnTextInput = null!;
+        public event Action<string, GUIInputBox> OnTextInput = null!;
+
+        /// <summary>
+        /// Called when focus is lost from leaving or pressing "ui_confirm", will not call if <see cref="autofocus"/> is false<para/>
+        /// the first string is the current text, the second is the text before this input was focused 
+        /// and the last param is the input box itself
+        /// </summary>
+        public event Action<string, string, GUIInputBox> OnTextEntered = null!;
 
         public GUIInputBox(string displayedString = "Testing", uint charSize = 15)
         {
@@ -196,6 +203,8 @@ namespace SFML_Game_Engine.GUI
         /// </summary>
         public bool Hovering { get; private set; } = false;
 
+        string beforeFocusLost = string.Empty;
+
         public override void Update()
         {
             BoundBox bounds = GetBounds();
@@ -231,20 +240,24 @@ namespace SFML_Game_Engine.GUI
             if(withinBounds && Project.IsMouseButtonPressed(Mouse.Button.Left) && autofocus && canClick)
             {
                 focused = true;
+                beforeFocusLost = displayedString;
                 Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Text));
                 outlineColor = Color.White;
             }
-            if(!withinBounds && Project.IsMouseButtonPressed(Mouse.Button.Left) && autofocus)
+            if(((!withinBounds && Project.IsMouseButtonPressed(Mouse.Button.Left)) || Project.IsInputJustPressed("ui_confirm")) && autofocus && focused)
             {
                 focused = false;
                 outlineColor = GUIPanel.defaultSecondary;
                 Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow));
+                OnTextEntered?.Invoke(displayedString, beforeFocusLost, this);
+                beforeFocusLost = string.Empty;
             }
         }
 
         protected override void PostPass(RenderTarget rt)
         {
             UDim2 oldPos = textPosition;
+            Vector2 relPos = oldPos.GetVector(GetBounds().Size);
 
             if (focused)
             {

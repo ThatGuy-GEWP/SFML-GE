@@ -26,7 +26,8 @@ namespace SFML_Game_Engine
             {"move_up" ,   Keyboard.Key.W},
             {"move_down",  Keyboard.Key.S},
             {"move_left",  Keyboard.Key.A},
-            {"move_right", Keyboard.Key.D}
+            {"move_right", Keyboard.Key.D},
+            {"ui_confirm", Keyboard.Key.Enter}
         };
 
         Dictionary<string, bool> inputPressed = new Dictionary<string, bool>();

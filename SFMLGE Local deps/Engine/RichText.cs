@@ -84,7 +84,6 @@ namespace SFML_Game_Engine
         bool[] boldChars = new bool[1];     // keeps track of bold chars
         Color[] charColors = new Color[1]; // keeps track of char colors
 
-
         Font _font = null!;
         public Font Font { get { return _font; } set { if (value == _font) { return; } _font = value; EvalFormatting(_displayed); } }
 
@@ -95,10 +94,11 @@ namespace SFML_Game_Engine
             this.Font = font;
             FillColor = Color.White;
             this.DisplayedString = DisplayedString;
-            this.CharacterSize = 16;
+            this.CharacterSize = characterSize;
+            EvalFormatting(DisplayedString);
         }
 
-        void ParseTokent(string bit)
+        void ParseToken(string bit)
         {
             if (bit == "r") { targetCharColor = FillColor; targetCharBold = IsBold; return; }
 
@@ -120,6 +120,7 @@ namespace SFML_Game_Engine
         }
 
         Color targetCharColor = Color.White;
+        Texture fontTexture;
         bool targetCharBold = false;
 
         void EvalFormatting(string val)
@@ -136,12 +137,15 @@ namespace SFML_Game_Engine
             boldChars = new bool[val.Length];
             charColors = new Color[val.Length];
 
+
             for(int i = 0; i < val.Length; i++)
             {
                 char curChar = val[i];
 
                 charColors[i] = targetCharColor;
                 boldChars[i] = targetCharBold;
+
+                Font.GetGlyph(val[i], CharacterSize, targetCharBold, 0); // forces fontTexture to update with given glyph
 
                 if (curChar == '<' && RichEnabled)
                 {
@@ -159,7 +163,7 @@ namespace SFML_Game_Engine
 
                 if (curChar == '>' && insideBrackets)
                 {
-                    ParseTokent(val.Substring(tokenStart+1, i - tokenStart-1));
+                    ParseToken(val.Substring(tokenStart+1, i - tokenStart-1));
                     tokenStart = -1;
                     insideBrackets = false;
                 }
@@ -175,6 +179,8 @@ namespace SFML_Game_Engine
             }
 
             _displayed = val;
+
+            fontTexture = Font.GetTexture(CharacterSize);
         }
 
         bool boundsAccurate = false;
@@ -302,8 +308,6 @@ namespace SFML_Game_Engine
 
             float width = 0;
             float height = Font.GetLineSpacing(CharacterSize);
-
-            Texture fontTexture = Font.GetTexture(CharacterSize);
 
             float halfWidth = GetLocalBounds().Size.x / 2f;
             float firstLineWidth = getLineWidth(textToDraw, 0, 0, 0);

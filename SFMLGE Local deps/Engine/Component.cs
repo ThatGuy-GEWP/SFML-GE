@@ -10,11 +10,7 @@ namespace SFML_Game_Engine
         /// <summary>
         /// The <see cref="GameObject"/> this component is attached too. null if this component is not added to anything yet
         /// </summary>
-        public GameObject gameObject
-        {
-            get { return _gameObject; }
-            set { _gameObject = value; OnAdded(value); }
-        }
+        public GameObject gameObject = null!;
 
         public float DeltaTime
         {
@@ -35,8 +31,6 @@ namespace SFML_Game_Engine
 
         bool _started = false;
         bool _enabled = true;
-
-        GameObject? _gameObject;
 
         Project _project = null!;
         Scene _scene = null!;

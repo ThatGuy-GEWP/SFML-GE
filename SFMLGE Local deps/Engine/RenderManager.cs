@@ -48,6 +48,21 @@ namespace SFML_Game_Engine
             overlayQueue.Add(renderableComponent);
         }
 
+        static int ZSort(Component x, Component y)
+        {
+            int realXZ = x.gameObject.ZOrder + (x as IRenderable)!.ZOffset;
+            int realYZ = y.gameObject.ZOrder + (y as IRenderable)!.ZOffset;
+            if (realXZ == realYZ) { return 0; }
+            if (realXZ < realYZ) 
+            {
+                return -1; 
+            } 
+            else
+            {
+                return 1;
+            }
+        }
+
         /// <summary>
         /// Renders all <see cref="IRenderable"/>'s after sorting them by ZOrder,
         /// then clears the render queue.
@@ -57,7 +72,7 @@ namespace SFML_Game_Engine
         {
             if (renderQueue.Count > 0)
             {
-                renderQueue.Sort((x, y) => { return x.gameObject.ZOrder - y.gameObject.ZOrder; });
+                renderQueue.Sort(ZSort);
 
                 for (int i = 0; i < renderQueue.Count; i++)
                 {
@@ -80,7 +95,7 @@ namespace SFML_Game_Engine
         {
             if (overlayQueue.Count > 0)
             {
-                overlayQueue.Sort((x, y) => { return x.gameObject.ZOrder - y.gameObject.ZOrder; });
+                overlayQueue.Sort(ZSort);
 
                 for (int i = 0; i < overlayQueue.Count; i++)
                 {

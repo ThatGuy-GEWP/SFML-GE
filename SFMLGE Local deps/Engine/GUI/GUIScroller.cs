@@ -154,7 +154,7 @@ namespace SFML_Game_Engine.GUI
             for (int i = 0; i < embeddedChildren.Count; i++)
             {
                 GUIPanel panel = embeddedChildren[i];
-
+                if(panel.Started != true) { panel.gameObject.Update(); }
                 panel.Position = new UDim2(panel.Position.scale, (originalPositions[i].offset + new Vector2(0, -ScrollPosition)));
                 panel.Update();
                 UpdateDescendants(panel.gameObject);

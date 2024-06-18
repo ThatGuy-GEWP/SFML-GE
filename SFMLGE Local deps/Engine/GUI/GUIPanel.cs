@@ -72,7 +72,7 @@ namespace SFML_Game_Engine.GUI
         GameObject? lastParent = null;
         GUIPanel? lastGUIPanel = null;
 
-        
+        public int ZOffset { get; set; } = 0;
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = true;
         public RenderQueueType QueueType { get; set; } = RenderQueueType.OverlayQueue;
@@ -111,6 +111,14 @@ namespace SFML_Game_Engine.GUI
             {
                 generateCornerTexture();
             }
+        }
+
+        public static GUIPanel NewInvisiblePanel()
+        {
+            GUIPanel pan = new GUIPanel();
+            pan.outlineThickness = 0;
+            pan.backgroundColor = Color.Transparent;
+            return pan;
         }
 
         public override void Start()

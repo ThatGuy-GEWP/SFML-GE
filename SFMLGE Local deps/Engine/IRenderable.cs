@@ -1,4 +1,5 @@
 ﻿using SFML.Graphics;
+using SFML_Game_Engine.Editor;
 
 namespace SFML_Game_Engine
 {
@@ -19,6 +20,11 @@ namespace SFML_Game_Engine
 
     public interface IRenderable
     {
+        /// <summary>
+        /// An additional offset to apply to the gameObject this component is attached too
+        /// </summary>
+        public int ZOffset { get; set; }
+
         /// <summary>
         /// If false, this renderable will not be drawn even if added to a queue.
         /// </summary>

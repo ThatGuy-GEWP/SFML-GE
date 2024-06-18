@@ -16,9 +16,8 @@ namespace SFML_Game_Engine
         string rootName = string.Empty;
 
         /// <summary>
-        /// Collects resources from a directory, pass <see cref="null"/> if you plan on adding your own manualy.
+        /// Collects resources from a directory, pass <c>null</c> if you plan on adding your own manualy.
         /// </summary>
-        /// <param name="dirToCollect"></param>
         public ResourceCollection(string? dirToCollect, Project project)
         {
             linkedProject = project;

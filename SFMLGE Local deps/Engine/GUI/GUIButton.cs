@@ -106,12 +106,12 @@ namespace SFML_Game_Engine.GUI
 
             if (!wasHovering && Hovering && interactable)
             {
-                Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Hand));
+                if (useHoverEffects) { Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Hand)); }
                 if (interactable) { OnHoveringStart?.Invoke(this); }
             }
             if (wasHovering && !Hovering && interactable)
             {
-                Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow));
+                if (useHoverEffects) { Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow)); }
                 if (interactable) { OnHoveringEnd?.Invoke(this); }
             }
 

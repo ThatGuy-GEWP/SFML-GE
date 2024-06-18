@@ -53,9 +53,9 @@ namespace SFML_Game_Engine.GUI
 
         protected RichText text = null!;
 
-        public GUILabel() : base() 
+        public GUILabel(string displayedString = "") : base() 
         { 
-            displayedString = string.Empty;  
+            this.displayedString = displayedString;  
         }
 
         public GUILabel(FontResource font, string displayedString, uint characterSize = 16) : base()

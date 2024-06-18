@@ -37,7 +37,6 @@
 
   <ItemGroup>
     <Folder Include="Res\" />
-    <Folder Include="Scripts\" />
   </ItemGroup>
 
   <ItemGroup>

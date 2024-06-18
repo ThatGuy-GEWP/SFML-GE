@@ -75,7 +75,7 @@ namespace SFML_Game_Engine.GUI
 
             bool mousePressed = Mouse.IsButtonPressed(Mouse.Button.Left);
 
-            if (mouseOnEdge && (mousePressed && !mouseHeld) && !Resizing && focused)
+            if (mouseOnEdge && (mousePressed && !mouseHeld) && !Resizing && focused && resizeable)
             {
                 Resizing = true;
 

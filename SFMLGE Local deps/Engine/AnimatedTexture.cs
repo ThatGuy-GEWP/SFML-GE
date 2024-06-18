@@ -9,6 +9,7 @@ namespace SFML_Game_Engine
     {
         // Should probably replace with a TextureResource variant that handles all this but oh well.
 
+        public int ZOffset { get; set; } = 0;
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = true;
         public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;

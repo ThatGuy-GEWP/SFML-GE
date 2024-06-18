@@ -20,6 +20,11 @@
         /// </summary>
         public bool enabled = true;
 
+        /// <summary>
+        /// If false, this GameObject and its children will not be visible in the editor.
+        /// </summary>
+        public bool editorVisible = true;
+
         /// <summary>Indicates to the current <see cref="Scene"/> that this gameobject is fully destroyed.</summary>
         public bool ShouldCleanup { get; private set; }
 
@@ -115,6 +120,7 @@
             {
                 Component comp = Components[i];
                 if (!comp.Started) { continue; }
+                if (!comp.Enabled) { continue; }
 
                 if (comp as IRenderable != null && typeof(IRenderable).IsAssignableFrom(comp.GetType()))
                 {
@@ -386,6 +392,7 @@
         {
             comp.gameObject = this;
             Components.Add(comp);
+            comp.OnAdded(this);
             return comp;
         }
 
