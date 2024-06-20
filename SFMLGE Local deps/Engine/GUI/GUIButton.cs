@@ -143,6 +143,12 @@ namespace SFML_Game_Engine.GUI
             interactable = lastInerac;
         }
 
+        public override void OnDestroy(GameObject gameObject)
+        {
+            Console.WriteLine("Destroyed!");
+            Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow));
+        }
+
         protected override void PrePass(RenderTarget rt, in Vector2 pos, in Vector2 size)
         {
             backgroundPanelRect.FillColor = useHoverEffects ? currentColor : backgroundColor;
