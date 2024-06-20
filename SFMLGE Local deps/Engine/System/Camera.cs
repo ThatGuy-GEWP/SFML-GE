@@ -2,7 +2,7 @@
 using SFML_Game_Engine.GUI;
 using SFML_Game_Engine.System;
 
-namespace SFML_Game_Engine.Engine.System
+namespace SFML_Game_Engine.System
 {
     /// <summary>
     /// A Camera, defines where the current <see cref="Scene"/> is being viewed from.

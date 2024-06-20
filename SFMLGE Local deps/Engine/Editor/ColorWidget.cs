@@ -1,5 +1,5 @@
 ﻿using SFML.Graphics;
-using SFML_Game_Engine.Engine.System;
+using SFML_Game_Engine.System;
 using SFML_Game_Engine.GUI;
 using System.Drawing;
 using Color = SFML.Graphics.Color;
@@ -19,8 +19,6 @@ namespace SFML_Game_Engine.Editor
             colorInputBox.Size = new UDim2(1f, 1f, 0, 0);
             colorInputBox.backgroundColor = Color.Transparent;
             colorInputBox.outlineThickness = 1;
-
-            Console.Write(GetColorFromString("#FFDFD991", out _));
         }
 
         public void SetColor(Color color)
@@ -33,7 +31,6 @@ namespace SFML_Game_Engine.Editor
         public static bool GetColorFromString(string str, out Color col)
         {
             string[] cols = str.Split(',');
-            Console.WriteLine(cols.Length);
             if(cols.Length == 4)
             {
                 byte A = 255;

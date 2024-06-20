@@ -1,10 +1,10 @@
 ﻿using SFML.Graphics;
-using SFML_Game_Engine.Engine.Resources;
-using SFML_Game_Engine.Engine.System;
+using SFML_Game_Engine.Resources;
+using SFML_Game_Engine.System;
 using SFML_Game_Engine.System;
 using SFMLGE_Local_deps.Engine.System;
 
-namespace SFML_Game_Engine.Engine.Components
+namespace SFML_Game_Engine.Components
 {
     /// <summary>
     /// A class for drawing rectangles.<para></para>

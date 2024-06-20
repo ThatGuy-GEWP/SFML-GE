@@ -1,4 +1,4 @@
-﻿namespace SFML_Game_Engine.Engine.System
+﻿namespace SFML_Game_Engine.System
 {
 
     // this class is probably not secure at all but i dont give a shit!

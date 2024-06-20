@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
-using SFML_Game_Engine.Engine.Resources;
+using SFML_Game_Engine.Resources;
 
-namespace SFML_Game_Engine.Engine.System
+namespace SFML_Game_Engine.System
 {
     /// <summary>
     /// A Class that represents a bunch of frames you want to play in sequence.

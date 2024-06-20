@@ -1,7 +1,7 @@
 ﻿using SFML.Audio;
-using SFML_Game_Engine.Engine.System;
+using SFML_Game_Engine.System;
 
-namespace SFML_Game_Engine.Engine.Resources
+namespace SFML_Game_Engine.Resources
 {
     public class SoundResource : Resource
     {

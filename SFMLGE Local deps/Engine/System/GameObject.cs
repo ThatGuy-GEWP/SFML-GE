@@ -1,6 +1,6 @@
 ﻿using SFMLGE_Local_deps.Engine.System;
 
-namespace SFML_Game_Engine.Engine.System
+namespace SFML_Game_Engine.System
 {
     /// <summary>
     /// A GameObject, can contain any number of <see cref="Component"/>'s and children.

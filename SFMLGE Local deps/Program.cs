@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
 using SFML_Game_Engine.Editor;
-using SFML_Game_Engine.Engine.System;
+using SFML_Game_Engine.System;
 using SFML_Game_Engine.GUI;
 using SFMLGE_Local_deps.Scripts;
 

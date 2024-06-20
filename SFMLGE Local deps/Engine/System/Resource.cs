@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SFML_Game_Engine.Engine.System
+namespace SFML_Game_Engine.System
 {
     /// <summary>
     /// Base class for all Resources.

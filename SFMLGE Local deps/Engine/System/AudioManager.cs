@@ -1,8 +1,8 @@
 ﻿using SFML.Audio;
-using SFML_Game_Engine.Engine.Resources;
+using SFML_Game_Engine.Resources;
 using System.Runtime.ConstrainedExecution;
 
-namespace SFML_Game_Engine.Engine.System
+namespace SFML_Game_Engine.System
 {
     /// <summary>
     /// An instance of a <see cref="Sound"/>

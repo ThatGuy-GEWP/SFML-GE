@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
 using SFMLGE_Local_deps.Engine.System;
 
-namespace SFML_Game_Engine.Engine.System
+namespace SFML_Game_Engine.System
 {
     // Does not yet take advantage of the new ZTree, should fix later!
 

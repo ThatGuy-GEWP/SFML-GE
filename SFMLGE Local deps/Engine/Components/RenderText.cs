@@ -1,9 +1,9 @@
 ﻿using SFML.Graphics;
-using SFML_Game_Engine.Engine.System;
+using SFML_Game_Engine.System;
 using SFML_Game_Engine.System;
 using SFMLGE_Local_deps.Engine.System;
 
-namespace SFML_Game_Engine.Engine.Components
+namespace SFML_Game_Engine.Components
 {
     /// <summary>
     /// A simple class for rendering text

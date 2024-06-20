@@ -1,4 +1,4 @@
-﻿namespace SFML_Game_Engine.Engine.System
+﻿namespace SFML_Game_Engine.System
 {
     /// <summary>
     /// A Base class all components derive from

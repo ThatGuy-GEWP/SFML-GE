@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
-using SFML_Game_Engine.Engine.System;
+using SFML_Game_Engine.System;
 
-namespace SFML_Game_Engine.Engine.Resources
+namespace SFML_Game_Engine.Resources
 {
     /// <summary>
     /// A simple wrapper for SFML.Net Shaders, to set uniforms within shaders,

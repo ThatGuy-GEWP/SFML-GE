@@ -1,8 +1,8 @@
 ﻿using SFML.Graphics;
-using SFML_Game_Engine.Engine.Resources;
+using SFML_Game_Engine.Resources;
 using System.Runtime.CompilerServices;
 
-namespace SFML_Game_Engine.Engine.System
+namespace SFML_Game_Engine.System
 {
     /// <summary>
     /// A Collection of <see cref="Resource"/>'s, used primarily to have all your assets in one place.

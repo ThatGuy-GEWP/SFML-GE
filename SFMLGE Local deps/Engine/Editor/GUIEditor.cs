@@ -6,8 +6,8 @@ using static SFML.Window.Mouse;
 using SFML.Graphics;
 using SFML_Game_Engine.System;
 using SFMLGE_Local_deps.Engine.System;
-using SFML_Game_Engine.Engine.System;
-using SFML_Game_Engine.Engine.Resources;
+using SFML_Game_Engine.System;
+using SFML_Game_Engine.Resources;
 
 namespace SFML_Game_Engine.Editor
 {
@@ -316,7 +316,6 @@ namespace SFML_Game_Engine.Editor
                 {
                     if(ColorWidget.GetColorFromString(s, out Color col))
                     {
-                        Console.WriteLine("valid col");
                         widget.SetColor(col);
                         member.SetValue(memberSource, col);
                     }
@@ -345,7 +344,6 @@ namespace SFML_Game_Engine.Editor
                 {
                     if (double.TryParse(s, out double val))
                     {
-                        Console.WriteLine(val);
                         if(valType == typeof(int))
                         {
                             member.SetValue(memberSource, (int)val);
@@ -642,7 +640,6 @@ namespace SFML_Game_Engine.Editor
                 {
                     EditorUpdate = null;
                     selectedGameObject = (GameObject)entry.val!;
-                    Console.WriteLine(((GameObject)entry.val!));
                     SetupGameObjectInfo(selectedGameObject);
                 }
             };

@@ -4,7 +4,7 @@ using SFML_Game_Engine.GUI;
 using SFML_Game_Engine.System;
 using System.Diagnostics;
 
-namespace SFML_Game_Engine.Engine.System
+namespace SFML_Game_Engine.System
 {
     /// <summary>
     /// A Project holds scenes, and all resources.

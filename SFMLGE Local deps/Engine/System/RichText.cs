@@ -3,7 +3,7 @@ using SFML.System;
 using SFML_Game_Engine.GUI;
 using SFML_Game_Engine.System;
 
-namespace SFML_Game_Engine.Engine.System
+namespace SFML_Game_Engine.System
 {
     // this entire file is just....
     // it works i guess
