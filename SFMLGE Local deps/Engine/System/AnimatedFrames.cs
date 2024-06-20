@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
-using SFML_Game_Engine;
+using SFML_Game_Engine.Engine.Resources;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Engine.System
 {
     /// <summary>
     /// A Class that represents a bunch of frames you want to play in sequence.
@@ -71,7 +71,7 @@ namespace SFML_Game_Engine
             if (reversed)
             {
                 currentFrame = frames.Length - 1;
-            } 
+            }
             else
             {
                 currentFrame = 0;
@@ -102,7 +102,7 @@ namespace SFML_Game_Engine
         /// <returns>true if the animation is finished, false otherwise, always false when looping</returns>
         public bool IsFinished()
         {
-            return loop ? false : reversed ? currentFrame <= 0 : currentFrame >= frames.Length-1;
+            return loop ? false : reversed ? currentFrame <= 0 : currentFrame >= frames.Length - 1;
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace SFML_Game_Engine
 
         public void Update(float deltaTime)
         {
-            if(!playing) { return; }
+            if (!playing) { return; }
             curTime += deltaTime;
 
             if (curTime >= frametime)
@@ -162,7 +162,7 @@ namespace SFML_Game_Engine
                 if (reversed)
                 {
                     currentFrame--;
-                } 
+                }
                 else
                 {
                     currentFrame++;

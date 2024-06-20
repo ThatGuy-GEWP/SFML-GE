@@ -1,9 +1,10 @@
 ﻿using SFML.Graphics;
+using SFML_Game_Engine.Engine.Resources;
 using SFML_Game_Engine.Engine.System;
 using SFML_Game_Engine.System;
 using SFMLGE_Local_deps.Engine.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Engine.Components
 {
     /// <summary>
     /// A class for drawing rectangles.<para></para>
@@ -39,7 +40,8 @@ namespace SFML_Game_Engine
         /// <summary>
         /// The texture of this rectangle, when set the texture will be stretched to this rects <see cref="size"/>, defaults to a white texture.
         /// </summary>
-        public TextureResource? Texture {
+        public TextureResource? Texture
+        {
             get;
             set;
         }
@@ -80,14 +82,14 @@ namespace SFML_Game_Engine
         {
             size = Size;
             fitTexture = false;
-            this.origin = Origin;
+            origin = Origin;
         }
 
         public Sprite2D(Vector2 Size, Vector2 Origin, TextureResource Texture)
         {
             size = Size;
             fitTexture = false;
-            this.origin = Origin;
+            origin = Origin;
             this.Texture = Texture;
         }
 

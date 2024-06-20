@@ -3,7 +3,7 @@ using SFML.System;
 using SFML_Game_Engine.GUI;
 using SFML_Game_Engine.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Engine.System
 {
     // this entire file is just....
     // it works i guess
@@ -38,12 +38,12 @@ namespace SFML_Game_Engine
         bool _bold = false;
         Color _color;
 
-        public string DisplayedString { get { return _displayed; } set { if (value == _displayed) { return; }  EvalFormatting(value); } }
+        public string DisplayedString { get { return _displayed; } set { if (value == _displayed) { return; } EvalFormatting(value); } }
 
         /// <summary>
         /// Font Character size, not in pixels
         /// </summary>
-        public uint CharacterSize { get { return _charSize; } set { if(value == _charSize) { return; } _charSize = value; EvalFormatting(_displayed); } }
+        public uint CharacterSize { get { return _charSize; } set { if (value == _charSize) { return; } _charSize = value; EvalFormatting(_displayed); } }
 
         /// <summary>
         /// The Default fill color without rich text modifiers
@@ -89,12 +89,12 @@ namespace SFML_Game_Engine
 
         Sprite charSprite = new Sprite();
 
-        public RichText(Font font, string DisplayedString="Rich Text", uint characterSize=16)
+        public RichText(Font font, string DisplayedString = "Rich Text", uint characterSize = 16)
         {
-            this.Font = font;
+            Font = font;
             FillColor = Color.White;
             this.DisplayedString = DisplayedString;
-            this.CharacterSize = characterSize;
+            CharacterSize = characterSize;
             EvalFormatting(DisplayedString);
         }
 
@@ -111,7 +111,7 @@ namespace SFML_Game_Engine
                 if (split.Length < 3) { return; }
 
                 int r = int.Parse(split[0]);
-                int g = int.Parse(split[1]); 
+                int g = int.Parse(split[1]);
                 int b = int.Parse(split[2]);
                 int a = split.Length > 3 ? int.Parse(split[3]) : 255;
 
@@ -138,7 +138,7 @@ namespace SFML_Game_Engine
             charColors = new Color[val.Length];
 
 
-            for(int i = 0; i < val.Length; i++)
+            for (int i = 0; i < val.Length; i++)
             {
                 char curChar = val[i];
 
@@ -149,9 +149,9 @@ namespace SFML_Game_Engine
 
                 if (curChar == '<' && RichEnabled)
                 {
-                    if(i > 0 && val[i-1] == '\\')
+                    if (i > 0 && val[i - 1] == '\\')
                     {
-                        skippedChars[i-1] = true;
+                        skippedChars[i - 1] = true;
                         continue;
                     }
 
@@ -163,15 +163,15 @@ namespace SFML_Game_Engine
 
                 if (curChar == '>' && insideBrackets)
                 {
-                    ParseToken(val.Substring(tokenStart+1, i - tokenStart-1));
+                    ParseToken(val.Substring(tokenStart + 1, i - tokenStart - 1));
                     tokenStart = -1;
                     insideBrackets = false;
                 }
 
 
-                if(insideBrackets && i == val.Length - 1)
+                if (insideBrackets && i == val.Length - 1)
                 {
-                    for(int s = tokenStart; s < val.Length; s++)
+                    for (int s = tokenStart; s < val.Length; s++)
                     {
                         skippedChars[s] = false;
                     }
@@ -189,7 +189,7 @@ namespace SFML_Game_Engine
 
         public BoundBox GetGlobalBounds()
         {
-            if(!boundsAccurate) { GenLocalBounds(DisplayedString); }
+            if (!boundsAccurate) { GenLocalBounds(DisplayedString); }
             return new BoundBox(new FloatRect(lastLocalBounds.Position + (Vector2f)position, lastLocalBounds.Size));
         }
 
@@ -240,7 +240,7 @@ namespace SFML_Game_Engine
 
                 Glyph glyph = Font.GetGlyph(textToBound[i], CharacterSize, boldChars[i], 0);
                 float kern = 0;
-                kern += i > 0 ? (Font.GetKerning(textToBound[i - 1], textToBound[i], CharacterSize)) : 0;
+                kern += i > 0 ? Font.GetKerning(textToBound[i - 1], textToBound[i], CharacterSize) : 0;
 
                 float charOffset = nextPos.x + glyph.Bounds.Left + kern + glyph.Bounds.Width + additionOffset;
 
@@ -282,11 +282,11 @@ namespace SFML_Game_Engine
 
                 Glyph glyph = Font.GetGlyph(str[i], CharacterSize, boldChars[lookPos], 0);
                 float kern = 0;
-                kern += i > 0 ? (Font.GetKerning(str[i - 1], str[i], CharacterSize)) : 0;
+                kern += i > 0 ? Font.GetKerning(str[i - 1], str[i], CharacterSize) : 0;
 
                 float charOffset = xPos + (glyph.Bounds.Left + kern);
 
-                if ((charOffset + glyph.Bounds.Width) > width) { width = (charOffset + glyph.Bounds.Width); }
+                if (charOffset + glyph.Bounds.Width > width) { width = charOffset + glyph.Bounds.Width; }
 
                 xPos += glyph.Advance;
                 lookPos++;
@@ -312,15 +312,15 @@ namespace SFML_Game_Engine
             float halfWidth = GetLocalBounds().Size.x / 2f;
             float firstLineWidth = getLineWidth(textToDraw, 0, 0, 0);
 
-            Vector2 nextPos = (position - new Vector2(0, whitespaceOffset));
+            Vector2 nextPos = position - new Vector2(0, whitespaceOffset);
             Vector2 additionalOffset = new Vector2(0, height); // gets text back to starting Position
 
-            if(alignment == TextAlignment.Center)
+            if (alignment == TextAlignment.Center)
             {
                 nextPos.x -= firstLineWidth / 2f;
                 additionalOffset.x = halfWidth;
             }
-            if(alignment == TextAlignment.Right)
+            if (alignment == TextAlignment.Right)
             {
                 nextPos.x -= firstLineWidth;
                 additionalOffset.x = halfWidth * 2f;
@@ -362,26 +362,26 @@ namespace SFML_Game_Engine
                 Glyph glyph = Font.GetGlyph(textToDraw[i], CharacterSize, boldChars[i], 0);
 
                 float kern = 0;
-                kern += i > 0 ? (Font.GetKerning(textToDraw[i - 1], textToDraw[i], CharacterSize)) : 0;
+                kern += i > 0 ? Font.GetKerning(textToDraw[i - 1], textToDraw[i], CharacterSize) : 0;
 
                 Vector2 charoffset = new Vector2f(
                     glyph.Bounds.Left + kern,
                     glyph.Bounds.Top
                     );
 
-                charSprite.Position = (nextPos + charoffset + additionalOffset);
+                charSprite.Position = nextPos + charoffset + additionalOffset;
                 charSprite.Texture = fontTexture;
                 charSprite.TextureRect = glyph.TextureRect;
                 charSprite.Color = charColors[i];
 
-                if ((charSprite.Position.X + glyph.Bounds.Width) - position.x > width) { width = (charSprite.Position.X + glyph.Bounds.Width) - position.x; }
+                if (charSprite.Position.X + glyph.Bounds.Width - position.x > width) { width = charSprite.Position.X + glyph.Bounds.Width - position.x; }
 
                 nextPos.x += glyph.Advance;
 
                 rt.Draw(charSprite);
-                if(MaxCharacters < 0) { continue; }
+                if (MaxCharacters < 0) { continue; }
                 drawnChars++;
-                if(drawnChars >= MaxCharacters)
+                if (drawnChars >= MaxCharacters)
                 {
                     break;
                 }

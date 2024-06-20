@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML_Game_Engine.Engine.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Engine.Resources
 {
     /// <summary>
     /// A Resource containing a <see cref="Font"/>
@@ -20,8 +20,8 @@ namespace SFML_Game_Engine
         /// <param name="name">the name of this resource</param>
         public FontResource(string filePath, string name)
         {
-            this.resource = new Font(filePath);
-            this.Name = name;
+            resource = new Font(filePath);
+            Name = name;
         }
 
         public override void Dispose()

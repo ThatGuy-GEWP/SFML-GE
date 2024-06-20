@@ -1,4 +1,5 @@
 ﻿using SFML.Graphics;
+using SFML_Game_Engine.Engine.Resources;
 using System.Runtime.CompilerServices;
 
 namespace SFML_Game_Engine.Engine.System

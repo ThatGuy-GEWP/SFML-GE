@@ -1,8 +1,9 @@
 ﻿using SFML.Graphics;
+using SFML_Game_Engine.Engine.Resources;
 using SFML_Game_Engine.Engine.System;
 using SFMLGE_Local_deps.Engine.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Engine.Components
 {
     [Obsolete("AnimatedTexture is deprecated, please use AnimatedFrames instead.")]
     // jokes on that old comment, i replaced it with a manager class instead, get bent nerd
@@ -72,7 +73,7 @@ namespace SFML_Game_Engine
             if (reversed)
             {
                 currentFrame = frames.Count - 1;
-            } 
+            }
             else
             {
                 currentFrame = 0;
@@ -87,7 +88,7 @@ namespace SFML_Game_Engine
         /// <returns>true if the animation is finished, false otherwise, always false when looping</returns>
         public bool IsFinished()
         {
-            return loop ? false : reversed ? currentFrame <= 0 : currentFrame >= frames.Count-1;
+            return loop ? false : reversed ? currentFrame <= 0 : currentFrame >= frames.Count - 1;
         }
 
         public AnimatedTexture(TextureResource[] frames)
@@ -98,7 +99,7 @@ namespace SFML_Game_Engine
 
         public override void Update()
         {
-            if(!playing) { return; }
+            if (!playing) { return; }
             curTime += DeltaTime;
 
             if (curTime >= frametime)
@@ -108,7 +109,7 @@ namespace SFML_Game_Engine
                 if (reversed)
                 {
                     currentFrame--;
-                } 
+                }
                 else
                 {
                     currentFrame++;
@@ -119,7 +120,7 @@ namespace SFML_Game_Engine
                 {
                     currentFrame = currentFrame < 0 ? frames.Count - 1 : currentFrame;
                     currentFrame = currentFrame > frames.Count - 1 ? 0 : currentFrame;
-                } 
+                }
                 else
                 {
                     currentFrame = currentFrame < 0 ? 0 : currentFrame;

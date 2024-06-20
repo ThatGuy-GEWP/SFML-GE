@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML_Game_Engine.Engine.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Engine.Resources
 {
     /// <summary>
     /// A simple wrapper for SFML.Net Shaders, to set uniforms within shaders,
@@ -37,12 +37,12 @@ namespace SFML_Game_Engine
             if (GeometryShaderPath == null) { containsGeometry = false; } else { containsGeometry = true; }
             if (FragmentShaderPath == null) { containsFragment = false; } else { containsFragment = true; }
 
-            if(!containsVertex && !containsGeometry && !containsFragment) 
+            if (!containsVertex && !containsGeometry && !containsFragment)
             {
                 throw new ArgumentException("A shader was created with no shader paths!");
             }
 
-            this.Name = name;
+            Name = name;
 
             Resource = new Shader(VertexShaderPath, GeometryShaderPath, FragmentShaderPath);
         }

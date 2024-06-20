@@ -4,6 +4,7 @@
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using SFML_Game_Engine.Engine.Resources;
 using SFML_Game_Engine.System;
 using System.Diagnostics;
 
