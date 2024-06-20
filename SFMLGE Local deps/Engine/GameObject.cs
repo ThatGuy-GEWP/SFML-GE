@@ -223,11 +223,6 @@
             for (int i = 0; i < Children.Count; i++)
             {
                 Children[i].Update();
-
-                if (Children[i].DestroyQueued)
-                {
-                    Children.RemoveAt(i);
-                }
             }
         }
 
