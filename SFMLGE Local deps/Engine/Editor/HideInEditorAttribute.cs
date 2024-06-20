@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace SFML_Game_Engine.Editor
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class SpacingAttribute : Attribute { }
+    public class HideInEditorAttribute : Attribute { }
 }

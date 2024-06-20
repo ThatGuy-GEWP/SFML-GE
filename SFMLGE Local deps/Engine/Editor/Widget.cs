@@ -1,4 +1,4 @@
-﻿using SFML_Game_Engine;
+﻿using SFML_Game_Engine.Engine.System;
 using SFML_Game_Engine.GUI;
 
 namespace SFML_Game_Engine.Editor

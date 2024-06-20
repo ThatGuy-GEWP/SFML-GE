@@ -1,9 +1,10 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
 using SFML_Game_Engine.GUI;
+using SFML_Game_Engine.System;
 using System.Diagnostics;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Engine.System
 {
     /// <summary>
     /// A Project holds scenes, and all resources.
@@ -70,7 +71,7 @@ namespace SFML_Game_Engine
             {
                 Resources.LoadDir("Engine");
             }
-            
+
             app.MouseWheelScrolled += (sender, args) =>
             {
                 ScrollDelta = args.Delta;
@@ -151,10 +152,10 @@ namespace SFML_Game_Engine
 
         public void Update()
         {
-            if (!Started) 
+            if (!Started)
             {
                 Start();
-                return; 
+                return;
             }
 
             App.DispatchEvents();
@@ -176,7 +177,7 @@ namespace SFML_Game_Engine
 
         void MouseInputUpdate()
         {
-            foreach(KeyValuePair<Mouse.Button, bool> kvp in pressedDict)
+            foreach (KeyValuePair<Mouse.Button, bool> kvp in pressedDict)
             {
                 Mouse.Button curButton = kvp.Key;
                 bool curPressed = kvp.Value;
@@ -187,7 +188,7 @@ namespace SFML_Game_Engine
 
                 releasedDict[curButton] = false;
 
-                if (mouseState && curPressed && curHeld) 
+                if (mouseState && curPressed && curHeld)
                 {
                     pressedDict[curButton] = false;
                 }

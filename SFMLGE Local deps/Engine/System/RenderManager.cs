@@ -1,6 +1,7 @@
 ﻿using SFML.Graphics;
+using SFMLGE_Local_deps.Engine.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Engine.System
 {
     // Does not yet take advantage of the new ZTree, should fix later!
 
@@ -41,7 +42,7 @@ namespace SFML_Game_Engine
         /// <param name="renderableComponent"></param>
         public void AddToOverlayQueue(Component renderableComponent)
         {
-            if (!typeof(IRenderable).IsAssignableFrom(renderableComponent.GetType())) 
+            if (!typeof(IRenderable).IsAssignableFrom(renderableComponent.GetType()))
             {
                 throw new ArgumentException(renderableComponent.GetType().FullName + " does not implment the IRenderable interface.");
             }
@@ -53,10 +54,10 @@ namespace SFML_Game_Engine
             int realXZ = x.gameObject.ZOrder + (x as IRenderable)!.ZOffset;
             int realYZ = y.gameObject.ZOrder + (y as IRenderable)!.ZOffset;
             if (realXZ == realYZ) { return 0; }
-            if (realXZ < realYZ) 
+            if (realXZ < realYZ)
             {
-                return -1; 
-            } 
+                return -1;
+            }
             else
             {
                 return 1;

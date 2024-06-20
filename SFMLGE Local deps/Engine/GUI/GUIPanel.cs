@@ -1,6 +1,8 @@
 ﻿using SFML.Audio;
 using SFML.Graphics;
-
+using SFML_Game_Engine.Engine.System;
+using SFML_Game_Engine.System;
+using SFMLGE_Local_deps.Engine.System;
 
 namespace SFML_Game_Engine.GUI
 {

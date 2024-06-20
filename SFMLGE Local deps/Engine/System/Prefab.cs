@@ -1,4 +1,4 @@
-﻿namespace SFML_Game_Engine
+﻿namespace SFML_Game_Engine.Engine.System
 {
 
     // this class is probably not secure at all but i dont give a shit!
@@ -21,7 +21,7 @@
 
         public Prefab(string name, Func<Project, Scene, GameObject> createPrefab)
         {
-            this.Name = name;
+            Name = name;
             CreatePrefab = createPrefab;
         }
 

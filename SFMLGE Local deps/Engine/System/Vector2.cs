@@ -2,7 +2,7 @@
 using SFML.Graphics.Glsl;
 using SFML.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.System
 {
     public struct Vector2
     {
@@ -64,8 +64,8 @@ namespace SFML_Game_Engine
             float deg = degrees * (MathF.PI / 180); // Convert degrees to radians
 
             Vector2 newVec = new Vector2(
-                (point.x * MathF.Cos(deg)) - (point.y * MathF.Sin(deg)),
-                (point.y * MathF.Cos(deg)) + (point.x * MathF.Sin(deg))
+                point.x * MathF.Cos(deg) - point.y * MathF.Sin(deg),
+                point.y * MathF.Cos(deg) + point.x * MathF.Sin(deg)
                 );
 
             return newVec;
@@ -80,7 +80,7 @@ namespace SFML_Game_Engine
         /// <returns>the rotated point</returns>
         public static Vector2 RotateAroundPoint(Vector2 point, Vector2 origin, float degrees)
         {
-            return (Rotate(point - origin, degrees) + origin);
+            return Rotate(point - origin, degrees) + origin;
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace SFML_Game_Engine
             if (string.IsNullOrWhiteSpace(input)) throw new ArgumentException(input);
 
             string[] vars = input.Replace(" ", string.Empty).Split(',');
-            if(vars.Length != 2) { throw new ArgumentException(input); }
+            if (vars.Length != 2) { throw new ArgumentException(input); }
 
             return new Vector2(float.Parse(vars[0]), float.Parse(vars[1]));
         }
@@ -205,7 +205,7 @@ namespace SFML_Game_Engine
         /// <returns></returns>
         public static float Cross(Vector2 A, Vector2 B)
         {
-            return (A.x * B.y) - (A.y * B.x);
+            return A.x * B.y - A.y * B.x;
         }
 
         /// <summary>

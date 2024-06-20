@@ -1,8 +1,7 @@
 ﻿using SFML.Audio;
-using SFML_Game_Engine;
 using System.Runtime.ConstrainedExecution;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Engine.System
 {
     /// <summary>
     /// An instance of a <see cref="Sound"/>
@@ -98,7 +97,7 @@ namespace SFML_Game_Engine
 
                 if (cur.Disposed) { continue; }
                 if (cur.sound == null) { continue; }
-                if ((cur.sound.Status == SoundStatus.Stopped) && cur.allowCleanup)
+                if (cur.sound.Status == SoundStatus.Stopped && cur.allowCleanup)
                 {
                     cur.Dispose();
                     continue;

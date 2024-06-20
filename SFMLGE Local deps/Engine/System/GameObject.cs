@@ -1,4 +1,6 @@
-﻿namespace SFML_Game_Engine
+﻿using SFMLGE_Local_deps.Engine.System;
+
+namespace SFML_Game_Engine.Engine.System
 {
     /// <summary>
     /// A GameObject, can contain any number of <see cref="Component"/>'s and children.
@@ -9,9 +11,9 @@
         /// The name of this GameObject
         /// </summary>
         public string name;
-        
+
         /// <summary>
-        /// If false, <see cref="GameObject.Start"/> has not ran yet
+        /// If false, <see cref="Start"/> has not ran yet
         /// </summary>
         public bool started = false;
 
@@ -30,10 +32,10 @@
 
         bool DestroyQueued = false;
 
-        /// <summary>The <see cref="SFML_Game_Engine.Project"/> this GameObject belongs too.</summary>
+        /// <summary>The <see cref="System.Project"/> this GameObject belongs too.</summary>
         public Project Project { get; private set; }
 
-        /// <summary>The <see cref="SFML_Game_Engine.Scene"/> this GameObject belongs too.</summary>
+        /// <summary>The <see cref="System.Scene"/> this GameObject belongs too.</summary>
         public Scene Scene { get; private set; }
 
         /// <summary>The parent of this GameObject, null if attached to scene root.</summary>
@@ -209,7 +211,7 @@
 
             if (DestroyQueued) // queued so stuff does not get removed mid update.
             {
-                DestroyNow(); 
+                DestroyNow();
                 return;
             }
 
@@ -286,12 +288,12 @@
             }
 
             if (child.Parent == this) { return child; }
-            
-            if(child.Parent != null)
+
+            if (child.Parent != null)
             {
                 if (child.Parent.HasChild(child))
                 {
-                    if(child.Parent.RemoveChild(child) == null)
+                    if (child.Parent.RemoveChild(child) == null)
                     {
                         throw new Exception($"Could not remove child \"{child.name}\" from old parent \"{child.Parent.name}\"!");
                     }
@@ -304,7 +306,7 @@
         }
 
         /// <summary>
-        /// Gets the array version of the list <see cref="GameObject.Children"/>
+        /// Gets the array version of the list <see cref="Children"/>
         /// </summary>
         /// <returns></returns>
         public GameObject[] GetChildren()
@@ -321,7 +323,7 @@
         {
             foreach (GameObject child in Children)
             {
-                if(child.name == name) { return child; }
+                if (child.name == name) { return child; }
             }
             return null;
         }
@@ -349,7 +351,7 @@
         {
             foreach (GameObject schild in Children)
             {
-                if(schild == child) { return true; }
+                if (schild == child) { return true; }
             }
             return false;
         }
@@ -361,7 +363,7 @@
         public GameObject? RemoveChild(string name)
         {
             GameObject? child = GetChild(name);
-            if(child != null)
+            if (child != null)
             {
                 if (Children.Remove(child))
                 {

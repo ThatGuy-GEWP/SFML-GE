@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
 using System.Runtime.CompilerServices;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Engine.System
 {
     /// <summary>
     /// A Collection of <see cref="Resource"/>'s, used primarily to have all your assets in one place.
@@ -22,7 +22,7 @@ namespace SFML_Game_Engine
         {
             linkedProject = project;
 
-            Console.WriteLine("Max Texture size is : " + SFML.Graphics.Texture.MaximumSize+ "x" + SFML.Graphics.Texture.MaximumSize);
+            Console.WriteLine("Max Texture size is : " + Texture.MaximumSize + "x" + Texture.MaximumSize);
 
             LoadDir(dirToCollect);
 
@@ -158,7 +158,7 @@ namespace SFML_Game_Engine
         /// <param name="resource"></param>
         public void AddResource(Resource resource)
         {
-            Console.WriteLine("(Runtime) Loaded "+resource.Name +" as "+resource.GetType().Name);
+            Console.WriteLine("(Runtime) Loaded " + resource.Name + " as " + resource.GetType().Name);
             resources.Add(resource);
         }
 

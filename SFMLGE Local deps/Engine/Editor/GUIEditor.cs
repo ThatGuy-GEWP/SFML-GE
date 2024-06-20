@@ -4,6 +4,9 @@ using System.Reflection;
 using Windows.Devices.Lights;
 using static SFML.Window.Mouse;
 using SFML.Graphics;
+using SFML_Game_Engine.System;
+using SFMLGE_Local_deps.Engine.System;
+using SFML_Game_Engine.Engine.System;
 
 namespace SFML_Game_Engine.Editor
 {

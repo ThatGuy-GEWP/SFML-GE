@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Engine.System
 {
     /// <summary>
     /// A struct for representing a random number range.<para></para>
