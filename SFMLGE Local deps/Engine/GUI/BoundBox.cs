@@ -55,7 +55,8 @@ namespace SFML_Game_Engine.GUI
         }
         
         /// <summary>
-        /// Checks if a point is within the bounds of this boundbox.
+        /// Checks if a point is within the bounds of this boundbox.<para></para>
+        /// Does not account for bounds with rotated points, see <see cref="WithinBoundsAccurate(Vector2)"/>
         /// </summary>
         public readonly bool WithinBounds(Vector2 point)
         {
@@ -67,6 +68,49 @@ namespace SFML_Game_Engine.GUI
                 point.y <= BottomRight.y;
 
             return inXBounds && inYBounds;
+        }
+
+        //https://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
+        // not feeling like understanding this math atm, just gonna use it!
+        static bool ptInTriangle(Vector2 p, Vector2 p0, Vector2 p1, Vector2 p2)
+        {
+            float A = 1.0f / 2.0f * (-p1.y * p2.x + p0.y * (-p1.x + p2.x) + p0.x * (p1.y - p2.y) + p1.x * p2.y);
+            float sign = A < 0.0f ? -1.0f : 1.0f;
+            float s = (p0.y * p2.x - p0.x * p2.y + (p2.y - p0.y) * p.x + (p0.x - p2.x) * p.y) * sign;
+            float t = (p0.x * p1.y - p0.y * p1.x + (p0.y - p1.y) * p.x + (p1.x - p0.x) * p.y) * sign;
+
+            return s > 0.0f && t > 0.0f && (s + t) < 2.0f * A * sign;
+        }
+
+        /// <summary>
+        /// Rotates a boundBox around a givent point <paramref name="p"/> by <paramref name="degrees"/>
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="degrees"></param>
+        /// <returns></returns>
+        public readonly BoundBox Rotate(Vector2 p, float degrees)
+        {
+            return new BoundBox(
+                Vector2.RotateAroundPoint(TopLeft, p, degrees),
+                Vector2.RotateAroundPoint(TopRight, p, degrees),
+                Vector2.RotateAroundPoint(BottomLeft, p, degrees),
+                Vector2.RotateAroundPoint(BottomRight, p, degrees)
+                );
+        }
+
+
+        /// <summary>
+        /// Checks if a point is within the bounds.
+        /// works by checking if the given point is within either of the two triangles that make up this BoundBox,
+        /// useful if your bounds are non-rectangular, or rotated.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public readonly bool WithinBoundsAccurate(Vector2 point)
+        {
+            bool withinFirst = ptInTriangle(point, TopLeft, TopRight, BottomRight);
+            bool withinSecond = ptInTriangle(point, BottomRight, BottomLeft, TopLeft);
+            return withinFirst || withinSecond;
         }
 
         /// <summary>
@@ -91,17 +135,12 @@ namespace SFML_Game_Engine.GUI
         }
 
         /// <summary>
-        /// Sets a rectangle shapes position, size, fill color, outline thickness and outline color for debug viewing of bound boxes.
-        /// does not actually draw the rectangle shape
+        /// Draws a BoundBox to the given <see cref="RenderTarget"/>
         /// </summary>
-        /// <param name="shape"></param>
-        public readonly void SetRect(RectangleShape shape)
+        /// <param name="rt"></param>
+        public readonly void Draw(RenderTarget rt)
         {
-            shape.FillColor = Color.Transparent;
-            shape.OutlineColor = Color.Red; 
-            shape.OutlineThickness = 1;
-            shape.Position = Rect.Position;
-            shape.Size = Rect.Size;
+            rt.Draw(new Vertex[] { TopLeft, TopRight, BottomRight, BottomRight, BottomLeft, TopLeft }, PrimitiveType.LineStrip);
         }
     }
 }

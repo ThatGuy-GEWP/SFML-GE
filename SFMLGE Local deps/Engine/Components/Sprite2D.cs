@@ -13,7 +13,7 @@ namespace SFML_Game_Engine.Components
     {
         public Vector2 size = new Vector2(50, 50);
 
-        public Vector2 origin = new Vector2(0.5f, 0.5f);
+        public Vector2 anchor = new Vector2(0.5f, 0.5f);
 
         public Vector2 offset = new Vector2(0.0f, 0.0f);
 
@@ -68,6 +68,7 @@ namespace SFML_Game_Engine.Components
         public Sprite2D(TextureResource Texture)
         {
             this.Texture = Texture;
+            size = (Vector2)Texture.Resource.Size;
             fitTexture = true;
         }
 
@@ -82,14 +83,14 @@ namespace SFML_Game_Engine.Components
         {
             size = Size;
             fitTexture = false;
-            origin = Origin;
+            anchor = Origin;
         }
 
         public Sprite2D(Vector2 Size, Vector2 Origin, TextureResource Texture)
         {
             size = Size;
             fitTexture = false;
-            origin = Origin;
+            anchor = Origin;
             this.Texture = Texture;
         }
 
@@ -97,7 +98,7 @@ namespace SFML_Game_Engine.Components
         {
             shape.Position = gameObject.transform.WorldPosition;
             shape.Size = size;
-            shape.Origin = size * origin;
+            shape.Origin = size * anchor;
         }
 
         public void OnRender(RenderTarget rt)
@@ -111,7 +112,7 @@ namespace SFML_Game_Engine.Components
             shape.TextureRect = new IntRect(0, 0, (int)Texture.Resource.Size.X, (int)Texture.Resource.Size.Y);
             shape.Position = gameObject.transform.WorldPosition + offset;
             shape.Size = size;
-            shape.Origin = size * origin;
+            shape.Origin = size * anchor;
             shape.FillColor = fillColor;
             shape.OutlineColor = outlineColor;
             shape.OutlineThickness = outlineThickness;

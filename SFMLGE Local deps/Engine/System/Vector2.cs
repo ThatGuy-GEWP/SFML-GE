@@ -187,7 +187,16 @@ namespace SFML_Game_Engine.System
         /// Gets the Magnitude of a vector
         /// </summary>
         /// <returns></returns>
-        public readonly float Magnitude(Vector2 vec)
+        public readonly float Magnitude()
+        {
+            return MathF.Sqrt(x * x + y * y);
+        }
+
+        /// <summary>
+        /// Gets the Magnitude of a vector
+        /// </summary>
+        /// <returns></returns>
+        public static float Magnitude(Vector2 vec)
         {
             return MathF.Sqrt(vec.x * vec.x + vec.y * vec.y);
         }

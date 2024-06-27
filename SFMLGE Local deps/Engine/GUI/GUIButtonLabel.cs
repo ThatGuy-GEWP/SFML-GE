@@ -1,28 +1,25 @@
-﻿using SFML.Graphics;
+﻿
+using SFML.Graphics;
 using SFML.Window;
 using SFML_Game_Engine.System;
 
 namespace SFML_Game_Engine.GUI
 {
-    /// <summary>
-    /// An Interactable GUI button.
-    /// </summary>
-    public class GUIButton : GUIPanel
+    internal class GUIButtonLabel : GUILabel
     {
-        /// <summary> Called when the button is clicked </summary>
-        public event Action<GUIButton> OnClick = null!;
+        public event Action<GUIButtonLabel> OnClick = null!;
 
         /// <summary> Called while the button is held </summary>
-        public event Action<GUIButton> OnHold = null!;
+        public event Action<GUIButtonLabel> OnHold = null!;
 
         /// <summary> Called when the button is released </summary>
-        public event Action<GUIButton> OnRelease = null!;
+        public event Action<GUIButtonLabel> OnRelease = null!;
 
         /// <summary> Called when the button is being hovered over </summary>
-        public event Action<GUIButton> OnHoveringStart = null!;
+        public event Action<GUIButtonLabel> OnHoveringStart = null!;
 
         /// <summary> Called when the button is no longer being hovered over </summary>
-        public event Action<GUIButton> OnHoveringEnd = null!;
+        public event Action<GUIButtonLabel> OnHoveringEnd = null!;
 
         /// <summary>
         /// If <c>false</c>, the button will not respond to clicks.
@@ -68,6 +65,13 @@ namespace SFML_Game_Engine.GUI
         bool lastClickState = false;
         bool clickedThis = false;
 
+        public GUIButtonLabel() { }
+
+        public GUIButtonLabel(string displayedString)
+        {
+            this.displayedString = displayedString;
+        }
+
         public override void Start()
         {
             base.Start();
@@ -85,7 +89,7 @@ namespace SFML_Game_Engine.GUI
 
             bool wasHovering = Hovering;
 
-            if (bounds.WithinBounds(mousePos))
+            if(bounds.WithinBounds(mousePos))
             {
                 Hovering = true;
                 if (useHoverEffects) { currentColor = hoverColor; }

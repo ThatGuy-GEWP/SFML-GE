@@ -57,6 +57,30 @@ namespace SFML_Game_Engine.System
 
         public string? ResourceDir { get; private set; } = null;
 
+        public NetworkingManager networkingManager;
+
+        public bool useNetworking = false;
+
+        Cursor.CursorType _cursorState = Cursor.CursorType.Arrow;
+
+        public Cursor.CursorType CursorState
+        {
+            get
+            {
+                return _cursorState;
+            }
+            set
+            {
+                if (value != _cursorState)
+                {
+                    Cursor cursor = new Cursor(value);
+                    App.SetMouseCursor(cursor);
+                    cursor.Dispose();
+                    _cursorState = value;
+                }
+            }
+        }
+
         /// <summary>
         /// Creates a new project and loads a directory of resources.
         /// </summary>
@@ -88,6 +112,8 @@ namespace SFML_Game_Engine.System
             heldDict[Mouse.Button.Left] = false;
             heldDict[Mouse.Button.Right] = false;
             heldDict[Mouse.Button.Middle] = false;
+
+            networkingManager = new NetworkingManager(this, "127.0.0.1", 25565);
         }
 
         public T GetResource<T>(string name) where T : Resource
@@ -167,6 +193,8 @@ namespace SFML_Game_Engine.System
             InputUpdate();
             ActiveScene.Update();
             ScrollDelta = 0;
+
+            networkingManager.Update();
         }
 
         public void Render(RenderTarget rt)

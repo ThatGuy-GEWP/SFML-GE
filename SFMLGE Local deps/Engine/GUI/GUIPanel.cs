@@ -2,7 +2,6 @@
 using SFML.Graphics;
 using SFML_Game_Engine.Resources;
 using SFML_Game_Engine.System;
-using SFML_Game_Engine.System;
 using SFMLGE_Local_deps.Engine.System;
 
 namespace SFML_Game_Engine.GUI
@@ -21,7 +20,7 @@ namespace SFML_Game_Engine.GUI
 
         internal static Color defaultPressed = new Color(0x2C2D36FF);
 
-        internal static string defaultFontName = "Roboto-Regular";
+        internal static string defaultFontName = "monogram";
 
         /// <summary>
         /// The background color of this GUI object

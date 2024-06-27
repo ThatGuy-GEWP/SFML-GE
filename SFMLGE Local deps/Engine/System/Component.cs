@@ -1,4 +1,6 @@
-﻿namespace SFML_Game_Engine.System
+﻿using SFML.Window;
+
+namespace SFML_Game_Engine.System
 {
     /// <summary>
     /// A Base class all components derive from
