@@ -1,7 +1,7 @@
 ﻿using LiteNetLib;
 using SFML_Game_Engine.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Networking
 {
     /// <summary>
     /// A Component that acts as a hook into the networking layer, meant to be used with other components.

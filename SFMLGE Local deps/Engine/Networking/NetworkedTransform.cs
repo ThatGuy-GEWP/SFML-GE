@@ -3,7 +3,7 @@ using SFML_Game_Engine.System;
 using SFMLGE_Local_deps.Engine.System;
 using System.Diagnostics;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Networking
 {
     /// <summary>
     /// Syncs the <see cref="System.Transform"/> of the gameObject its attached too with the server and other clients.

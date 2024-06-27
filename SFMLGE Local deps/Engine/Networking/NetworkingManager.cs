@@ -7,7 +7,7 @@ using System.Threading.Channels;
 using Windows.Devices.Enumeration;
 using Windows.Storage.Streams;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Networking
 {
     public class NetworkingManager
     {

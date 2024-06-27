@@ -1,6 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
-using SFML_Game_Engine.Engine.Networking;
+using SFML_Game_Engine.Networking;
 using SFML_Game_Engine.GUI;
 using SFML_Game_Engine.System;
 using System.Diagnostics;
