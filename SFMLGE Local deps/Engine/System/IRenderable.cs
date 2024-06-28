@@ -1,8 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML_Game_Engine.Editor;
-using SFML_Game_Engine.System;
 
-namespace SFMLGE_Local_deps.Engine.System
+namespace SFML_Game_Engine.System
 {
     /// <summary>
     /// Tells the renderer how to render IRenderables, see <see cref="IRenderable.QueueType"/>

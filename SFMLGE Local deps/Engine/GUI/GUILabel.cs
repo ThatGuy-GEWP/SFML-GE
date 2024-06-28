@@ -1,12 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML_Game_Engine.Resources;
 using SFML_Game_Engine.System;
-using SFML_Game_Engine.System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SFML_Game_Engine.GUI
 {

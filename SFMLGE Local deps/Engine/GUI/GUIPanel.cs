@@ -2,8 +2,6 @@
 using SFML.Graphics;
 using SFML_Game_Engine.Resources;
 using SFML_Game_Engine.System;
-using SFML_Game_Engine.System;
-using SFMLGE_Local_deps.Engine.System;
 
 namespace SFML_Game_Engine.GUI
 {
@@ -43,7 +41,7 @@ namespace SFML_Game_Engine.GUI
         public TextureResource panelContent = null!;
 
         /// <summary> The background panel rectangle from <see cref="GUIPanel"/>, can be
-        /// altered right before its drawn in the <see cref="PrePass(RenderTarget)"/> </summary>
+        /// altered right before its drawn in the <see cref="PrePass(RenderTarget, in Vector2, in Vector2)"/> </summary>
         protected RectangleShape backgroundPanelRect = new RectangleShape();
 
         RectangleShape outlineRect = new RectangleShape();
@@ -334,13 +332,11 @@ namespace SFML_Game_Engine.GUI
         /// <summary>
         /// Gets run before anything is drawn to the screen, allows you to change the position and size variables before being drawn.
         /// </summary>
-        /// <param name="rt"></param>
         protected virtual void PrePass(RenderTarget rt, in Vector2 pos, in Vector2 size) { return; }
 
         /// <summary>
         /// Gets after the base panel is drawn to the screen.
         /// </summary>
-        /// <param name="rt"></param>
         protected virtual void PostPass(RenderTarget rt) { return; }
     }
 }

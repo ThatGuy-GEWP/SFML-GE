@@ -1,5 +1,4 @@
 ﻿using SFML.Graphics;
-using SFMLGE_Local_deps.Engine.System;
 
 namespace SFML_Game_Engine.System
 {
@@ -12,12 +11,12 @@ namespace SFML_Game_Engine.System
     public class RenderManager
     {
         /// <summary>
-        /// A List of <see cref="IRenderable"/>'s to be rendered next frame, Cleared after every <see cref="Render(RenderWindow)"/>
+        /// A List of <see cref="IRenderable"/>'s to be rendered next frame, Cleared after every <see cref="Render(RenderTarget)"/>
         /// </summary>
         List<Component> renderQueue = new List<Component>();
 
         /// <summary>
-        /// A List of <see cref="IRenderable"/>'s to be rendered next frame, Cleared after every <see cref="Render(RenderWindow)"/>
+        /// A List of <see cref="IRenderable"/>'s to be rendered next frame, Cleared after every <see cref="Render(RenderTarget)"/>
         /// </summary>
         List<Component> overlayQueue = new List<Component>();
 

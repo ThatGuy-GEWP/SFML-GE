@@ -108,7 +108,7 @@ namespace SFML_Game_Engine.System
         }
 
         /// <summary>
-        /// Swaps x and y in the given <paramref name="vector"/> and returns a new vector with the result.
+        /// Swaps x and y in the current vector and returns a new vector with the result.
         /// </summary>
         public readonly Vector2 Flip()
         {
@@ -128,9 +128,8 @@ namespace SFML_Game_Engine.System
         }
 
         /// <summary>
-        /// Returns a new normalized Vector from <paramref name="vec"/>
+        /// Returns a new normalized Vector from this vector.
         /// </summary>
-        /// <param name="vec">The vector to normalize</param>
         /// <returns></returns>
         public readonly Vector2 Normalize()
         {

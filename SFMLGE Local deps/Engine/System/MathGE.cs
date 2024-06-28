@@ -78,7 +78,6 @@
         /// <summary>
         /// Converts degrees to radians
         /// </summary>
-        /// <param name="radians"></param>
         /// <returns></returns>
         public static float DegToRad(float degrees)
         {

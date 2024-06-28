@@ -1,4 +1,4 @@
-﻿using SFMLGE_Local_deps.Engine.System;
+﻿using SFML_Game_Engine.System;
 
 namespace SFML_Game_Engine.System
 {

@@ -136,7 +136,6 @@ namespace SFML_Game_Engine.System
         /// <summary>
         /// Plays a given <paramref name="sound"/> at a given <paramref name="volume"/> from 0-100
         /// </summary>
-        /// <param name="sound"></param>
         public void PlaySound(SoundResource sound, float volume)
         {
             if (activeSounds.Count > 200) { return; }
@@ -163,7 +162,6 @@ namespace SFML_Game_Engine.System
         /// <summary>
         /// Creates a <see cref="ManagedSound"/> from a given <see cref="SoundResource"/>
         /// </summary>
-        /// <param name="sound"></param>
         /// <returns><see cref="ManagedSound"/>, or null if active sounds is greater then 200</returns>
         public ManagedSound? CreateSound(SoundResource sound, float volume)
         {

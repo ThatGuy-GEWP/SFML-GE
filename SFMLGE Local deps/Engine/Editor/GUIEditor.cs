@@ -1,14 +1,19 @@
 ﻿using SFML_Game_Engine.GUI;
-using static SFML.Graphics.Font;
 using System.Reflection;
-using Windows.Devices.Lights;
-using static SFML.Window.Mouse;
 using SFML.Graphics;
-using SFML_Game_Engine.System;
-using SFMLGE_Local_deps.Engine.System;
 using SFML_Game_Engine.System;
 using SFML_Game_Engine.Resources;
 
+
+// WARNING!!!
+/*
+ *  This class is *very* heavy, and not really optimized
+ *  The first pass was meant just to see how it would end up, and this *desperately* needs
+ *  A second cleanup pass, and lots of caching.
+ *  Big issues right now is clicking GameObjects with lots of public component properties lags hard
+ *  For a few seconds, and nothing is really reused.
+ * 
+ */
 namespace SFML_Game_Engine.Editor
 {
     /// <summary>
@@ -26,7 +31,7 @@ namespace SFML_Game_Engine.Editor
         public ClassMemberInfo(FieldInfo field)
         {
             this.field = field;
-            if(field.CustomAttributes.Count() > 0)
+            if (field.CustomAttributes.Count() > 0)
             {
                 if (field.CustomAttributes.First().AttributeType == typeof(SpacingAttribute))
                 {
@@ -51,7 +56,7 @@ namespace SFML_Game_Engine.Editor
 
         public object? GetValue(object? obj)
         {
-            if(field != null)
+            if (field != null)
             {
                 return field.GetValue(obj);
             }
@@ -176,7 +181,7 @@ namespace SFML_Game_Engine.Editor
 
                 WidgetVector2 widget = new WidgetVector2(Scene);
                 widget.SetParentTo(panel.gameObject);
-                
+
 
                 widget.WidgetPanel.Size = new UDim2(0.5f, 1f, 0, 0);
                 widget.WidgetPanel.Position = new UDim2(0.5f, 0, 0, 0);
@@ -249,7 +254,7 @@ namespace SFML_Game_Engine.Editor
 
                 scaleWidget.xInput.OnTextInput += (s, e) =>
                 {
-                    if (double.TryParse(s, out double val)) 
+                    if (double.TryParse(s, out double val))
                     {
                         UDim2 oldUDim = (UDim2)member.GetValue(memberSource)!;
                         Vector2 newScale = new Vector2((float)val, oldUDim.scale.y);
@@ -290,7 +295,7 @@ namespace SFML_Game_Engine.Editor
                     UDim2 curUDim = (UDim2)member.GetValue(memberSource)!;
 
                     bool offsetFocused = offsetWidget.xInput.focused || offsetWidget.yInput.focused;
-                    if(!offsetFocused)
+                    if (!offsetFocused)
                     {
                         offsetWidget.SetVector(curUDim.offset);
                     }
@@ -314,7 +319,7 @@ namespace SFML_Game_Engine.Editor
 
                 widget.colorInputBox.OnTextInput += (s, g) =>
                 {
-                    if(ColorWidget.GetColorFromString(s, out Color col))
+                    if (ColorWidget.GetColorFromString(s, out Color col))
                     {
                         widget.SetColor(col);
                         member.SetValue(memberSource, col);
@@ -344,7 +349,7 @@ namespace SFML_Game_Engine.Editor
                 {
                     if (double.TryParse(s, out double val))
                     {
-                        if(valType == typeof(int))
+                        if (valType == typeof(int))
                         {
                             member.SetValue(memberSource, (int)val);
                         }
@@ -392,7 +397,7 @@ namespace SFML_Game_Engine.Editor
                 };
             }
 
-            if(childCount == panel.gameObject.Children.Count)
+            if (childCount == panel.gameObject.Children.Count)
             {
                 GUILabel fillInVal = AddToObj(new GUILabel(), "unknownType", panel);
                 fillInVal.Size = new UDim2(0.5f, 1f, 0, 0);
@@ -403,8 +408,8 @@ namespace SFML_Game_Engine.Editor
                 fillInVal.textPosition = new UDim2(0, 0.5f, 5, 0);
                 fillInVal.charSize = 12;
                 fillInVal.outlineThickness = 0;
-                
-                if(value != null)
+
+                if (value != null)
                 {
                     fillInVal.displayedString = value.ToString() ?? string.Empty;
                 }
@@ -543,7 +548,7 @@ namespace SFML_Game_Engine.Editor
                         memInfo.Add(new ClassMemberInfo(field));
                     });
 
-                foreach(ClassMemberInfo mem in memInfo)
+                foreach (ClassMemberInfo mem in memInfo)
                 {
                     AddMember(mem, comp, compInfo, ref totalSize);
                 }
@@ -636,7 +641,7 @@ namespace SFML_Game_Engine.Editor
 
             GameObjectScroller.EntrySelected += (entry) =>
             {
-                if(selectedGameObject != (GameObject)entry.val!) 
+                if (selectedGameObject != (GameObject)entry.val!)
                 {
                     EditorUpdate = null;
                     selectedGameObject = (GameObject)entry.val!;
@@ -690,7 +695,7 @@ namespace SFML_Game_Engine.Editor
                     Resource asRes = (Resource)entry.val!;
 
                     string descript = asRes.Description ?? string.Empty;
-                    if(descript.Length > 0)
+                    if (descript.Length > 0)
                     {
                         descript = descript.Replace(" True", "<crgb86,154,175>" + " True" + "<r>");
                         descript = descript.Replace(" False", "<crgb86,154,175>" + " False" + "<r>");
