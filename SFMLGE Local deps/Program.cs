@@ -1,6 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
-using SFML_Game_Engine;
+using SFML_Game_Engine.System;
 
 namespace SFMLGE_Local_deps
 {
