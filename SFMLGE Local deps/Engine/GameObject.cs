@@ -109,8 +109,8 @@
         /// <param name="renderManager"></param>
         public void GetRenderables(RenderManager renderManager)
         {
-            if (DestroyQueued) return;
-
+            if (DestroyQueued || !enabled) return;
+            
             for (int i = 0; i < Components.Count; i++)
             {
                 Component comp = Components[i];
