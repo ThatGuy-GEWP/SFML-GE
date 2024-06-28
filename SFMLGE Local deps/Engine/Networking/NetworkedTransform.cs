@@ -10,8 +10,6 @@ namespace SFML_Game_Engine.Networking
     /// </summary>
     public class NetworkedTransform : NetworkComponent
     {
-        public bool SmoothMovment = false;
-
         public bool syncRoatation = true;
         public bool syncPosition = true;
 
