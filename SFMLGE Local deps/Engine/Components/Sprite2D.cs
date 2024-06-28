@@ -1,7 +1,8 @@
 ﻿using SFML.Graphics;
+using SFML_Game_Engine.Resources;
+using SFML_Game_Engine.System;
 
-
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Components
 {
     /// <summary>
     /// A class for drawing rectangles.<para></para>
@@ -37,13 +38,15 @@ namespace SFML_Game_Engine
         /// <summary>
         /// The texture of this rectangle, when set the texture will be stretched to this rects <see cref="size"/>, defaults to a white texture.
         /// </summary>
-        public TextureResource? Texture {
+        public TextureResource? Texture
+        {
             get;
             set;
         }
 
         RectangleShape shape = new RectangleShape();
 
+        public int ZOffset { get; set; } = 0;
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = true;
         public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;
@@ -77,14 +80,14 @@ namespace SFML_Game_Engine
         {
             size = Size;
             fitTexture = false;
-            this.origin = Origin;
+            origin = Origin;
         }
 
         public Sprite2D(Vector2 Size, Vector2 Origin, TextureResource Texture)
         {
             size = Size;
             fitTexture = false;
-            this.origin = Origin;
+            origin = Origin;
             this.Texture = Texture;
         }
 

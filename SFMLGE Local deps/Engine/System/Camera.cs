@@ -1,7 +1,8 @@
 ﻿using SFML.Graphics;
 using SFML_Game_Engine.GUI;
+using SFML_Game_Engine.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.System
 {
     /// <summary>
     /// A Camera, defines where the current <see cref="Scene"/> is being viewed from.
@@ -9,7 +10,7 @@ namespace SFML_Game_Engine
     public class Camera
     {
         readonly RenderWindow app;
-        
+
         /// <summary>
         /// The <see cref="View"/> of this camera.
         /// </summary>
@@ -32,7 +33,7 @@ namespace SFML_Game_Engine
             get { return cameraView.Rotation; }
             set { cameraView.Rotation = value; }
         }
- 
+
         /// <summary>
         /// The size of this cameras <see cref="cameraView"/>
         /// </summary>

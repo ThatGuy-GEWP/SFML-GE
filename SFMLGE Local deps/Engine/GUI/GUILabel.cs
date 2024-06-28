@@ -1,9 +1,6 @@
 ﻿using SFML.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SFML_Game_Engine.Resources;
+using SFML_Game_Engine.System;
 
 namespace SFML_Game_Engine.GUI
 {
@@ -12,6 +9,8 @@ namespace SFML_Game_Engine.GUI
     /// </summary>
     public class GUILabel : GUIPanel 
     {
+        bool destroyed = false;
+
         /// <summary>The character size, not in pixels</summary>
         public uint charSize = 16;
         /// <summary>The string that will be displayed</summary>
@@ -51,9 +50,9 @@ namespace SFML_Game_Engine.GUI
 
         protected RichText text = null!;
 
-        public GUILabel() : base() 
+        public GUILabel(string displayedString = "") : base() 
         { 
-            displayedString = string.Empty;  
+            this.displayedString = displayedString;  
         }
 
         public GUILabel(FontResource font, string displayedString, uint characterSize = 16) : base()
@@ -98,6 +97,7 @@ namespace SFML_Game_Engine.GUI
 
         protected override void PostPass(RenderTarget rt)
         {
+            if(destroyed) return;
             if(font == null) { return; }
             if(font != null && text == null) { text = new RichText(font.resource, displayedString, charSize); }
 
@@ -147,5 +147,11 @@ namespace SFML_Game_Engine.GUI
             }
         }
 
+        public override void OnDestroy(GameObject gameObject)
+        {
+            destroyed = true;
+            internalRenderTexture.Dispose();
+            // dispose text? idk prob later
+        }
     }
 }

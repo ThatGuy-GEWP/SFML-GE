@@ -2,7 +2,7 @@
 using SFML.Graphics.Glsl;
 using SFML.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.System
 {
     public struct Vector2
     {
@@ -64,8 +64,8 @@ namespace SFML_Game_Engine
             float deg = degrees * (MathF.PI / 180); // Convert degrees to radians
 
             Vector2 newVec = new Vector2(
-                (point.x * MathF.Cos(deg)) - (point.y * MathF.Sin(deg)),
-                (point.y * MathF.Cos(deg)) + (point.x * MathF.Sin(deg))
+                point.x * MathF.Cos(deg) - point.y * MathF.Sin(deg),
+                point.y * MathF.Cos(deg) + point.x * MathF.Sin(deg)
                 );
 
             return newVec;
@@ -80,7 +80,7 @@ namespace SFML_Game_Engine
         /// <returns>the rotated point</returns>
         public static Vector2 RotateAroundPoint(Vector2 point, Vector2 origin, float degrees)
         {
-            return (Rotate(point - origin, degrees) + origin);
+            return Rotate(point - origin, degrees) + origin;
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace SFML_Game_Engine
         }
 
         /// <summary>
-        /// Swaps x and y in the given <paramref name="vector"/> and returns a new vector with the result.
+        /// Swaps x and y in the current vector and returns a new vector with the result.
         /// </summary>
         public readonly Vector2 Flip()
         {
@@ -128,9 +128,8 @@ namespace SFML_Game_Engine
         }
 
         /// <summary>
-        /// Returns a new normalized Vector from <paramref name="vec"/>
+        /// Returns a new normalized Vector from this vector.
         /// </summary>
-        /// <param name="vec">The vector to normalize</param>
         /// <returns></returns>
         public readonly Vector2 Normalize()
         {
@@ -191,7 +190,7 @@ namespace SFML_Game_Engine
         /// <returns></returns>
         public readonly Vector2 Clamp(Vector2 min, Vector2 max)
         {
-            return new Vector2(MathF.Min(MathF.Max(min.x, x), max.x), MathF.Min(MathF.Max(min.x, y), max.y));
+            return new Vector2(MathF.Min(MathF.Max(min.x, x), max.x), MathF.Min(MathF.Max(min.y, y), max.y));
         }
 
         /// <summary>
@@ -232,7 +231,7 @@ namespace SFML_Game_Engine
             if (string.IsNullOrWhiteSpace(input)) throw new ArgumentException(input);
 
             string[] vars = input.Replace(" ", string.Empty).Split(',');
-            if(vars.Length != 2) { throw new ArgumentException(input); }
+            if (vars.Length != 2) { throw new ArgumentException(input); }
 
             return new Vector2(float.Parse(vars[0]), float.Parse(vars[1]));
         }
@@ -288,7 +287,7 @@ namespace SFML_Game_Engine
         /// <returns></returns>
         public static float Cross(Vector2 A, Vector2 B)
         {
-            return (A.x * B.y) - (A.y * B.x);
+            return A.x * B.y - A.y * B.x;
         }
 
         /// <summary>

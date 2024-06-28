@@ -1,13 +1,15 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
+using SFML_Game_Engine.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Components
 {
     /// <summary>
     /// A trigger that can sense when the mouse interacts with it, great for UI or ingame buttons
     /// </summary>
     public class MouseTrigger : Component, IRenderable
     {
+        public int ZOffset { get; set; } = 0;
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = false;
 
@@ -23,13 +25,13 @@ namespace SFML_Game_Engine
         public Mouse.Button Button = Mouse.Button.Left;
 
         /// <summary> True if mouse is held and hovering over this trigger. </summary>
-        public bool IsMouseHeld {get; private set;}= false;
+        public bool IsMouseHeld { get; private set; } = false;
 
         /// <summary>True for a single frame when this trigger is clicked </summary>
         public bool IsMousePressed { get; private set; } = false;
 
         /// <summary>True if mouse is hovering over this trigger. </summary>
-        public bool IsMouseHovering {get; private set;} = false;
+        public bool IsMouseHovering { get; private set; } = false;
 
         /// <summary>If true, the trigger will check within the gameObject.Position + screen space or smtn idfk</summary>
         public bool relativeToScreen = true;
@@ -108,29 +110,32 @@ namespace SFML_Game_Engine
             if (withinXBounds && withinYBounds)
             {
                 IsMouseHovering = true;
-            } else { IsMouseHovering = false; }
+            }
+            else { IsMouseHovering = false; }
 
             if (!wasHovering && IsMouseHovering) { OnMouseEnter?.Invoke(this); }
             if (wasHovering && !IsMouseHovering) { OnMouseExit?.Invoke(this); }
 
-            if(IsMousePressed == true) { IsMousePressed = false; }
+            if (IsMousePressed == true) { IsMousePressed = false; }
 
             mouseDown = Mouse.IsButtonPressed(Button);
 
             if (IsMouseHovering && mouseDown && !wasPressed) { OnClick?.Invoke(this); IsMousePressed = true; }
             if (IsMouseHovering && !mouseDown && wasPressed) { OnRelease?.Invoke(this); }
 
-            if(IsMouseHovering && mouseDown && wasPressed)
+            if (IsMouseHovering && mouseDown && wasPressed)
             {
                 OnHeld?.Invoke(this);
                 IsMouseHeld = true;
-            } else { IsMouseHeld = false; }
+            }
+            else { IsMouseHeld = false; }
 
             if (debugDraw && !AutoQueue)
             {
                 QueueType = relativeToScreen ? RenderQueueType.OverlayQueue : RenderQueueType.DefaultQueue;
                 AutoQueue = true;
-            } else { AutoQueue = false; }
+            }
+            else { AutoQueue = false; }
         }
 
         public void OnRender(RenderTarget rt)

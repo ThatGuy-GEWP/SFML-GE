@@ -1,6 +1,7 @@
 ﻿using SFML.Graphics;
+using SFML_Game_Engine.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Resources
 {
     public class TextureResource : Resource
     {
@@ -12,25 +13,25 @@ namespace SFML_Game_Engine
 
         public TextureResource(Texture text, string name)
         {
-            base.Name = name;
+            Name = name;
             Resource = text;
-            Description = "path to: "+ "Generated at Runtime.\n"+ getTextureInfo();
+            Description = "path to: " + "Generated at Runtime.\n" + getTextureInfo();
         }
 
         public TextureResource(string path, string name)
         {
-            base.Name = name;
+            Name = name;
             Resource = new Texture(path);
-            base.Description = "path to: "+path + "\n" + getTextureInfo();
+            Description = "path to: " + path + "\n" + getTextureInfo();
         }
 
         string getTextureInfo()
         {
-            return 
-                "Texture Size:"+Resource.Size.X+"x"+Resource.Size.Y+
-                "\nRepeated? "+Resource.Repeated+
-                "\nSmooth? "+ "<crgb86,154,175>" + Resource.Smooth+"<r>"+
-                "\nSRGB Enabled? "+Resource.Srgb;
+            return
+                "Texture Size:" + Resource.Size.X + "x" + Resource.Size.Y +
+                "\nRepeated? " + Resource.Repeated +
+                "\nSmooth? " + Resource.Smooth +
+                "\nSRGB Enabled? " + Resource.Srgb;
         }
 
         public override string ToString()

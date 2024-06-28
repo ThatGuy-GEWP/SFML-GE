@@ -1,8 +1,8 @@
 ﻿using SFML.Audio;
-using SFML_Game_Engine;
+using SFML_Game_Engine.Resources;
 using System.Runtime.ConstrainedExecution;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.System
 {
     /// <summary>
     /// An instance of a <see cref="Sound"/>
@@ -98,7 +98,7 @@ namespace SFML_Game_Engine
 
                 if (cur.Disposed) { continue; }
                 if (cur.sound == null) { continue; }
-                if ((cur.sound.Status == SoundStatus.Stopped) && cur.allowCleanup)
+                if (cur.sound.Status == SoundStatus.Stopped && cur.allowCleanup)
                 {
                     cur.Dispose();
                     continue;
@@ -136,7 +136,6 @@ namespace SFML_Game_Engine
         /// <summary>
         /// Plays a given <paramref name="sound"/> at a given <paramref name="volume"/> from 0-100
         /// </summary>
-        /// <param name="sound"></param>
         public void PlaySound(SoundResource sound, float volume)
         {
             if (activeSounds.Count > 200) { return; }
@@ -163,7 +162,6 @@ namespace SFML_Game_Engine
         /// <summary>
         /// Creates a <see cref="ManagedSound"/> from a given <see cref="SoundResource"/>
         /// </summary>
-        /// <param name="sound"></param>
         /// <returns><see cref="ManagedSound"/>, or null if active sounds is greater then 200</returns>
         public ManagedSound? CreateSound(SoundResource sound, float volume)
         {

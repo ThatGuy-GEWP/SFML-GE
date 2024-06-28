@@ -1,7 +1,8 @@
 ﻿using SFML.Graphics;
-using SFML_Game_Engine;
+using SFML_Game_Engine.Resources;
+using SFML_Game_Engine.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Components
 {
     [Obsolete("AnimatedTexture is deprecated, please use AnimatedFrames instead.")]
     // jokes on that old comment, i replaced it with a manager class instead, get bent nerd
@@ -9,6 +10,7 @@ namespace SFML_Game_Engine
     {
         // Should probably replace with a TextureResource variant that handles all this but oh well.
 
+        public int ZOffset { get; set; } = 0;
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = true;
         public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;
@@ -39,8 +41,6 @@ namespace SFML_Game_Engine
 
         int currentFrame = 0; // what frame we are on.
 
-        int drawnFrame = 0; // tells the sprite what frame to draw, used for reversed animations mostly.
-
         public AnimatedTexture(List<TextureResource> frames)
         {
             this.frames = frames;
@@ -70,7 +70,7 @@ namespace SFML_Game_Engine
             if (reversed)
             {
                 currentFrame = frames.Count - 1;
-            } 
+            }
             else
             {
                 currentFrame = 0;
@@ -85,7 +85,7 @@ namespace SFML_Game_Engine
         /// <returns>true if the animation is finished, false otherwise, always false when looping</returns>
         public bool IsFinished()
         {
-            return loop ? false : reversed ? currentFrame <= 0 : currentFrame >= frames.Count-1;
+            return loop ? false : reversed ? currentFrame <= 0 : currentFrame >= frames.Count - 1;
         }
 
         public AnimatedTexture(TextureResource[] frames)
@@ -96,7 +96,7 @@ namespace SFML_Game_Engine
 
         public override void Update()
         {
-            if(!playing) { return; }
+            if (!playing) { return; }
             curTime += DeltaTime;
 
             if (curTime >= frametime)
@@ -106,7 +106,7 @@ namespace SFML_Game_Engine
                 if (reversed)
                 {
                     currentFrame--;
-                } 
+                }
                 else
                 {
                     currentFrame++;
@@ -117,7 +117,7 @@ namespace SFML_Game_Engine
                 {
                     currentFrame = currentFrame < 0 ? frames.Count - 1 : currentFrame;
                     currentFrame = currentFrame > frames.Count - 1 ? 0 : currentFrame;
-                } 
+                }
                 else
                 {
                     currentFrame = currentFrame < 0 ? 0 : currentFrame;

@@ -1,4 +1,4 @@
-﻿namespace SFML_Game_Engine
+﻿namespace SFML_Game_Engine.System
 {
     public static class MathGE
     {
@@ -30,7 +30,7 @@
             public static float QuadraticEaseOut(float A, float B, float T)
             {
                 T = Clamp(T, 0, 1);
-                return Lerp(A, B, 1.0f - ((1.0f - T) * (1.0f - T)));
+                return Lerp(A, B, 1.0f - (1.0f - T) * (1.0f - T));
             }
 
             public static float ElasticOut(float A, float B, float T)
@@ -78,7 +78,6 @@
         /// <summary>
         /// Converts degrees to radians
         /// </summary>
-        /// <param name="radians"></param>
         /// <returns></returns>
         public static float DegToRad(float degrees)
         {
@@ -92,7 +91,7 @@
         /// <returns></returns>
         public static float ZeroSin(float x)
         {
-            return (MathF.Sin(x)/2f) + 0.5f;
+            return MathF.Sin(x) / 2f + 0.5f;
         }
 
         /// <summary>
@@ -102,7 +101,7 @@
         /// <returns></returns>
         public static float ZeroCos(float x)
         {
-            return (MathF.Cos(x) / 2f) + 0.5f;
+            return MathF.Cos(x) / 2f + 0.5f;
         }
 
         /// <summary>

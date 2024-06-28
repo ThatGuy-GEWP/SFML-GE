@@ -1,11 +1,11 @@
-﻿using SFML_Game_Engine;
+﻿using SFML_Game_Engine.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.System
 {
 
     /// <summary>

@@ -4,9 +4,11 @@
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using SFML_Game_Engine.Resources;
+using SFML_Game_Engine.System;
 using System.Diagnostics;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.System
 {
     public class Scene
     {
@@ -16,7 +18,7 @@ namespace SFML_Game_Engine
         public string Name { get; set; }
 
         /// <summary>
-        /// The <see cref="SFML_Game_Engine.Project"/> this scene is within
+        /// The <see cref="System.Project"/> this scene is within
         /// </summary>
         public Project Project { get; private set; }
 
@@ -36,12 +38,12 @@ namespace SFML_Game_Engine
         public bool IsLoaded { get; private set; } = false;
 
         /// <summary>
-        /// The <see cref="SFML_Game_Engine.AudioManager"/> this scene controls
+        /// The <see cref="System.AudioManager"/> this scene controls
         /// </summary>
         public AudioManager AudioManager { get; private set; }
 
         /// <summary>
-        /// The <see cref="SFML_Game_Engine.RenderManager"/> this scene controls
+        /// The <see cref="System.RenderManager"/> this scene controls
         /// </summary>
         public RenderManager RenderManager { get; private set; } = new RenderManager();
 
@@ -79,7 +81,7 @@ namespace SFML_Game_Engine
         /// <param name="project"></param>
         public Scene(string name, Project project)
         {
-            this.Name = name;
+            Name = name;
             Project = project;
             Camera = new Camera(project.App);
             AudioManager = new AudioManager(this);
@@ -106,7 +108,7 @@ namespace SFML_Game_Engine
         /// <returns></returns>
         public GameObject CreateGameObject(string name = "")
         {
-            if(name == "" || name == null || name == string.Empty) { name = "Unnamed"; }
+            if (name == "" || name == null || name == string.Empty) { name = "Unnamed"; }
 
             GameObject go = new GameObject(Project, this, root);
             root.AddChild(go);
@@ -123,8 +125,8 @@ namespace SFML_Game_Engine
         /// <returns></returns>
         public GameObject CreateGameObject(string name, GameObject parent)
         {
-            if(parent == null) { return null; }
-            if(parent.Scene != this) { return null; }
+            if (parent == null) { return null; }
+            if (parent.Scene != this) { return null; }
 
             if (name == "" || name == null || name == string.Empty) { name = "Unnamed"; }
 
@@ -165,7 +167,7 @@ namespace SFML_Game_Engine
         /// <returns></returns>
         public GameObject[] GetGameObjects(int depth = 0)
         {
-            if(depth == 0)
+            if (depth == 0)
             {
                 return root.GetChildren();
             }
@@ -185,8 +187,8 @@ namespace SFML_Game_Engine
             if (ZTree.ContainsKey(newZOrder))
             {
                 ZTree[newZOrder].Add(go);
-                if(newZOrder == oldZOrder) { return; } else { ZTree[oldZOrder].Remove(go); }
-            } 
+                if (newZOrder == oldZOrder) { return; } else { ZTree[oldZOrder].Remove(go); }
+            }
             else
             {
                 ZTree.Add(newZOrder, new List<GameObject>());
@@ -201,9 +203,9 @@ namespace SFML_Game_Engine
         void GetObjectsAt(GameObject from, List<GameObject> sofar, int depth)
         {
             sofar.AddRange(from.GetChildren());
-            if(depth > 0)
+            if (depth > 0)
             {
-                foreach(GameObject child in from.Children)
+                foreach (GameObject child in from.Children)
                 {
                     if (child.Children.Count > 0)
                     {
@@ -253,10 +255,10 @@ namespace SFML_Game_Engine
 
             root.Update();
 
-            for(int i = 0; i < gameObjects.Count; i++)
+            for (int i = 0; i < gameObjects.Count; i++)
             {
                 GameObject go = gameObjects[i];
-                if(go.ShouldCleanup == true)
+                if (go.ShouldCleanup == true)
                 {
                     gameObjects.RemoveAt(i);
                     if (ZTree.ContainsKey(go.ZOrder)) { ZTree[go.ZOrder].Remove(go); }
@@ -277,7 +279,7 @@ namespace SFML_Game_Engine
         {
             if (!IsLoaded) { return; }
 
-            if(screenText == null || screenText.Size != Project.App.Size)
+            if (screenText == null || screenText.Size != Project.App.Size)
             {
                 screenText?.Dispose();
                 screenText = new RenderTexture(Project.App.Size.X, Project.App.Size.Y);
@@ -292,7 +294,7 @@ namespace SFML_Game_Engine
                 gm.GetRenderables(RenderManager);
             }
 
-            
+
             RenderManager.Render(screenText);
 
             View oldView = new View(screenText.GetView());

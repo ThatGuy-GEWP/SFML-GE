@@ -1,6 +1,7 @@
 ﻿using SFML.Graphics;
+using SFML_Game_Engine.System;
 
-namespace SFML_Game_Engine
+namespace SFML_Game_Engine.Components
 {
     /// <summary>
     /// A simple class for rendering text
@@ -45,7 +46,7 @@ namespace SFML_Game_Engine
             this.font = font;
         }
 
-        
+        public int ZOffset { get; set; } = 0;
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = true;
         public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;
