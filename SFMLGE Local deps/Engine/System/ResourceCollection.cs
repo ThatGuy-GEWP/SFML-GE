@@ -164,12 +164,12 @@ namespace SFML_Game_Engine.System
         }
 
         /// <summary>
-        /// Finds a <see cref="Resource"/> by name or full path, case sensitive, raises exception if resource could not be found
+        /// Finds a <see cref="Resource"/> by name or full path, case sensitive, returns null if the resource could not be found
         /// </summary>
         /// <typeparam name="T">Type of resource</typeparam>
         /// <param name="name">Name of the resource</param>
         /// <returns></returns>
-        public T GetResource<T>(string name) where T : Resource
+        public T? GetResource<T>(string name) where T : Resource
         {
             Resource? secondaryMatch = null;
 
@@ -198,7 +198,45 @@ namespace SFML_Game_Engine.System
                 return (T)secondaryMatch;
             }
 
-            throw new NullReferenceException($"Resource '{name}' could not be found!");
+            return null;
+        }
+
+        /// <summary>
+        /// Finds a <see cref="Resource"/> by name or full path, case sensitive, returns null if the resource could not be found
+        /// </summary>
+        /// <param name="resourceType">Type of resource</param>
+        /// <param name="name">Name of the resource</param>
+        /// <returns></returns>
+        public Resource? GetResource(string name, Type resourceType)
+        {
+            Resource? secondaryMatch = null;
+
+            foreach (Resource resource in resources)
+            {
+                if (resource.Name == name)
+                {
+                    if (resource.GetType() == resourceType)
+                    {
+                        resource.requests++;
+                        return resource;
+                    }
+                }
+                if (resource.Name.Contains(name))
+                {
+                    if (resource.GetType() == resourceType)
+                    {
+                        resource.requests++;
+                        secondaryMatch = resource;
+                    }
+                }
+            }
+            if (secondaryMatch != null)
+            {
+                secondaryMatch.requests++;
+                return secondaryMatch;
+            }
+
+            return null;
         }
 
         /// <summary>
