@@ -117,7 +117,7 @@ namespace SFML_Game_Engine.System
         public void GetRenderables(RenderManager renderManager)
         {
             if (DestroyQueued || !enabled) return;
-            
+
             for (int i = 0; i < Components.Count; i++)
             {
                 Component comp = Components[i];
@@ -391,6 +391,22 @@ namespace SFML_Game_Engine.System
             Components.Add(comp);
             comp.OnAdded(this);
             return comp;
+        }
+
+        /// <summary>
+        /// Gets all components from this <see cref="GameObject"/> and its decendents
+        /// </summary>
+        /// <returns></returns>
+        public List<Component> GetComponentsOfDecendents()
+        {
+            List<Component> components = new List<Component>();
+            components.AddRange(Components);
+            foreach(GameObject child in Children)
+            {
+                components.AddRange(child.GetComponentsOfDecendents());
+            }
+
+            return components;
         }
 
         /// <summary>
