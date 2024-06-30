@@ -37,11 +37,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Res\" />
+    <PackageReference Include="SFML.Net" Version="2.6.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SFML.Net" Version="2.6.0" />
+    <Folder Include="Res\" />
   </ItemGroup>
 
 </Project>
