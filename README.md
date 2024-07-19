@@ -137,7 +137,7 @@ When a component is marked as IRenderable, it will be automatically drawn to scr
 ```cs
 public class ExampleComponent : Component, IRenderable
 {
-  public sbyte ZOrder { get; set; } = 0; // ZOrder of an IRenderable, from -128 to 127
+  public int ZOffset { get; set; } = 0; // The ZOffset of an IRenderable, added to the GameObject.ZOrder this component is attached too
 
   public bool Visible { get; set; } = true; // If false, OnRender() will not be called.
 
