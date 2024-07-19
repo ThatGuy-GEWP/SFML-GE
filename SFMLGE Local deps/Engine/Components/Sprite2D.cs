@@ -93,7 +93,7 @@ namespace SFML_Game_Engine.Components
 
         public override void Start()
         {
-            shape.Position = gameObject.transform.WorldPosition;
+            shape.Position = gameObject.transform.GlobalPosition;
             shape.Size = size;
             shape.Origin = size * origin;
         }
@@ -107,7 +107,7 @@ namespace SFML_Game_Engine.Components
             if (fitTexture) { size = new Vector2(Texture.Resource.Size.X, Texture.Resource.Size.Y); }
             shape.Texture = Texture.Resource;
             shape.TextureRect = new IntRect(0, 0, (int)Texture.Resource.Size.X, (int)Texture.Resource.Size.Y);
-            shape.Position = gameObject.transform.WorldPosition + offset;
+            shape.Position = gameObject.transform.GlobalPosition + offset;
             shape.Size = size;
             shape.Origin = size * origin;
             shape.FillColor = fillColor;

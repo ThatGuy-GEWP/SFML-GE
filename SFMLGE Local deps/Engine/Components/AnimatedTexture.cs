@@ -133,7 +133,7 @@ namespace SFML_Game_Engine.Components
 
         public void OnRender(RenderTarget rt)
         {
-            sprite.Position = gameObject.transform.WorldPosition;
+            sprite.Position = gameObject.transform.GlobalPosition;
             sprite.Texture = frames[currentFrame];
             sprite.TextureRect = new IntRect(0, 0, (int)frames[currentFrame].Resource.Size.X, (int)frames[currentFrame].Resource.Size.Y);
             sprite.Color = color;
