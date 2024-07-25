@@ -39,6 +39,21 @@ namespace SFML_Game_Engine.GUI
 
         }
 
+        public BoundBox(float left, float top, float width, float height)
+        {
+            Rect = new FloatRect(left, top, width, height);
+            TopLeft = new Vector2(Rect.Left, Rect.Top);
+            TopRight = new Vector2(Rect.Left + Rect.Width, Rect.Top);
+            BottomLeft = new Vector2(Rect.Left, Rect.Top + Rect.Height);
+            BottomRight = new Vector2(Rect.Left + Rect.Width, Rect.Top + Rect.Height);
+            Center = new Vector2(Rect.Left + (Rect.Width / 2), Rect.Top + (Rect.Height / 2));
+            Size = Rect.Size;
+            Position = Rect.Position;
+            minPoint = new Vector2(GetMinX(), GetMinY());
+            maxPoint = new Vector2(GetMaxX(), GetMaxY());
+
+        }
+
         /// <summary>
         /// Creates a BoundBox from some <see cref="Vector2"/>'s, also generates a <see cref="FloatRect"/> from the given corners so <see cref="Rect"/> isnt null/all zeros
         /// </summary>
@@ -54,10 +69,12 @@ namespace SFML_Game_Engine.GUI
             this.BottomLeft = BottomLeft;
             this.BottomRight = BottomRight;
             Center = new Vector2(Rect.Left + (Rect.Width / 2), Rect.Top + (Rect.Height / 2));
-            Size = Rect.Size;
+            Size = Vector2.zero;
             Position = Rect.Position;
             minPoint = new Vector2(GetMinX(), GetMinY());
             maxPoint = new Vector2(GetMaxX(), GetMaxY());
+
+            Size = new Vector2(maxPoint.x - minPoint.x, maxPoint.y - minPoint.y);
         }
 
         readonly float GetMinX()

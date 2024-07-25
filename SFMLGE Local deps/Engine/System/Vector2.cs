@@ -35,6 +35,16 @@ namespace SFML_Game_Engine.System
             this.y = y;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="Vector2"/> with X and Y set to <paramref name="xy"/>
+        /// </summary>
+        /// <param name="xy"></param>
+        public Vector2(float xy)
+        {
+            this.x = xy;
+            this.y = xy;
+        }
+
         public static readonly Vector2 zero = new Vector2(0f, 0f);
 
         /// <summary>
