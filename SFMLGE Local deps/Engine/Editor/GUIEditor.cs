@@ -479,8 +479,8 @@ namespace SFML_Game_Engine.Editor
 
             EditorUpdate += (ed) =>
             {
-                worldPosWidget.SetVector(go.transform.WorldPosition);
-                localPosWidget.SetVector(go.transform.LocalPosition);
+                worldPosWidget.SetVector(go.transform.GlobalPosition);
+                localPosWidget.SetVector(go.transform.Position);
             };
 
             UDim2 fitFull = new UDim2(1f, 0, 0, varYSize);

@@ -22,13 +22,13 @@ namespace SFML_Game_Engine.System
         Vector2 _position;
 
         /// <summary>The position of this transform relative to all parent's transforms</summary>
-        public Vector2 WorldPosition
+        public Vector2 GlobalPosition
         {
             get
             {
                 if (owner.Parent != null)
                 {
-                    return _position + owner.Parent.transform.WorldPosition;
+                    return _position + owner.Parent.transform.GlobalPosition;
                 }
                 return _position;
             }
@@ -36,7 +36,7 @@ namespace SFML_Game_Engine.System
             {
                 if (owner.Parent != null)
                 {
-                    Vector2 c = value - owner.Parent.transform.WorldPosition;
+                    Vector2 c = value - owner.Parent.transform.GlobalPosition;
                     _position = c;
                 }
                 else
@@ -49,7 +49,7 @@ namespace SFML_Game_Engine.System
         /// <summary>
         /// The position of this transform relative to itself.
         /// </summary>
-        public Vector2 LocalPosition
+        public Vector2 Position
         {
             get { return _position; }
             set { _position = value; }

@@ -17,6 +17,8 @@ namespace SFML_Game_Engine.GUI
         public Vector2 Size { get; } // simply so i dont have to keep getting stupid "Vector2f + Vector2 is ambiguiosososasasd" garbage
         public Vector2 Position { get; } // simply so i dont have to keep getting stupid "Vector2f + Vector2 is ambiguiosososasasd" garbage
 
+        readonly Vector2 minPoint = new Vector2(0,0);
+        readonly Vector2 maxPoint = new Vector2(0,0);
 
         /// <summary>
         /// Creates a BoundBox from a <see cref="FloatRect"/>.
@@ -32,6 +34,24 @@ namespace SFML_Game_Engine.GUI
             Center = new Vector2(rect.Left + (rect.Width / 2), rect.Top + (rect.Height / 2));
             Size = Rect.Size;
             Position = Rect.Position;
+            minPoint = new Vector2(GetMinX(), GetMinY());
+            maxPoint = new Vector2(GetMaxX(), GetMaxY());
+
+        }
+
+        public BoundBox(float left, float top, float width, float height)
+        {
+            Rect = new FloatRect(left, top, width, height);
+            TopLeft = new Vector2(Rect.Left, Rect.Top);
+            TopRight = new Vector2(Rect.Left + Rect.Width, Rect.Top);
+            BottomLeft = new Vector2(Rect.Left, Rect.Top + Rect.Height);
+            BottomRight = new Vector2(Rect.Left + Rect.Width, Rect.Top + Rect.Height);
+            Center = new Vector2(Rect.Left + (Rect.Width / 2), Rect.Top + (Rect.Height / 2));
+            Size = Rect.Size;
+            Position = Rect.Position;
+            minPoint = new Vector2(GetMinX(), GetMinY());
+            maxPoint = new Vector2(GetMaxX(), GetMaxY());
+
         }
 
         /// <summary>
@@ -49,23 +69,112 @@ namespace SFML_Game_Engine.GUI
             this.BottomLeft = BottomLeft;
             this.BottomRight = BottomRight;
             Center = new Vector2(Rect.Left + (Rect.Width / 2), Rect.Top + (Rect.Height / 2));
-            Size = Rect.Size;
+            Size = Vector2.zero;
             Position = Rect.Position;
+            minPoint = new Vector2(GetMinX(), GetMinY());
+            maxPoint = new Vector2(GetMaxX(), GetMaxY());
+
+            Size = new Vector2(maxPoint.x - minPoint.x, maxPoint.y - minPoint.y);
         }
-        
+
+        readonly float GetMinX()
+        {
+            // not using a for loop since it seems slower then just hard coding.
+            float minX = float.MaxValue;
+            minX = TopLeft.x < minX ? TopLeft.x : minX;
+            minX = BottomLeft.x < minX ? BottomLeft.x : minX;
+            minX = TopRight.x < minX ? TopRight.x : minX;
+            minX = BottomRight.x < minX ? BottomRight.x : minX;
+            return minX;
+        }
+        readonly float GetMinY()
+        {
+            // not using a for loop since it seems slower then just hard coding.
+            float minY = float.MaxValue;
+            minY = TopLeft.y < minY ? TopLeft.y : minY;
+            minY = BottomLeft.y < minY ? BottomLeft.y : minY;
+            minY = TopRight.y < minY ? TopRight.y : minY;
+            minY = BottomRight.y < minY ? BottomRight.y : minY;
+            return minY;
+        }
+        readonly float GetMaxX()
+        {
+            // not using a for loop since it seems slower then just hard coding.
+            float max = float.MinValue;
+            max = TopLeft.x > max ? TopLeft.x : max;
+            max = BottomLeft.x > max ? BottomLeft.x : max;
+            max = TopRight.x > max ? TopRight.x : max;
+            max = BottomRight.x > max ? BottomRight.x : max;
+            return max;
+        }
+        readonly float GetMaxY()
+        {
+            // not using a for loop since it seems slower then just hard coding.
+            float minY = float.MinValue;
+            minY = TopLeft.y > minY ? TopLeft.y : minY;
+            minY = BottomLeft.y > minY ? BottomLeft.y : minY;
+            minY = TopRight.y > minY ? TopRight.y : minY;
+            minY = BottomRight.y > minY ? BottomRight.y : minY;
+            return minY;
+        }
+
         /// <summary>
-        /// Checks if a point is within the bounds of this boundbox.
+        /// Checks if a point is within the AABB bounds of this boundbox.<para></para>
+        /// Because its Axis Aligned, this method does not account for bounds with rotated or non-rectangular points, see <see cref="WithinBoundsAccurate(Vector2)"/>
         /// </summary>
         public readonly bool WithinBounds(Vector2 point)
         {
             bool inXBounds =
-                point.x >= TopLeft.x &&
-                point.x <= BottomRight.x;
+                point.x >= minPoint.x &&
+                point.x <= maxPoint.x;
             bool inYBounds =
-                point.y >= TopLeft.y &&
-                point.y <= BottomRight.y;
+                point.y >= minPoint.y &&
+                point.y <= maxPoint.y;
 
             return inXBounds && inYBounds;
+        }
+
+        //https://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
+        // not feeling like understanding this math atm, just gonna use it!
+        static bool ptInTriangle(Vector2 p, Vector2 p0, Vector2 p1, Vector2 p2)
+        {
+            float A = 1.0f / 2.0f * (-p1.y * p2.x + p0.y * (-p1.x + p2.x) + p0.x * (p1.y - p2.y) + p1.x * p2.y);
+            float sign = A < 0.0f ? -1.0f : 1.0f;
+            float s = (p0.y * p2.x - p0.x * p2.y + (p2.y - p0.y) * p.x + (p0.x - p2.x) * p.y) * sign;
+            float t = (p0.x * p1.y - p0.y * p1.x + (p0.y - p1.y) * p.x + (p1.x - p0.x) * p.y) * sign;
+
+            return s > 0.0f && t > 0.0f && (s + t) < 2.0f * A * sign;
+        }
+
+        /// <summary>
+        /// Rotates a boundBox around a givent point <paramref name="p"/> by <paramref name="degrees"/>
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="degrees"></param>
+        /// <returns></returns>
+        public readonly BoundBox Rotate(Vector2 p, float degrees)
+        {
+            return new BoundBox(
+                Vector2.RotateAroundPoint(TopLeft, p, degrees),
+                Vector2.RotateAroundPoint(TopRight, p, degrees),
+                Vector2.RotateAroundPoint(BottomLeft, p, degrees),
+                Vector2.RotateAroundPoint(BottomRight, p, degrees)
+                );
+        }
+
+
+        /// <summary>
+        /// Checks if a point is within the bounds.
+        /// works by checking if the given point is within either of the two triangles that make up this BoundBox,
+        /// useful if your bounds are non-rectangular, concave, or rotated.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public readonly bool WithinBoundsAccurate(Vector2 point)
+        {
+            bool withinFirst = ptInTriangle(point, TopLeft, TopRight, BottomRight);
+            bool withinSecond = ptInTriangle(point, BottomRight, BottomLeft, TopLeft);
+            return withinFirst || withinSecond;
         }
 
         /// <summary>
@@ -90,17 +199,12 @@ namespace SFML_Game_Engine.GUI
         }
 
         /// <summary>
-        /// Sets a rectangle shapes position, size, fill color, outline thickness and outline color for debug viewing of bound boxes.
-        /// does not actually draw the rectangle shape
+        /// Draws a BoundBox to the given <see cref="RenderTarget"/>
         /// </summary>
-        /// <param name="shape"></param>
-        public readonly void SetRect(RectangleShape shape)
+        /// <param name="rt"></param>
+        public readonly void Draw(RenderTarget rt)
         {
-            shape.FillColor = Color.Transparent;
-            shape.OutlineColor = Color.Red; 
-            shape.OutlineThickness = 1;
-            shape.Position = Rect.Position;
-            shape.Size = Rect.Size;
+            rt.Draw(new Vertex[] { TopLeft, TopRight, BottomRight, BottomRight, BottomLeft, TopLeft }, PrimitiveType.LineStrip);
         }
     }
 }

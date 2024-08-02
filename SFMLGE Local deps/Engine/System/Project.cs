@@ -57,6 +57,26 @@ namespace SFML_Game_Engine.System
 
         public string? ResourceDir { get; private set; } = null;
 
+        Cursor.CursorType _cursorState = Cursor.CursorType.Arrow;
+
+        public Cursor.CursorType CursorState
+        {
+            get
+            {
+                return _cursorState;
+            }
+            set
+            {
+                if (value != _cursorState)
+                {
+                    Cursor cursor = new Cursor(value);
+                    App.SetMouseCursor(cursor);
+                    cursor.Dispose();
+                    _cursorState = value;
+                }
+            }
+        }
+
         /// <summary>
         /// Creates a new project and loads a directory of resources.
         /// </summary>

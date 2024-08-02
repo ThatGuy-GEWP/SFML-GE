@@ -56,7 +56,7 @@ namespace SFML_Game_Engine.Components
             rtext.CharacterSize = size;
             rtext.FillColor = color;
             rtext.Rotation = gameObject.transform.rotation;
-            rtext.Position = gameObject.transform.WorldPosition + offset;
+            rtext.Position = gameObject.transform.GlobalPosition + offset;
             rtext.OutlineColor = outlineColor;
             rtext.OutlineThickness = outlineThickness;
             rt.Draw(rtext);

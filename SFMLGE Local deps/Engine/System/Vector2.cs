@@ -35,6 +35,16 @@ namespace SFML_Game_Engine.System
             this.y = y;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="Vector2"/> with X and Y set to <paramref name="xy"/>
+        /// </summary>
+        /// <param name="xy"></param>
+        public Vector2(float xy)
+        {
+            this.x = xy;
+            this.y = xy;
+        }
+
         public static readonly Vector2 zero = new Vector2(0f, 0f);
 
         /// <summary>
@@ -151,6 +161,17 @@ namespace SFML_Game_Engine.System
         }
 
         /// <summary>
+        /// Lerps from this <see cref="Vector2"/> to <paramref name="B"/> lineraly using <paramref name="T"/>
+        /// </summary>
+        /// <param name="B">The vector to lerp to</param>
+        /// <param name="T">Time where 0.0f is A, and 1.0f is B</param>
+        /// <returns></returns>
+        public readonly Vector2 Lerp(Vector2 B, float T)
+        {
+            return this + (B - this) * T;
+        }
+
+        /// <summary>
         /// Gets the distance between <paramref name="A"/> and <paramref name="B"/>
         /// </summary>
         /// <param name="A"></param>
@@ -161,17 +182,60 @@ namespace SFML_Game_Engine.System
             return MathF.Sqrt(MathF.Pow(B.x - A.x, 2) + MathF.Pow(B.y - A.y, 2));
         }
 
+        /// <summary>
+        /// Gets the distance between this <see cref="Vector2"/> and <paramref name="B"/>
+        /// </summary>
+        /// <param name="B"></param>
+        /// <returns></returns>
+        public readonly float Distance(Vector2 B)
+        {
+            return MathF.Sqrt(MathF.Pow(B.x - x, 2) + MathF.Pow(B.y - y, 2));
+        }
+
+        /// <summary>
+        /// Clamps a vector between two vectors, <paramref name="min"/> and <paramref name="max"/>
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
         public readonly Vector2 Clamp(Vector2 min, Vector2 max)
         {
             return new Vector2(MathF.Min(MathF.Max(min.x, x), max.x), MathF.Min(MathF.Max(min.y, y), max.y));
         }
 
+        /// <summary>
+        /// Clamps a vector between two floats, <paramref name="min"/> and <paramref name="max"/>
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
         public readonly Vector2 Clamp(float min, float max)
         {
             return new Vector2(MathF.Min(MathF.Max(min, x), max), MathF.Min(MathF.Max(min, y), max));
         }
 
+        /// <summary>
+        /// Clamps a vector with four floats, clamps X between <paramref name="xMin"/> and <paramref name="xMax"/>, then clamps
+        /// Y between <paramref name="yMin"/> and <paramref name="yMax"/>
+        /// </summary>
+        /// <param name="xMin"></param>
+        /// <param name="xMax"></param>
+        /// <param name="yMin"></param>
+        /// <param name="yMax"></param>
+        /// <returns></returns>
+        public readonly Vector2 Clamp(float xMin, float xMax, float yMin, float yMax)
+        {
+            return new Vector2(MathF.Min(MathF.Max(xMin, x), xMax), MathF.Min(MathF.Max(yMin, y), yMax));
+        }
+
         //https://stackoverflow.com/questions/10163083/parse-method-for-the-custom-class-c-sharp
+        /// <summary>
+        /// Parses a string where <c>"5,6"</c> would create a vector where X is 5 and Y is 6.
+        /// Throws an exception if it cant parse the string.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static Vector2 Parse(string input)
         {
             if (string.IsNullOrWhiteSpace(input)) throw new ArgumentException(input);
@@ -182,18 +246,47 @@ namespace SFML_Game_Engine.System
             return new Vector2(float.Parse(vars[0]), float.Parse(vars[1]));
         }
 
+        //https://stackoverflow.com/questions/10163083/parse-method-for-the-custom-class-c-sharp
+        /// <summary>
+        /// Tries Parses a string where <c>"5,6"</c> would create a vector where X is 5 and Y is 6, then stores it in <paramref name="output"/>.
+        /// Output defaults to 0,0.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static bool TryParse(string input, out Vector2 output)
+        {
+            output = new Vector2(0, 0);
+            if (string.IsNullOrWhiteSpace(input)) return false;
+
+            string[] vars = input.Replace(" ", string.Empty).Split(',');
+            if (vars.Length != 2) { return false; }
+
+            bool gotX = float.TryParse(vars[0], out float x);
+            bool gotY = float.TryParse(vars[0], out float y);
+            if (!gotX && !gotY) { return false; }
+            output = new Vector2 (x, y);
+
+            return true;
+        }
+
         /// <summary>
         /// Gets the Magnitude of a vector
         /// </summary>
         /// <returns></returns>
-        public readonly float Magnitude(Vector2 vec)
+        public readonly float Magnitude()
         {
-            return MathF.Sqrt(vec.x * vec.x + vec.y * vec.y);
+            return MathF.Sqrt(x * x + y * y);
         }
 
-        public readonly Vector2 Clamp(float xMin, float xMax, float yMin, float yMax)
+        /// <summary>
+        /// Gets the Magnitude of a vector
+        /// </summary>
+        /// <returns></returns>
+        public static float Magnitude(Vector2 vec)
         {
-            return new Vector2(MathF.Min(MathF.Max(xMin, x), xMax), MathF.Min(MathF.Max(yMin, y), yMax));
+            return MathF.Sqrt(vec.x * vec.x + vec.y * vec.y);
         }
 
         /// <summary>
@@ -255,13 +348,9 @@ namespace SFML_Game_Engine.System
             return new Vector2(MathF.Round(x), MathF.Round(y));
         }
 
-
-
-
-
-        public override string ToString()
+        public override readonly string ToString()
         {
-            return $"X[{x}] Y:[{y}]";
+            return x.ToString() + "," + y.ToString();
         }
 
         public override bool Equals(object? obj)

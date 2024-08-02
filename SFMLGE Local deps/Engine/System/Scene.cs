@@ -1,11 +1,7 @@
-﻿
-
-
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 using SFML_Game_Engine.Resources;
-using SFML_Game_Engine.System;
 using System.Diagnostics;
 
 namespace SFML_Game_Engine.System
@@ -65,9 +61,14 @@ namespace SFML_Game_Engine.System
         // This MIGHT be hacky AF but *might* be better then constantly re-sorting all game objects when a ZOrder is changed.
         public Dictionary<int, List<GameObject>> ZTree { get; private set; } = new Dictionary<int, List<GameObject>>();
 
-        Stopwatch deltaWatch = new Stopwatch();
+        readonly Stopwatch deltaWatch = new Stopwatch();
 
-        List<GameObject> gameObjects = new List<GameObject>();
+        readonly List<GameObject> gameObjects = new List<GameObject>();
+
+        /// <summary>
+        /// A HashSet containing all used names by gameObjects within this scene
+        /// </summary>
+        readonly HashSet<string> usedNames = new HashSet<string>();
 
         /// <summary>
         /// The time in seconds since the last frame
@@ -104,36 +105,52 @@ namespace SFML_Game_Engine.System
         /// <summary>
         /// Creates a new <see cref="GameObject"/> instance with a given <paramref name="name"/>
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public GameObject CreateGameObject(string name = "")
+        public GameObject CreateGameObject(string name = "", GameObject? parent = null)
         {
             if (name == "" || name == null || name == string.Empty) { name = "Unnamed"; }
+            if (parent == null) { parent = root; }
 
-            GameObject go = new GameObject(Project, this, root);
-            root.AddChild(go);
-            go.name = name;
-            gameObjects.Add(go);
+            GameObject go = new GameObject(Project, this, parent);
+            RegisterGameObjectToScene(go, name);
             return go;
         }
 
         /// <summary>
-        /// Creates a new <see cref="GameObject"/> instance, and parents it to <paramref name="parent"/>
+        /// Creates a new <see cref="GameObject"/> and attaches a component to it.<para></para>
+        /// Shorthand for <c>Scene.CreateGameObject().AddComponent</c>
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="parent"></param>
-        /// <returns></returns>
-        public GameObject CreateGameObject(string name, GameObject parent)
+        /// <typeparam name="T">The component type.</typeparam>
+        /// <param name="comp">The component instance to add</param>
+        /// <param name="name">The new GameObject's name</param>
+        /// <param name="parent">The new Parent of the GameObject</param>
+        /// <returns>A Component instance attached to a newly created GameObject</returns>
+        public T CreateGameObjectWithComp<T>(T comp, string name = "", GameObject? parent = null) where T : Component
         {
-            if (parent == null) { return null; }
-            if (parent.Scene != this) { return null; }
+            return CreateGameObject(name, parent).AddComponent(comp);
+        }
 
-            if (name == "" || name == null || name == string.Empty) { name = "Unnamed"; }
+        string GetValidName(string fromName)
+        {
+            if (usedNames.Contains(fromName))
+            {
+                for (int i = 1; i < int.MaxValue; i++)
+                {
+                    if (!usedNames.Contains(fromName + " " + i))
+                    {
+                        usedNames.Add(fromName + " " + i);
+                        return fromName + " " + i;
+                    }
+                }
+            }
+            usedNames.Add(fromName);
+            return fromName;
+        }
 
-            GameObject go = new GameObject(Project, this, parent);
-            go.name = name;
+        void RegisterGameObjectToScene(GameObject go, string name)
+        {
+            string finalName = GetValidName(name);
+            go.name = finalName;
             gameObjects.Add(go);
-            return go;
         }
 
         /// <summary>
@@ -262,6 +279,7 @@ namespace SFML_Game_Engine.System
                 {
                     gameObjects.RemoveAt(i);
                     if (ZTree.ContainsKey(go.ZOrder)) { ZTree[go.ZOrder].Remove(go); }
+                    usedNames.Remove(go.name);
                     i--;
                 }
             }
@@ -289,7 +307,8 @@ namespace SFML_Game_Engine.System
             screenText.Clear();
             screenText.SetView(Camera.cameraView);
 
-            foreach (GameObject gm in root.GetChildren())
+            GameObject[] curChildren = root.GetChildren();
+            foreach (GameObject gm in curChildren)
             {
                 gm.GetRenderables(RenderManager);
             }
