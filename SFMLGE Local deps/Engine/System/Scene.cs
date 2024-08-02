@@ -115,6 +115,20 @@ namespace SFML_Game_Engine.System
             return go;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="GameObject"/> and attaches a component to it.<para></para>
+        /// Shorthand for <c>Scene.CreateGameObject().AddComponent</c>
+        /// </summary>
+        /// <typeparam name="T">The component type.</typeparam>
+        /// <param name="comp">The component instance to add</param>
+        /// <param name="name">The new GameObject's name</param>
+        /// <param name="parent">The new Parent of the GameObject</param>
+        /// <returns>A Component instance attached to a newly created GameObject</returns>
+        public T CreateGameObjectWithComp<T>(T comp, string name = "", GameObject? parent = null) where T : Component
+        {
+            return CreateGameObject(name, parent).AddComponent(comp);
+        }
+
         string GetValidName(string fromName)
         {
             if (usedNames.Contains(fromName))
