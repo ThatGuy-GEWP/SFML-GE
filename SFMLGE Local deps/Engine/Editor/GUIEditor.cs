@@ -21,6 +21,7 @@ namespace SFML_Game_Engine.Editor
     /// </summary>
     class ClassMemberInfo
     {
+        public object? obj;
         public FieldInfo? field;
         public PropertyInfo? prop;
 
@@ -28,7 +29,7 @@ namespace SFML_Game_Engine.Editor
 
         public bool hasSpacer = false;
 
-        public ClassMemberInfo(FieldInfo field)
+        public ClassMemberInfo(object? obj, FieldInfo field)
         {
             this.field = field;
             if (field.CustomAttributes.Count() > 0)
@@ -39,9 +40,10 @@ namespace SFML_Game_Engine.Editor
                 }
             }
             Name = field.Name;
+            this.obj = obj;
         }
 
-        public ClassMemberInfo(PropertyInfo property)
+        public ClassMemberInfo(object? Class, PropertyInfo property)
         {
             this.prop = property;
             if (prop.CustomAttributes.Count() > 0)
@@ -52,6 +54,7 @@ namespace SFML_Game_Engine.Editor
                 }
             }
             Name = property.Name;
+            this.obj = Class;
         }
 
         public object? GetValue(object? obj)
@@ -68,6 +71,31 @@ namespace SFML_Game_Engine.Editor
         }
 
         public void SetValue(object? obj, object? value)
+        {
+            if (field != null)
+            {
+                field.SetValue(obj, value); return;
+            }
+            if (prop != null)
+            {
+                prop.SetValue(obj, value); return;
+            }
+        }
+
+        public object? GetValue()
+        {
+            if (field != null)
+            {
+                return field.GetValue(obj);
+            }
+            if (prop != null)
+            {
+                return prop.GetValue(obj);
+            }
+            return null;
+        }
+
+        public void SetValue(object? value)
         {
             if (field != null)
             {
@@ -125,58 +153,15 @@ namespace SFML_Game_Engine.Editor
             valueLabel.outlineThickness = -1f;
             panel.outlineThickness = 0;
 
+            bool createdVal = false;
+
+            // creates the input boxes for values.
+
             if (valType == null) { return panel; }
 
-            if (valType == typeof(bool))
+            if (valType == typeof(Vector2) && createdVal == false)
             {
-                GUIButton button = AddToObj(new GUIButton(), "valbut", panel);
-                button.Size = new UDim2(0.1f, 1f, 0, 0);
-                button.Position = new UDim2(0.9f, 0, 0, 0);
-                valueLabel.Size = new UDim2(0.9f, 1f, 0, 0);
-                button.Anchor = new Vector2(0f, 0);
-                button.outlineThickness = -1f;
-                button.useHoverEffects = false;
-
-                button.OnClick += (but) => {
-                    bool curState = (bool)member.GetValue(memberSource)!;
-
-                    member.SetValue(memberSource, !curState);
-                };
-
-                EditorUpdate += (ed) =>
-                {
-                    bool curState = (bool)member.GetValue(memberSource)!;
-                    if (curState)
-                    {
-                        button.backgroundColor = GUIPanel.defaultForeground;
-                    }
-                    else { button.backgroundColor = button.heldColor; }
-                };
-            }
-
-            if (valType == typeof(string))
-            {
-                GUIInputBox input = AddToObj(new GUIInputBox(), "strInput", panel);
-                input.Size = new UDim2(0.5f, 1f, 0, 0);
-                input.Position = new UDim2(0.5f, 0, 0, 0);
-
-                input.OnTextInput += (s, e) =>
-                {
-                    member.SetValue(memberSource, s);
-                };
-
-                EditorUpdate += (ed) =>
-                {
-                    if (!input.focused)
-                    {
-                        input.displayedString = (string)member.GetValue(memberSource)!;
-                    }
-                };
-            }
-
-            if (valType == typeof(Vector2))
-            {
-
+                createdVal = true;
                 valueLabel.Size = new UDim2(0.5f, 1f, 0, 0);
 
                 WidgetVector2 widget = new WidgetVector2(Scene);
@@ -218,8 +203,9 @@ namespace SFML_Game_Engine.Editor
                 };
             }
 
-            if (valType == typeof(UDim2))
+            if (valType == typeof(UDim2) && createdVal == false)
             {
+                createdVal = true;
                 valueLabel.Size = new UDim2(0.45f, 1f, 0, 0);
                 panel.Size = new UDim2(1f, 0, 0, 40);
 
@@ -308,8 +294,9 @@ namespace SFML_Game_Engine.Editor
                 };
             }
 
-            if (valType == typeof(Color))
+            if (valType == typeof(Color) && createdVal == false)
             {
+                createdVal = true;
                 ColorWidget widget = new ColorWidget(Scene);
                 widget.SetParentTo(panel.gameObject);
                 valueLabel.Size = new UDim2(0.5f, 1f, 0, 0);
@@ -335,8 +322,58 @@ namespace SFML_Game_Engine.Editor
                 };
             }
 
-            if (value != null && double.TryParse(value.ToString(), out _))
+            if (valType == typeof(bool) && createdVal == false)
             {
+                createdVal = true;
+                GUIButton button = AddToObj(new GUIButton(), "valbut", panel);
+                button.Size = new UDim2(0.1f, 1f, 0, 0);
+                button.Position = new UDim2(0.9f, 0, 0, 0);
+                valueLabel.Size = new UDim2(0.9f, 1f, 0, 0);
+                button.Anchor = new Vector2(0f, 0);
+                button.outlineThickness = -1f;
+                button.useHoverEffects = false;
+
+                button.OnClick += (but) => {
+                    bool curState = (bool)member.GetValue(memberSource)!;
+
+                    member.SetValue(memberSource, !curState);
+                };
+
+                EditorUpdate += (ed) =>
+                {
+                    bool curState = (bool)member.GetValue(memberSource)!;
+                    if (curState)
+                    {
+                        button.backgroundColor = GUIPanel.defaultForeground;
+                    }
+                    else { button.backgroundColor = button.heldColor; }
+                };
+            }
+
+            if (valType == typeof(string) && createdVal == false)
+            {
+                createdVal = true;
+                GUIInputBox input = AddToObj(new GUIInputBox(), "strInput", panel);
+                input.Size = new UDim2(0.5f, 1f, 0, 0);
+                input.Position = new UDim2(0.5f, 0, 0, 0);
+
+                input.OnTextInput += (s, e) =>
+                {
+                    member.SetValue(memberSource, s);
+                };
+
+                EditorUpdate += (ed) =>
+                {
+                    if (!input.focused)
+                    {
+                        input.displayedString = (string)member.GetValue(memberSource)!;
+                    }
+                };
+            }
+
+            if (value != null && double.TryParse(value.ToString(), out _) && createdVal == false)
+            {
+                createdVal = true;
                 valueLabel.Size = new UDim2(0.8f, 1f, 0, 0);
                 GUIInputBox inputBox = AddToObj(new GUIInputBox(), "valInput", panel);
                 inputBox.Size = new UDim2(0.2f, 1f, 0, 0);
@@ -359,7 +396,7 @@ namespace SFML_Game_Engine.Editor
                         }
                         if (valType == typeof(uint))
                         {
-                            member.SetValue(memberSource, (int)val);
+                            member.SetValue(memberSource, (uint)val);
                         }
                         if (valType == typeof(short))
                         {
@@ -477,10 +514,28 @@ namespace SFML_Game_Engine.Editor
             localPosWidget.WidgetPanel.Position = new UDim2(0.5f, 0, 0, 110);
             localPosWidget.WidgetPanel.Size = new UDim2(0.5f, 0, 0, 30);
 
+
+            worldPosWidget.xInput.OnTextEntered += (s, e, b) =>
+            {
+                if (double.TryParse(s, out double val))
+                {
+                    go.transform.GlobalPosition = new Vector2((float)val, go.transform.GlobalPosition.y);
+                }
+            };
+
+            worldPosWidget.yInput.OnTextEntered += (s, e, b) =>
+            {
+                if (double.TryParse(s, out double val))
+                {
+                    go.transform.GlobalPosition = new Vector2(go.transform.GlobalPosition.x, (float)val);
+                }
+            };
+
+
             EditorUpdate += (ed) =>
             {
-                worldPosWidget.SetVector(go.transform.GlobalPosition);
-                localPosWidget.SetVector(go.transform.Position);
+                worldPosWidget.SetVectorIfUnfocused(go.transform.GlobalPosition);
+                localPosWidget.SetVectorIfUnfocused(go.transform.Position);
             };
 
             UDim2 fitFull = new UDim2(1f, 0, 0, varYSize);
@@ -526,7 +581,7 @@ namespace SFML_Game_Engine.Editor
                 if (comp.GetType().IsAssignableTo(typeof(IRenderable)))
                 {
                     typeof(IRenderable).GetProperties().ToList().ForEach(prop => {
-                        memInfo.Add(new ClassMemberInfo(prop));
+                        memInfo.Add(new ClassMemberInfo(comp, prop));
                     });
                 }
 
@@ -536,7 +591,7 @@ namespace SFML_Game_Engine.Editor
                         typeof(IRenderable).GetRuntimeProperty(property.Name) == null &&
                         property.CanRead
                     ).ToList().ForEach(prop => {
-                        memInfo.Add(new ClassMemberInfo(prop));
+                        memInfo.Add(new ClassMemberInfo(comp, prop));
                     });
 
                 comp.GetType().GetRuntimeFields().Where(
@@ -545,7 +600,7 @@ namespace SFML_Game_Engine.Editor
                         typeof(IRenderable).GetRuntimeProperty(field.Name) == null &&
                         field.IsPublic
                     ).ToList().ForEach(field => {
-                        memInfo.Add(new ClassMemberInfo(field));
+                        memInfo.Add(new ClassMemberInfo(comp, field));
                     });
 
                 foreach (ClassMemberInfo mem in memInfo)

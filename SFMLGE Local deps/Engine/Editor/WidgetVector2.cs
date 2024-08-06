@@ -48,5 +48,11 @@ namespace SFML_Game_Engine.Editor
             xInput.displayedString = vec.x.ToString();
             yInput.displayedString = vec.y.ToString();
         }
+
+        public void SetVectorIfUnfocused(Vector2 vec)
+        {
+            if (!xInput.focused) { xInput.displayedString = vec.x.ToString(); }
+            if (!yInput.focused) { yInput.displayedString = vec.y.ToString(); }
+        }
     }
 }
