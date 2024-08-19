@@ -1,4 +1,5 @@
 ﻿using SFML.Window;
+using SFML_Game_Engine.Engine.System;
 using SFML_Game_Engine.System;
 using System;
 using System.Collections.Generic;
@@ -67,7 +68,7 @@ namespace SFML_Game_Engine.GUI
             BoundBox TopOrBottomTrig = GetBounds().OffsetBoundsByCenter(-resizeTriggerPadding, resizeTriggerPadding);
             BoundBox LeftOrRightTrig = GetBounds().OffsetBoundsByCenter(resizeTriggerPadding, -resizeTriggerPadding);
 
-            Vector2 mousePos = Scene.GetMouseWorldPosition();
+            Vector2 mousePos = Scene.GetMouseScreenPosition();
 
             if(!resizeMin.WithinBounds(mousePos) && resizeMax.WithinBounds(mousePos))
             {

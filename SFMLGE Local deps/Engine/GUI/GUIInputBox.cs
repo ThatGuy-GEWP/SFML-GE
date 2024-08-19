@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
+using SFML_Game_Engine.Engine.System;
 using SFML_Game_Engine.System;
 
 namespace SFML_Game_Engine.GUI
@@ -204,6 +205,11 @@ namespace SFML_Game_Engine.GUI
         /// </summary>
         public bool Hovering { get; private set; } = false;
 
+        /// <summary>
+        /// the color the outline will be switched to when focused.
+        /// </summary>
+        public Color focusedColor = Color.White;
+
         string beforeFocusLost = string.Empty;
 
         public override void Update()
@@ -243,22 +249,30 @@ namespace SFML_Game_Engine.GUI
                 focused = true;
                 beforeFocusLost = displayedString;
                 Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Text));
-                outlineColor = Color.White;
             }
             if(((!withinBounds && Project.IsMouseButtonPressed(Mouse.Button.Left)) || Project.IsInputJustPressed("ui_confirm")) && autofocus && focused)
             {
                 focused = false;
-                outlineColor = GUIPanel.defaultSecondary;
                 Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow));
                 OnTextEntered?.Invoke(displayedString, beforeFocusLost, this);
                 beforeFocusLost = string.Empty;
             }
         }
 
+        Color lastCol;
+
+        protected override void PrePass(RenderTarget rt, in Vector2 pos, in Vector2 size)
+        {
+            lastCol = outlineColor;
+            if (focused) { outlineColor = focusedColor; }
+        }
+
         protected override void PostPass(RenderTarget rt)
         {
             UDim2 oldPos = textPosition;
             Vector2 relPos = oldPos.GetVector(GetBounds().Size);
+
+            Color lastCol = outlineColor;
 
             if (focused)
             {
@@ -271,6 +285,7 @@ namespace SFML_Game_Engine.GUI
             else { textPosition = new UDim2(textPosition.scale, textPosition.offset); }
             base.PostPass(rt);
             textPosition = oldPos;
+            outlineColor = lastCol;
         }
     }
 }

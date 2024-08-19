@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML_Game_Engine.System;
 
-namespace SFML_Game_Engine.GUI
+namespace SFML_Game_Engine.Engine.System
 {
     /// <summary>
     /// A Simple Wrapper around <see cref="FloatRect"/>. Has 5 <see cref="Vector2"/>'s, one for each corner and one in the center of the bound box.
@@ -17,8 +17,8 @@ namespace SFML_Game_Engine.GUI
         public Vector2 Size { get; } // simply so i dont have to keep getting stupid "Vector2f + Vector2 is ambiguiosososasasd" garbage
         public Vector2 Position { get; } // simply so i dont have to keep getting stupid "Vector2f + Vector2 is ambiguiosososasasd" garbage
 
-        readonly Vector2 minPoint = new Vector2(0,0);
-        readonly Vector2 maxPoint = new Vector2(0,0);
+        readonly Vector2 minPoint = new Vector2(0, 0);
+        readonly Vector2 maxPoint = new Vector2(0, 0);
 
         /// <summary>
         /// Creates a BoundBox from a <see cref="FloatRect"/>.
@@ -31,7 +31,7 @@ namespace SFML_Game_Engine.GUI
             TopRight = new Vector2(rect.Left + rect.Width, rect.Top);
             BottomLeft = new Vector2(rect.Left, rect.Top + rect.Height);
             BottomRight = new Vector2(rect.Left + rect.Width, rect.Top + rect.Height);
-            Center = new Vector2(rect.Left + (rect.Width / 2), rect.Top + (rect.Height / 2));
+            Center = new Vector2(rect.Left + rect.Width / 2, rect.Top + rect.Height / 2);
             Size = Rect.Size;
             Position = Rect.Position;
             minPoint = new Vector2(GetMinX(), GetMinY());
@@ -46,7 +46,7 @@ namespace SFML_Game_Engine.GUI
             TopRight = new Vector2(Rect.Left + Rect.Width, Rect.Top);
             BottomLeft = new Vector2(Rect.Left, Rect.Top + Rect.Height);
             BottomRight = new Vector2(Rect.Left + Rect.Width, Rect.Top + Rect.Height);
-            Center = new Vector2(Rect.Left + (Rect.Width / 2), Rect.Top + (Rect.Height / 2));
+            Center = new Vector2(Rect.Left + Rect.Width / 2, Rect.Top + Rect.Height / 2);
             Size = Rect.Size;
             Position = Rect.Position;
             minPoint = new Vector2(GetMinX(), GetMinY());
@@ -68,7 +68,7 @@ namespace SFML_Game_Engine.GUI
             this.TopRight = TopRight;
             this.BottomLeft = BottomLeft;
             this.BottomRight = BottomRight;
-            Center = new Vector2(Rect.Left + (Rect.Width / 2), Rect.Top + (Rect.Height / 2));
+            Center = new Vector2(Rect.Left + Rect.Width / 2, Rect.Top + Rect.Height / 2);
             Size = Vector2.zero;
             Position = Rect.Position;
             minPoint = new Vector2(GetMinX(), GetMinY());
@@ -143,7 +143,7 @@ namespace SFML_Game_Engine.GUI
             float s = (p0.y * p2.x - p0.x * p2.y + (p2.y - p0.y) * p.x + (p0.x - p2.x) * p.y) * sign;
             float t = (p0.x * p1.y - p0.y * p1.x + (p0.y - p1.y) * p.x + (p1.x - p0.x) * p.y) * sign;
 
-            return s > 0.0f && t > 0.0f && (s + t) < 2.0f * A * sign;
+            return s > 0.0f && t > 0.0f && s + t < 2.0f * A * sign;
         }
 
         /// <summary>

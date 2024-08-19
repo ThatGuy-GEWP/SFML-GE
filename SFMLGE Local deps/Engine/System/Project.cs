@@ -237,6 +237,16 @@ namespace SFML_Game_Engine.System
         }
 
         /// <summary>
+        /// The ZIndex the mouse is hovering over.
+        /// </summary>
+        public int MouseHoveringZ;
+
+        /// <summary>
+        /// The ZIndex the mouse is clicking.
+        /// </summary>
+        public int MouseClickingZ;
+
+        /// <summary>
         /// Returns true the first frame a mouse button is pressed down
         /// </summary>
         /// <param name="button">the button to check</param>

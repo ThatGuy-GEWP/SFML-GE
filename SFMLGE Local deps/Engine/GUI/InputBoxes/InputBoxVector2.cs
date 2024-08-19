@@ -1,4 +1,5 @@
-﻿using SFML_Game_Engine.GUI;
+﻿using SFML.Graphics;
+using SFML_Game_Engine.GUI;
 using SFML_Game_Engine.System;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,9 @@ namespace SFML_Game_Engine.Engine.GUI.InputBoxes
             xInput.outlineThickness = -1;
             yInput.outlineThickness = -1;
 
+            xInput.backgroundColor = Color.Transparent;
+            yInput.backgroundColor = Color.Transparent;
+            label.backgroundColor = Color.Transparent;
 
             xInput.OnTextEntered += (s, e, a) =>
             {
@@ -75,6 +79,14 @@ namespace SFML_Game_Engine.Engine.GUI.InputBoxes
 
         public override void Update()
         {
+            xInput.outlineColor = outlineColor;
+            yInput.outlineColor = outlineColor;
+            label.outlineColor = outlineColor;
+
+            xInput.outlineThickness = -outlineThickness;
+            yInput.outlineThickness = -outlineThickness;
+            label.outlineThickness = -outlineThickness;
+
             SetValue(Value);
 
             label.displayedString = LabelText;
