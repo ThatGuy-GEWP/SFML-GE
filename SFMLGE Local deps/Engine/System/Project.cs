@@ -168,14 +168,15 @@ namespace SFML_Game_Engine.System
             Started = true;
             if (ActiveScene is null) { return; }
             ActiveScene.Start();
+            Console.WriteLine("Project started\n---------------------------");
         }
 
         public void Update()
         {
             if (!Started)
             {
+                Console.WriteLine("Update called without being started, manually starting...");
                 Start();
-                return;
             }
 
             App.DispatchEvents();

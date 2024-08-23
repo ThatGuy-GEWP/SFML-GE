@@ -4,7 +4,7 @@ using SFML_Game_Engine.System;
 namespace SFML_Game_Engine.Engine.System
 {
     /// <summary>
-    /// A Simple Wrapper around <see cref="FloatRect"/>. Has 5 <see cref="Vector2"/>'s, one for each corner and one in the center of the bound box.
+    /// A Simple Wrapper around <see cref="FloatRect"/>. Has 5 <see cref="Vector2"/>'s, one for each corner and one for the center of the bound box.
     /// </summary>
     public readonly struct BoundBox
     {
@@ -14,8 +14,8 @@ namespace SFML_Game_Engine.Engine.System
         public Vector2 BottomLeft { get; }
         public Vector2 BottomRight { get; }
         public Vector2 Center { get; }
-        public Vector2 Size { get; } // simply so i dont have to keep getting stupid "Vector2f + Vector2 is ambiguiosososasasd" garbage
-        public Vector2 Position { get; } // simply so i dont have to keep getting stupid "Vector2f + Vector2 is ambiguiosososasasd" garbage
+        public Vector2 Size { get; }
+        public Vector2 Position { get; }
 
         readonly Vector2 minPoint = new Vector2(0, 0);
         readonly Vector2 maxPoint = new Vector2(0, 0);
@@ -39,6 +39,13 @@ namespace SFML_Game_Engine.Engine.System
 
         }
 
+        /// <summary>
+        /// Creates a boundbox where the top left rests at (left, top) and the bottom right at (width, height)
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         public BoundBox(float left, float top, float width, float height)
         {
             Rect = new FloatRect(left, top, width, height);
@@ -55,7 +62,7 @@ namespace SFML_Game_Engine.Engine.System
         }
 
         /// <summary>
-        /// Creates a BoundBox from some <see cref="Vector2"/>'s, also generates a <see cref="FloatRect"/> from the given corners so <see cref="Rect"/> isnt null/all zeros
+        /// Creates a BoundBox from some <see cref="Vector2"/>'s
         /// </summary>
         /// <param name="TopLeft"></param>
         /// <param name="TopRight"></param>
@@ -147,10 +154,11 @@ namespace SFML_Game_Engine.Engine.System
         }
 
         /// <summary>
-        /// Rotates a boundBox around a givent point <paramref name="p"/> by <paramref name="degrees"/>
+        /// Rotates a BoundBox around a givent point <paramref name="p"/> by <paramref name="degrees"/>,
+        /// the resulting BoundBox may not be axis aligned, and should be sampled with <see cref="WithinBoundsAccurate(Vector2)"/>
         /// </summary>
-        /// <param name="p"></param>
-        /// <param name="degrees"></param>
+        /// <param name="p">the point to rotate around</param>
+        /// <param name="degrees">how many degrees to rotate around the given point <paramref name="p"/></param>
         /// <returns></returns>
         public readonly BoundBox Rotate(Vector2 p, float degrees)
         {
@@ -166,7 +174,7 @@ namespace SFML_Game_Engine.Engine.System
         /// <summary>
         /// Checks if a point is within the bounds.
         /// works by checking if the given point is within either of the two triangles that make up this BoundBox,
-        /// useful if your bounds are non-rectangular, concave, or rotated.
+        /// useful if your bounds are non-rectangular, or rotated.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
