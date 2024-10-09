@@ -35,9 +35,14 @@ namespace SFML_Game_Engine.System
         Dictionary<string, bool> inputJustPressed = new Dictionary<string, bool>();
         Dictionary<string, bool> inputJustReleased = new Dictionary<string, bool>();
 
+        /// <summary>
+        /// The Delta of the scroll wheel
+        /// </summary>
         public float ScrollDelta = 0.0f;
 
         public bool Started { get; private set; } = false;
+
+        public bool writeToConsole = true;
 
         Dictionary<Mouse.Button, bool> pressedDict = new Dictionary<Mouse.Button, bool>();
         Dictionary<Mouse.Button, bool> releasedDict = new Dictionary<Mouse.Button, bool>();
@@ -59,6 +64,9 @@ namespace SFML_Game_Engine.System
 
         Cursor.CursorType _cursorState = Cursor.CursorType.Arrow;
 
+        /// <summary>
+        /// The current state of the cursor.
+        /// </summary>
         public Cursor.CursorType CursorState
         {
             get
@@ -110,11 +118,21 @@ namespace SFML_Game_Engine.System
             heldDict[Mouse.Button.Middle] = false;
         }
 
-        public T GetResource<T>(string name) where T : Resource
+        /// <summary>
+        /// Gets a <see cref="Resource"/> <typeparamref name="T"/> from the project's resources.
+        /// </summary>
+        /// <typeparam name="T">the type of resouce to find</typeparam>
+        /// <param name="name">the name of the resource</param>
+        public T? GetResource<T>(string name) where T : Resource
         {
             return Resources.GetResource<T>(name);
         }
 
+        /// <summary>
+        /// Creates and returns new scene for the project.
+        /// </summary>
+        /// <param name="sceneName">the name of this scene, should be unique</param>
+        /// <returns>the newly created scene</returns>
         public Scene CreateScene(string sceneName = "Untitled")
         {
             Scene scn = new Scene(sceneName, this);
@@ -122,6 +140,11 @@ namespace SFML_Game_Engine.System
             return scn;
         }
 
+        /// <summary>
+        /// Creates and loads a scene.
+        /// </summary>
+        /// <param name="sceneName">the name of this scene, should be unique</param>
+        /// <returns>the newly created scene</returns>
         public Scene CreateSceneAndLoad(string sceneName = "Untitled")
         {
             ActiveScene = CreateScene(sceneName);
@@ -129,6 +152,10 @@ namespace SFML_Game_Engine.System
             return ActiveScene;
         }
 
+        /// <summary>
+        /// Loads a scene using the given <paramref name="scene"/>
+        /// </summary>
+        /// <param name="scene">The scene to load.</param>
         public void LoadScene(Scene scene)
         {
             if (ActiveScene == null)
@@ -144,6 +171,10 @@ namespace SFML_Game_Engine.System
             if (Started) { ActiveScene.Start(); }
         }
 
+        /// <summary>
+        /// Finds the first scene named <paramref name="sceneName"/> then loads it.
+        /// </summary>
+        /// <param name="sceneName">The name of the scene to load</param>
         public void LoadScene(string sceneName)
         {
             foreach (Scene scn in scenes)
@@ -157,25 +188,55 @@ namespace SFML_Game_Engine.System
             Console.WriteLine("Failed to load scene '" + sceneName + "'!");
         }
 
+        /// <summary>
+        /// Finds the first scene named <paramref name="sceneName"/> then returns it.
+        /// </summary>
+        /// <param name="sceneName">The name of the scene to get</param>
+        /// <returns></returns>
+        public Scene? GetScene(string sceneName)
+        {
+            foreach (Scene scn in scenes)
+            {
+                if (scn.Name == sceneName)
+                {
+                    return scn;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Adds a new keyboard input to monitor with the given <paramref name="inputName"/> and <paramref name="key"/><para></para>
+        /// you can get the state of the new input with <see cref="IsInputJustPressed(string)"/>
+        /// </summary>
+        /// <param name="inputName"></param>
+        /// <param name="key"></param>
         public void AddInput(string inputName, Keyboard.Key key)
         {
             inputs.Add(inputName, key);
         }
 
+        /// <summary>
+        /// Starts this project and the loaded scene.
+        /// If no scene is loaded, nothing will happen.
+        /// </summary>
         public void Start()
         {
             InputUpdate();
             Started = true;
             if (ActiveScene is null) { return; }
             ActiveScene.Start();
-            Console.WriteLine("Project started\n---------------------------");
+            if (writeToConsole) { Console.WriteLine("Project started\n---------------------------"); }
         }
 
+        /// <summary>
+        /// Updates this project and its loaded scene.
+        /// </summary>
         public void Update()
         {
             if (!Started)
             {
-                Console.WriteLine("Update called without being started, manually starting...");
+                if (writeToConsole) { Console.WriteLine("Update called without being started, manually starting..."); }
                 Start();
             }
 
@@ -190,6 +251,10 @@ namespace SFML_Game_Engine.System
             ScrollDelta = 0;
         }
 
+        /// <summary>
+        /// Renders the current scene to the given <see cref="RenderTarget"/>, <paramref name="rt"/>
+        /// </summary>
+        /// <param name="rt">The target this project will render too.</param>
         public void Render(RenderTarget rt)
         {
             if (ActiveScene is null) { return; }

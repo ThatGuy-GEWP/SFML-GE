@@ -93,7 +93,7 @@ namespace SFML_Game_Engine.System
         /// <summary>
         /// Instances a given <paramref name="prefab"/>
         /// </summary>
-        public GameObject InstancePrefab(Prefab prefab)
+        public GameObject? InstancePrefab(Prefab prefab)
         {
             GameObject? instance = prefab.CreatePrefab?.Invoke(Project, this);
             if (instance == null) { return null; }
@@ -199,7 +199,7 @@ namespace SFML_Game_Engine.System
         /// <summary>
         /// Updates a <see cref="GameObject"/>'s ZOrder in the <see cref="ZTree"/>
         /// </summary>
-        public void ZOrderGameObjectUpdate(GameObject go, int newZOrder, int oldZOrder)
+        internal void ZOrderGameObjectUpdate(GameObject go, int newZOrder, int oldZOrder)
         {
             if (ZTree.ContainsKey(newZOrder))
             {
@@ -235,7 +235,7 @@ namespace SFML_Game_Engine.System
         /// <summary>
         /// Starts the scene and its gameObjects
         /// </summary>
-        public void Start()
+        internal void Start()
         {
             if (!deltaWatch.IsRunning)
             {
@@ -250,7 +250,7 @@ namespace SFML_Game_Engine.System
         /// <summary>
         /// Unloads the scene
         /// </summary>
-        public void UnloadScene()
+        internal void UnloadScene()
         {
             deltaWatch.Stop();
             IsLoaded = false;
@@ -259,13 +259,19 @@ namespace SFML_Game_Engine.System
             root.OnUnload();
         }
 
-        public void LoadScene()
+        /// <summary>
+        /// Loads the scene.
+        /// </summary>
+        internal void LoadScene()
         {
             IsLoaded = true;
             root.OnLoad();
         }
 
-        public void Update()
+        /// <summary>
+        /// Should NOT be called manually, use <see cref="Project.Update"/>
+        /// </summary>
+        internal void Update()
         {
             if (!IsLoaded) { return; }
             if (!Started) { Start(); return; }
@@ -293,7 +299,7 @@ namespace SFML_Game_Engine.System
         RenderTexture? screenText = null;
         Sprite drawSprite = new Sprite();
 
-        public void Render(RenderTarget rt)
+        internal void Render(RenderTarget rt)
         {
             if (!IsLoaded) { return; }
 
@@ -351,7 +357,6 @@ namespace SFML_Game_Engine.System
             Vector2 pos = GetMouseScreenPosition();
             return Project.App.MapPixelToCoords((Vector2i)pos);
         }
-
     }
 
 }

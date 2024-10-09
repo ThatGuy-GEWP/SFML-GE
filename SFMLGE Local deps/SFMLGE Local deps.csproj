@@ -19,6 +19,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Res\**" />
+    <EmbeddedResource Remove="Res\**" />
+    <None Remove="Res\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Engine\Font\monogram.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -41,7 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Res\" />
+    <Folder Include="Engine\Collision\" />
   </ItemGroup>
 
 </Project>

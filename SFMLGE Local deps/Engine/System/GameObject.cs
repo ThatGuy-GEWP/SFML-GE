@@ -114,7 +114,7 @@ namespace SFML_Game_Engine.System
         /// (only if <see cref="IRenderable.AutoQueue"/> and <see cref="IRenderable.Visible"/> is true)
         /// </summary>
         /// <param name="renderManager"></param>
-        public void GetRenderables(RenderManager renderManager)
+        internal void GetRenderables(RenderManager renderManager)
         {
             if (DestroyQueued || !enabled) return;
 
