@@ -9,7 +9,7 @@ namespace SFML_Game_Engine.System
     /// <summary>
     /// Thread safe random, stolen shamelessly from <seealso href="https://devblogs.microsoft.com/pfxteam/getting-random-numbers-in-a-thread-safe-way/">here</seealso>
     /// </summary>
-    internal static class RandomGen
+    public static class RandomGen
     {
         private static Random _global = new Random(
             DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + DateTime.Now.Millisecond);

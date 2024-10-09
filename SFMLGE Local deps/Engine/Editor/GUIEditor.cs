@@ -108,7 +108,7 @@ namespace SFML_Game_Engine.Editor
         }
     }
 
-    internal class GUIEditor : GUIInteractiveWindow
+    public class GUIEditor : GUIInteractiveWindow
     {
         public GUIEditor(Project project)
         {
