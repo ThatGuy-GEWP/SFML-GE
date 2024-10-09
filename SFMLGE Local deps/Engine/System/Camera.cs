@@ -49,7 +49,7 @@ namespace SFML_Game_Engine.System
         /// <returns></returns>
         public BoundBox GetBounds()
         {
-            return new BoundBox(new FloatRect(cameraPosition, cameraAreaSize));
+            return new BoundBox(new FloatRect(cameraPosition - (cameraAreaSize/2f), cameraAreaSize));
         }
 
         /// <summary>
