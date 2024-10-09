@@ -120,13 +120,76 @@ namespace SFML_Game_Engine.System
 
                 if (extension == ".ttf")
                 {
-                    Console.Write("" + name);
+                    Console.Write("" + name + " as a FontResource");
                     resources.Add(new FontResource(file, name));
                     loadedSomething = true;
                 }
                 Console.Write("\n");
                 if (!loadedSomething) { continue; }
             }
+        }
+
+        public bool LoadResource(string file)
+        {
+            string? extension = Path.GetExtension(file);
+            string? fileName = Path.GetFileName(file);
+
+            if (extension == null || fileName == null) { return false; }
+
+            string name = file.Replace(extension, "").Replace(rootName + "\\", "").Replace("\\", "/");
+            Console.Write("loading ");
+
+            if (extension == ".png" || extension == ".jpg" || extension == ".jpeg")
+            {
+                Console.Write("" + name + " as TextureResource");
+
+                try
+                {
+                    TextureResource res = new TextureResource(file, name);
+                    resources.Add(new TextureResource(file, name));
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Console.Write("Failed to load " + name + "! Exception:" + ex.ToString());
+                }
+            }
+
+            if (extension == ".wav" || extension == ".ogg")
+            {
+                Console.Write("" + name + " as SoundResource");
+                if (extension == ".wav")
+                {
+                    Console.Write(" | Warning! .wav files are uncompressed and slow to load, use .ogg for faster loading!");
+                }
+
+                resources.Add(new SoundResource(file, name));
+                return true;
+            }
+
+            if (extension == ".frag" || extension == ".vert")
+            {
+                if (extension == ".frag")
+                {
+                    resources.Add(new ShaderResource(name + ".f", null, null, file));
+                    Console.Write("" + name + " as a Fragment only ShaderResource");
+                }
+                if (extension == ".vert")
+                {
+                    resources.Add(new ShaderResource(name + ".v", file, null, null));
+                    Console.Write("" + name + " as a Vertex only ShaderResource");
+                }
+                return true;
+            }
+
+            if (extension == ".ttf")
+            {
+                Console.Write("" + name + " as a FontResource");
+                resources.Add(new FontResource(file, name));
+                return true;
+            }
+
+            return false;
         }
 
         public void LoadDir(string? dirToCollect)

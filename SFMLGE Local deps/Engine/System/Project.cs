@@ -95,9 +95,12 @@ namespace SFML_Game_Engine.System
             App = app;
             this.ResourceDir = ResourceDir;
             Resources = new ResourceCollection(this.ResourceDir, this);
-            if (Directory.Exists("Engine"))
+            if (File.Exists("Roboto-Regular.ttf"))
             {
-                Resources.LoadDir("Engine");
+                Resources.LoadResource("Roboto-Regular.ttf");
+            } 
+            else
+            {
             }
 
             app.MouseWheelScrolled += (sender, args) =>

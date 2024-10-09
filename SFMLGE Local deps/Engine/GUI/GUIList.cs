@@ -81,7 +81,7 @@ namespace SFML_Game_Engine.GUI
         public override void Start()
         {
             base.Start();
-            contentText.Font = Project.GetResource<FontResource>("Roboto-Light");
+            contentText.Font = Project.GetResource<FontResource>("Roboto-Regular");
             lastSize = GetSize();
             scrollTexture = new RenderTexture((uint)lastSize.x, (uint)lastSize.y);
 
