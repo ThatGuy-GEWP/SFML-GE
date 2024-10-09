@@ -1,8 +1,5 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
-using SFML_Game_Engine.Components;
-using SFML_Game_Engine.Editor;
-using SFML_Game_Engine.Engine.GUI.InputBoxes;
 using SFML_Game_Engine.System;
 
 namespace SFMLGE_Local_deps
