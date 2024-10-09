@@ -1,4 +1,6 @@
 # About the project
+[Nuget Package](https://www.nuget.org/packages/SFML-GE/0.57.0)
+
 SFML-GE is my handmade game engine, I use it for all my games written in C#, and for a lot of my non-game projects as well.  
 Over time what started as just a Scene with GameObjects quickly turned into an engine through various project requirements.
 
@@ -19,8 +21,7 @@ Making components that can draw/render things is also easy, and requires a [Comp
 # Getting started
 ## Installation
 ### Automatic
-Opening with Visual Studio is recommended, as this is a Visual Studio 2022 Project.  
-![image](https://github.com/ThatGuy-GEWP/SFML-GE/assets/24467262/68d8fee3-651e-4319-8e01-9cae8c7c4124)
+Using NuGet you can install [this package](https://www.nuget.org/packages/SFML-GE/0.57.0), for .Net 8.0
 ### Manual
 Simply cloning the repo to a local project should work fine, releases also include a template for Visual Studio. As for dependencies, [SFML.Net 2.6.0](https://www.sfml-dev.org/download/sfml.net/)  [(NuGet package here)]([https://www.nuget.org/packages/SFML.Net](https://www.nuget.org/packages/SFML.Net/2.6.0)) is the main and only dependency.
 
