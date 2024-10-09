@@ -355,7 +355,7 @@ namespace SFML_Game_Engine.System
         public Vector2 GetMouseWorldPosition()
         {
             Vector2 pos = GetMouseScreenPosition();
-            return Project.App.MapPixelToCoords((Vector2i)pos);
+            return pos + Camera.GetBounds().TopLeft;
         }
     }
 

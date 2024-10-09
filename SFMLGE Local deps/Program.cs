@@ -18,7 +18,6 @@ namespace SFMLGE_Local_deps
             Project mainProject = new Project("Res", App);
             Scene scene = mainProject.CreateSceneAndLoad("DefaultScene");
 
-
             mainProject.Start();
             while (appOpen)
             {
