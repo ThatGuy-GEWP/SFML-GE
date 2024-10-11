@@ -91,7 +91,7 @@ namespace SFML_GE.GUI
 
                 for (int i = 0; i < 5; i++)
                 {
-                    content.Add(new GUIListEntry(0, RandomGen.Next(15f, 45f), true, "Test!! " + i));
+                    content.Add(new GUIListEntry(0, RandomGen.NextSingle(15f, 45f), true, "Test!! " + i));
                 }
             }
         }

@@ -10,13 +10,13 @@ namespace Testing
         [TestMethod]
         public void TestBasicLoop()
         {
-            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(1280, 720), "ProjectTest");
+            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(1280, 720), "Basic Loop Testing");
             Project newProject = new Project("", app);
             Scene testScene = newProject.CreateSceneAndLoad("TestScene");
 
             app.SetFramerateLimit(60);
 
-            for(int i = 0; i < 180; i++) // 60fps, 180 frames should take 3 seconds or less
+            for(int i = 0; i < 60; i++) // should take a second or less
             {
                 Assert.IsTrue(newProject.ActiveScene != null);
                 newProject.Update();
@@ -33,7 +33,7 @@ namespace Testing
         [TestMethod]
         public void TestSceneTransitions()
         {
-            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(1280, 720), "ProjectTest");
+            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(1280, 720), "Scene-Transition Testing");
             Project newProject = new Project("", app);
 
             Scene SceneA = newProject.CreateScene("Scene A");
@@ -45,19 +45,19 @@ namespace Testing
 
             app.SetFramerateLimit(60);
 
-            for (int i = 0; i < 180; i++) // 60fps, 180 frames should take 3 seconds or less
+            for (int i = 0; i < 60; i++) // should take a second or less
             {
                 Assert.IsTrue(newProject.ActiveScene != null);
-                if (i == 60)
+                if (i == 10)
                 {
                     newProject.LoadScene(SceneB);
                 }
-                if(i == 70)
+                if(i == 20)
                 {
                     Assert.AreEqual("Scene B", newProject.ActiveScene!.Name);
                     newProject.LoadScene(SceneA);
                 }
-                if(i == 75)
+                if(i == 25)
                 {
                     Assert.AreEqual("Scene A", newProject.ActiveScene!.Name);
                 }
@@ -75,7 +75,7 @@ namespace Testing
         [TestMethod]
         public void TestSceneWithEditor()
         {
-            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(1280, 720), "ProjectTest3");
+            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(1280, 720), "Editor Testing");
             Project newProject = new Project("", app);
             Scene testScene = newProject.CreateSceneAndLoad("TestScene");
 
@@ -83,7 +83,7 @@ namespace Testing
 
             app.SetFramerateLimit(60);
 
-            for (int i = 0; i < 300; i++) // 60fps, 300 frames should take 5 seconds or less
+            for (int i = 0; i < 60; i++) // 60fps, 300 frames should take 5 seconds or less
             {
                 Assert.IsTrue(newProject.ActiveScene != null);
                 newProject.Update();

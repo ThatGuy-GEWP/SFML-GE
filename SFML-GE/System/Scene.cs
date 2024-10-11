@@ -42,6 +42,16 @@ namespace SFML_GE.System
         public bool IsLoaded { get; private set; } = false;
 
         /// <summary>
+        /// The color used to clear the screen, if screen clearing is enabled.
+        /// </summary>
+        public Color ClearColor { get; set; } = Color.Black;
+
+        /// <summary>
+        /// If true, the screen will be cleared before rendering the frame.
+        /// </summary>
+        public bool ClearScreen { get; set; } = true;
+
+        /// <summary>
         /// The <see cref="System.AudioManager"/> this scene controls
         /// </summary>
         public AudioManager AudioManager { get; private set; }
@@ -329,7 +339,6 @@ namespace SFML_GE.System
 
         RenderTexture? screenText = null;
         Sprite drawSprite = new Sprite();
-
         internal void Render(RenderTarget rt)
         {
             if (!IsLoaded) { return; }
@@ -341,7 +350,7 @@ namespace SFML_GE.System
                 drawSprite.TextureRect = new IntRect(0, 0, (int)screenText.Size.X, (int)screenText.Size.Y);
             }
 
-            screenText.Clear();
+            if (ClearScreen) { screenText.Clear(ClearColor); }
             screenText.SetView(Camera.cameraView);
 
             GameObject[] curChildren = root.GetChildren();

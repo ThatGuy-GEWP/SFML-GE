@@ -9,7 +9,7 @@ namespace SFML_GE.System
     /// <summary>
     /// A struct for representing a random number range.<para></para>
     /// good for properties,
-    /// bad for one time uses, use <see cref="RandomGen.Next(int, int)"/> or <see cref="RandomGen.Next(float, float)"/> instead <para></para>
+    /// bad for one time uses, use <see cref="RandomGen.Next(int, int)"/> or <see cref="RandomGen.NextSingle(float, float)"/> instead <para></para>
     /// Example:
     /// <code>
     /// RandomRange rand = RandomRange{min = -20, max = 20}
@@ -62,7 +62,7 @@ namespace SFML_GE.System
             get
             {
                 if (min == max) { return min; }
-                return RandomGen.Next(min, max);
+                return RandomGen.NextSingle(min, max);
             }
 
         }

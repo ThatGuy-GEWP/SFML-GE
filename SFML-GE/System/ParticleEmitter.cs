@@ -171,14 +171,14 @@ namespace SFML_GE.System
         Particle SpawnParticle()
         {
             Particle part = new Particle(gameObject.transform.GlobalPosition);
-            part.position += new Vector2(RandomGen.Next(-spread, spread), RandomGen.Next(-spread, spread));
-            part.velocity += new Vector2(RandomGen.Next(-2f, 2f), RandomGen.Next(-2f, 2f)).Normalize() * randomVelocity;
+            part.position += new Vector2(RandomGen.NextSingle(-spread, spread), RandomGen.NextSingle(-spread, spread));
+            part.velocity += new Vector2(RandomGen.NextSingle(-2f, 2f), RandomGen.NextSingle(-2f, 2f)).Normalize() * randomVelocity;
             part.rotation = rotation;
 
             if (lifetimeRandomness > 0)
             {
                 float life = lifetime * lifetimeRandomness;
-                part.lifetime += RandomGen.Next(-life, life);
+                part.lifetime += RandomGen.NextSingle(-life, life);
             }
 
             return part;
