@@ -1,0 +1,1 @@
+The SFML.Net and CSFML libraries and source code are distributed under the zlib/png license.
