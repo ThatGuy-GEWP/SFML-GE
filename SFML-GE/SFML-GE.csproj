@@ -12,17 +12,17 @@
     <Description>A 2D Only Game Engine built on top of SFML.Net, Featuring a syntax close to unity's</Description>
     <PackageProjectUrl>https://github.com/ThatGuy-GEWP/SFML-GE</PackageProjectUrl>
     <Copyright>Copyright © 2024</Copyright>
-    <PackageIcon>TimsToolboxIcon.png</PackageIcon>
+    <PackageIcon>packageicon.png</PackageIcon>
     <RepositoryUrl>https://github.com/ThatGuy-GEWP/SFML-GE</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageLicenseFile>licensenuget.md</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageReadmeFile>readmenuget.md</PackageReadmeFile>
     <PackageTags>game engine,sfml.net,sfml,2D</PackageTags>
-	<PackageReleaseNotes>Said another bug fix</PackageReleaseNotes>
+	<PackageReleaseNotes>Documentation pass and more bug fixes.</PackageReleaseNotes>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 	
@@ -36,14 +36,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\..\Downloads\TimsToolboxIcon.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\..\SFMLGE Local deps\LICENSE.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
 	  <EmbeddedResource Include="Roboto-Regular.ttf">
 		  <Pack>True</Pack>
 		  <PackagePath>\</PackagePath>
@@ -57,6 +49,21 @@
 
   <ItemGroup>
     <Folder Include="Licenses\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="licensenuget.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="packageicon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="readmenuget.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
