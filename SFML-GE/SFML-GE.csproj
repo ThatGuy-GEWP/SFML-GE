@@ -59,4 +59,8 @@
     <PackageReference Include="SFML.Net" Version="2.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Licenses\" />
+  </ItemGroup>
+
 </Project>
