@@ -1,5 +1,6 @@
+![workflow](https://github.com/ThatGuy-GEWP/SFML-GE/actions/workflows/dotnet.yml/badge.svg)
 # About the project
-[Nuget Package](https://www.nuget.org/packages/SFML-GE/0.57.0)
+[Nuget Package](https://www.nuget.org/packages/SFML-GE/)
 
 SFML-GE is my handmade game engine, I use it for all my games written in C#, and for a lot of my non-game projects as well.  
 Over time what started as just a Scene with GameObjects quickly turned into an engine through various project requirements.
