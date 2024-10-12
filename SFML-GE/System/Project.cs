@@ -88,7 +88,7 @@ namespace SFML_GE.System
         /// </summary>
         /// <param name="ResourceDir"></param>
         /// <param name="app"></param>
-        public Project(string ResourceDir, RenderWindow app)
+        public Project(string? ResourceDir, RenderWindow app)
         {
             App = app;
             this.ResourceDir = ResourceDir;
@@ -99,6 +99,7 @@ namespace SFML_GE.System
             }
             else
             {
+                Console.WriteLine("Cannot load Default font.");
             }
 
             app.MouseWheelScrolled += (sender, args) =>

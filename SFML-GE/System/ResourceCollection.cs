@@ -24,7 +24,7 @@ namespace SFML_GE.System
 
             Console.WriteLine("Max Texture size is : " + Texture.MaximumSize + "x" + Texture.MaximumSize);
 
-            LoadDir(dirToCollect);
+            if(dirToCollect != null) { LoadDir(dirToCollect); }
 
             Image defaultSpriteImg = new Image(25, 25);
             for (uint x = 0; x < 25; x++)

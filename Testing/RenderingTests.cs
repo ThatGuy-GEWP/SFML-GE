@@ -10,7 +10,7 @@ namespace Testing
         [TestMethod]
         public void TestSceneClearing()
         {
-            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(1280, 720), "Screen-Clearing test");
+            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(512, 512), "Screen-Clearing test");
             Project newProject = new Project("", app);
             Scene testScene = newProject.CreateSceneAndLoad("TestScene");
 
