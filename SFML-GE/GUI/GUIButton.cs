@@ -84,8 +84,6 @@ namespace SFML_GE.GUI
             BoundBox bounds = GetBounds();
             bool isMousePressed = Project.IsMouseButtonHeld(Mouse.Button.Left);
 
-            bool wasHovering = Hovering;
-
             bool lastInerac = interactable;
             if (clipInteraction)
             {
@@ -100,19 +98,24 @@ namespace SFML_GE.GUI
             }
 
 
-            if (bounds.WithinBounds(mousePos))
+            bool lastHovering = Hovering;
+
+            if (bounds.WithinBounds(mousePos) && interactable)
             {
                 Hovering = true;
                 if (useHoverEffects) { currentColor = hoverColor; }
             }
             else { Hovering = false; if (useHoverEffects) { currentColor = backgroundColor; } }
 
-            if (!wasHovering && Hovering && interactable)
+            bool hoveringEnded = lastHovering == true && Hovering == false;
+            bool hoveringStarted = lastHovering == false && Hovering == true;
+
+            if (hoveringStarted)
             {
                 if (useHoverEffects) { Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Hand)); }
                 if (interactable) { OnHoveringStart?.Invoke(this); }
             }
-            if (wasHovering && !Hovering && interactable)
+            if (hoveringEnded)
             {
                 if (useHoverEffects) { Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow)); }
                 if (interactable) { OnHoveringEnd?.Invoke(this); }
