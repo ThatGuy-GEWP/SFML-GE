@@ -121,5 +121,22 @@ namespace SFML_GE.System
             }
             return inst.NextSingle() * maxValue;
         }
+
+
+        /// <summary>
+        /// Returns a random true or false bool.
+        /// </summary>
+        /// <returns>A bool that is either true or false.</returns>
+        public static bool NextBool()
+        {
+            Random inst = _local;
+            if (inst == null)
+            {
+                int seed;
+                lock (_global) seed = _global.Next();
+                _local = inst = new Random(seed);
+            }
+            return inst.Next(0, 2) == 0;
+        }
     }
 }
