@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <PackageId>SFML-GE</PackageId>
     <Title>SFML-Game Engine</Title>
-    <Version>0.60.0</Version>
+    <Version>0.60.1</Version>
     <Authors>Timothy Anderson</Authors>
     <Description>A 2D Only Game Engine built on top of SFML.Net, Featuring a syntax close to unity's</Description>
     <PackageProjectUrl>https://github.com/ThatGuy-GEWP/SFML-GE</PackageProjectUrl>
