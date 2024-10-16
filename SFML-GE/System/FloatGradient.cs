@@ -1,9 +1,9 @@
 ﻿namespace SFML_GE.System
 {
     /// <summary>
-    /// Similar to <see cref="Gradient1D"/>, but for <see cref="float"/>'s
+    /// Similar to <see cref="ColorGradient"/>, but for <see cref="float"/>'s
     /// </summary>
-    public class FloatCurve
+    public class FloatGradient
     {
         /// <summary>
         /// All points within this FloatCurve, should never be smaller then 2.
@@ -11,14 +11,21 @@
         public List<(float position, float value)> points = new List<(float position, float value)>();
 
         /// <summary>
-        /// Creates a new <see cref="FloatCurve"/> going from <paramref name="start"/> to <paramref name="end"/>
+        /// Dictates how this Gradient eases between values.
         /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        public FloatCurve(float start = 0.0f, float end = 1.0f)
+        public GradientEasing easingType = GradientEasing.Linear;
+
+        /// <summary>
+        /// Creates a new <see cref="FloatGradient"/> going from <paramref name="start"/> to <paramref name="end"/>
+        /// </summary>
+        /// <param name="start">the starting value, defaults to 0.0f</param>
+        /// <param name="end">the ending value, defaults to 1.0f</param>
+        /// <param name="easingType">the easing type.</param>
+        public FloatGradient(float start = 0.0f, float end = 1.0f, GradientEasing easingType = GradientEasing.Linear)
         {
             points.Add((0.0f, start));
             points.Add((1.0f, end));
+            this.easingType = easingType;
         }
 
         /// <summary>
@@ -26,7 +33,7 @@
         /// If less then 2 values are given, it will default to 0.0f-1.0f
         /// </summary>
         /// <param name="values">The values to space apart</param>
-        public FloatCurve(params float[] values)
+        public FloatGradient(params float[] values)
         {
             if (values.Length < 2) { points.Add((0.0f, 0.0f)); points.Add((0.0f, 1.0f)); return; }
 
@@ -43,7 +50,7 @@
         /// </summary>
         /// <param name="position">the position of the new point from 0.0 - 1.0</param>
         /// <param name="value">the value of the new point, can be any float value</param>
-        /// <returns></returns>
+        /// <returns>true if a point was added, false otherwise.</returns>
         public bool AddPoint(float position, float value)
         {
             for (int i = 0; i < points.Count; i++)
@@ -109,9 +116,10 @@
         }
 
         /// <summary>
-        /// Samples the <see cref="FloatCurve"/> at the given position <paramref name="at"/>.
+        /// Samples the <see cref="FloatGradient"/> at the given position <paramref name="at"/>.
         /// </summary>
         /// <param name="at">where to sample the float curve from ranging 0.0f to 1.0f </param>
+        /// <returns>the value of the given position on the gradient.</returns>
         public float Sample(float at)
         {
             if (points == null) throw new NullReferenceException("--> FloatCurve.Points is null!!!");
@@ -129,11 +137,18 @@
                 }
             }
 
-            float curAt = MathGE.Map(at, points[toSample].position, points[toSample + 1].position, 0.0f, 1.0f);
-            float startAt = points[toSample].value;
-            float endAt = points[toSample + 1].value;
+            if(easingType == GradientEasing.Linear)
+            {
+                float curAt = MathGE.Map(at, points[toSample].position, points[toSample + 1].position, 0.0f, 1.0f);
+                float startAt = points[toSample].value;
+                float endAt = points[toSample + 1].value;
 
-            return MathGE.Lerp(startAt, endAt, curAt);
+                return MathGE.Lerp(startAt, endAt, curAt);
+            } 
+            else
+            {
+                return points[toSample].value;
+            }
         }
 
     }

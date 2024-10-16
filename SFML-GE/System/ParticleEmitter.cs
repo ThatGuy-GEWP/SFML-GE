@@ -140,14 +140,14 @@ namespace SFML_GE.System
         public Vector2 textureSize = new Vector2(10, 10);
 
         /// <summary>
-        /// A <see cref="FloatCurve"/> representing the scale of each particle over its lifetime.
+        /// A <see cref="FloatGradient"/> representing the scale of each particle over its lifetime.
         /// </summary>
-        public FloatCurve ScaleOverTime = new FloatCurve(1.0f, 0.0f);
+        public FloatGradient ScaleOverTime = new FloatGradient(1.0f, 0.0f);
 
         /// <summary>
-        /// A <see cref="Gradient1D"/> representing the color/tint of each particle over its lifetime.
+        /// A <see cref="ColorGradient"/> representing the color/tint of each particle over its lifetime.
         /// </summary>
-        public Gradient1D ColorOverTime = new Gradient1D();
+        public ColorGradient ColorOverTime = new ColorGradient();
 
         /// <summary>
         /// A random velocity to add to a particle on creation.
