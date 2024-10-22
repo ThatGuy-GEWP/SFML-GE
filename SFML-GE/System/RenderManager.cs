@@ -142,7 +142,7 @@ namespace SFML_GE.System
 
                 for (int i = 0; i < overlayQueue.Count; i++)
                 {
-                    if (renderQueue[i] is ShadowComponent) { ((ShadowComponent)renderQueue[i]).OnRenderAction(target); continue; }
+                    if (overlayQueue[i] is ShadowComponent) { ((ShadowComponent)overlayQueue[i]).OnRenderAction(target); continue; }
                     if (!((IRenderable)overlayQueue[i]).Visible) { continue; }
                     ((IRenderable)overlayQueue[i]).OnRender(target);
                 }
