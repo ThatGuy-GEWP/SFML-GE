@@ -22,7 +22,7 @@ Making components that can draw/render things is also easy, and requires a [Comp
 # Getting started
 ## Installation
 ### Automatic
-Using NuGet you can install [this package](https://www.nuget.org/packages/SFML-GE/0.57.0), for .Net 6.0+
+Using NuGet you can install [this package](https://www.nuget.org/packages/SFML-GE/), for .Net 6.0+
 ### Manual
 Simply cloning the repo to a local project then building SFML-GE should produce the Dll and NuGet packages, some tests are also included to make sure everything works!
 
