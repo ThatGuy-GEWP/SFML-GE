@@ -48,10 +48,52 @@ namespace SFML_GE.System
             overlayQueue.Add(renderableComponent);
         }
 
+        /// <summary>
+        /// Adds a <see cref="Action"/> that renders something to the <see cref="renderQueue"/>.
+        /// This method is experimental and can be subject to change or removal in the future.
+        /// </summary>
+        /// <param name="renderAction">The action that will be called</param>
+        /// <param name="offset">The ZOrder of the render call.</param>
+        public void AddToQueue(Action<RenderTarget> renderAction, int offset)
+        {
+            ShadowComponent shadow = new ShadowComponent(renderAction, offset);
+            renderQueue.Add(shadow);
+        }
+
+        /// <summary>
+        /// Adds a <see cref="Action"/> that renders something to the <see cref="overlayQueue"/>.
+        /// This method is experimental and can be subject to change or removal in the future.
+        /// </summary>
+        /// <param name="renderAction">The action that will be called</param>
+        /// <param name="offset">The ZOrder of the render call.</param>
+        public void AddToOverlayQueue(Action<RenderTarget> renderAction, int offset)
+        {
+            ShadowComponent shadow = new ShadowComponent(renderAction, offset);
+            overlayQueue.Add(shadow);
+        }
+
         static int ZSort(Component x, Component y)
         {
-            int realXZ = x.gameObject.ZOrder + (x as IRenderable)!.ZOffset;
-            int realYZ = y.gameObject.ZOrder + (y as IRenderable)!.ZOffset;
+            int realXZ = 0;
+            int realYZ = 0;
+
+            if(x is ShadowComponent)
+            {
+                realXZ = (x as IRenderable)!.ZOffset;
+            }
+            else
+            {
+                realXZ = x.gameObject.ZOrder + (x as IRenderable)!.ZOffset;
+            }
+            if(y is ShadowComponent)
+            {
+                realYZ = (y as IRenderable)!.ZOffset;
+            }
+            else
+            {
+                realYZ = y.gameObject.ZOrder + (y as IRenderable)!.ZOffset;
+            }
+
             if (realXZ == realYZ) { return 0; }
             if (realXZ < realYZ)
             {
@@ -76,6 +118,7 @@ namespace SFML_GE.System
 
                 for (int i = 0; i < renderQueue.Count; i++)
                 {
+                    if (renderQueue[i] is ShadowComponent) { ((ShadowComponent)renderQueue[i]).OnRenderAction(target); continue; }
                     if (!((IRenderable)renderQueue[i]).Visible) { continue; }
                     ((IRenderable)renderQueue[i]).OnRender(target);
                 }
@@ -99,6 +142,7 @@ namespace SFML_GE.System
 
                 for (int i = 0; i < overlayQueue.Count; i++)
                 {
+                    if (renderQueue[i] is ShadowComponent) { ((ShadowComponent)renderQueue[i]).OnRenderAction(target); continue; }
                     if (!((IRenderable)overlayQueue[i]).Visible) { continue; }
                     ((IRenderable)overlayQueue[i]).OnRender(target);
                 }
