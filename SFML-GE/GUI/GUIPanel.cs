@@ -19,8 +19,6 @@ namespace SFML_GE.GUI
 
         internal static Color defaultPressed = new Color(0x2C2D36FF);
 
-        internal static string defaultFontName = "Roboto-Regular";
-
         /// <summary>
         /// The background color of this GUI object
         /// </summary>

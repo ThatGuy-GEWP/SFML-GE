@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
+using SFML_GE.GUI;
 using System.Diagnostics;
 
 namespace SFML_GE.System
@@ -12,6 +13,8 @@ namespace SFML_GE.System
         public Stopwatch sinceProjectCreation { get; private set; } = Stopwatch.StartNew();
 
         public ResourceCollection Resources;
+
+        public StylingDef GUIStyling;
 
         public Scene? ActiveScene;
 
@@ -92,15 +95,8 @@ namespace SFML_GE.System
         {
             App = app;
             this.ResourceDir = ResourceDir;
+            GUIStyling = new StylingDef();
             Resources = new ResourceCollection(this.ResourceDir, this);
-            if (File.Exists("Roboto-Regular.ttf"))
-            {
-                Resources.LoadResource("Roboto-Regular.ttf");
-            }
-            else
-            {
-                Console.WriteLine("Cannot load Default font.");
-            }
 
             app.MouseWheelScrolled += (sender, args) =>
             {

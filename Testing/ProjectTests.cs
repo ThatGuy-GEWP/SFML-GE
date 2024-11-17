@@ -76,7 +76,7 @@ namespace Testing
         public void TestSceneWithEditor()
         {
             RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(512, 512), "Editor Testing");
-            Project newProject = new Project(null, app);
+            Project newProject = new Project("Res", app);
             Scene testScene = newProject.CreateSceneAndLoad("TestScene");
 
             GUIEditor editor = testScene.CreateGameObjectWithComp(new GUIEditor(newProject), "EditorHolder");

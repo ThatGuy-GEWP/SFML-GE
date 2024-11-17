@@ -80,7 +80,12 @@ namespace SFML_GE.GUI
         public override void Start()
         {
             base.Start();
-            contentText.Font = Project.GetResource<FontResource>("Roboto-Regular");
+
+            if(Project.GetResource<FontResource>(Project.GUIStyling.defaultFontName) != null)
+            {
+                contentText.Font = Project.GetResource<FontResource>(Project.GUIStyling.defaultFontName)!;
+            }
+
             lastSize = GetSize();
             scrollTexture = new RenderTexture((uint)lastSize.x, (uint)lastSize.y);
 

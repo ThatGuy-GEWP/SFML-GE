@@ -678,7 +678,7 @@ namespace SFML_GE.Editor
             ResourceInfo.textAnchor = new Vector2(0, 0);
             ResourceInfo.textPosition = new UDim2(0, 0, 2, 5);
             ResourceInfo.charSize = 14;
-            ResourceInfo.font = Project.GetResource<FontResource>("Roboto-Regular");
+            ResourceInfo.font ??= Project.GetResource<FontResource>(Project.GUIStyling.defaultFontName);
             ResourceInfo.isBold = false;
 
             GameObjectScroller.content = new List<GUIListEntry>();

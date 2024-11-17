@@ -25,7 +25,7 @@ namespace SFML_GE.GUI
         /// <summary>
         /// The <see cref="FontResource"/> this GUILabel will use.
         /// </summary>
-        public FontResource font = null!;
+        public FontResource? font = null!;
 
         /// <summary>Hides overflow when true by rendering to an internal texture.</summary>
         public bool hideOverflow = true;
@@ -85,7 +85,7 @@ namespace SFML_GE.GUI
             base.Start();
 
             // intelisense taught me this, i bow before its benevolence
-            font ??= Project.GetResource<FontResource>(defaultFontName);
+            font ??= Project.GetResource<FontResource>(Project.GUIStyling.defaultFontName);
 
             lastSize = GetSize();
             internalRenderTexture ??= new RenderTexture((uint)lastSize.x, (uint)lastSize.y);
