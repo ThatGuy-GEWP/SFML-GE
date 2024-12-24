@@ -141,7 +141,7 @@ namespace SFML_GE.System
                 int r = int.Parse(split[0]);
                 int g = int.Parse(split[1]);
                 int b = int.Parse(split[2]);
-                int a = split.Length > 3 ? int.Parse(split[3]) : 255;
+                int a = split.Length > 3 ? int.Parse(split[3]) : FillColor.A;
 
                 targetCharColor = new Color((byte)r, (byte)g, (byte)b, (byte)a);
             }
