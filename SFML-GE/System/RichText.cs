@@ -30,13 +30,13 @@ namespace SFML_GE.System
     /// Rich text that can be formatted, examples on text formatting below.
     /// <code>
     /// --{
-    ///     "&lt;srgb R,G,B&gt;" -- Sets all text ahead to a given RGB color until "&lt;r&gt;"
+    ///     "&lt;crgb R,G,B&gt;" -- Sets all text ahead to a given RGB color until "&lt;r&gt;"
     ///     "&lt;b&gt;" -- Makes all text ahead bold until "&lt;r&gt;"
     ///     "&lt;r&gt;" -- resets all active text modifiers.
     /// 
-    ///     "&lt;srgb 255, 0, 0&gt;This text is red!&lt;r&gt; this text is the default <see cref="FillColor"/>"
+    ///     "&lt;crgb 255, 0, 0&gt;This text is red!&lt;r&gt; this text is the default <see cref="FillColor"/>"
     /// 
-    ///     "&lt;srgb 255,0,0&gt;&lt;b&gt;This text is bold AND red!!&lt;r&gt; and this text is normal."
+    ///     "&lt;crgb 255,0,0&gt;&lt;b&gt;This text is bold AND red!!&lt;r&gt; and this text is normal."
     /// --}
     /// </code>
     /// Is a bit more performance heavier then <see cref="Text"/>.
@@ -49,6 +49,9 @@ namespace SFML_GE.System
         bool _bold = false;
         Color _color;
 
+        /// <summary>
+        /// The string to display.
+        /// </summary>
         public string DisplayedString { get { return _displayed; } set { if (value == _displayed) { return; } EvalFormatting(value); } }
 
         /// <summary>
@@ -61,6 +64,9 @@ namespace SFML_GE.System
         /// </summary>
         public Color FillColor { get { return _color; } set { if (value == _color) { return; } _color = value; EvalFormatting(_displayed); } }
 
+        /// <summary>
+        /// If true, all text will be bold.
+        /// </summary>
         public bool IsBold { get { return _bold; } set { if (value == _bold) { return; } _bold = value; EvalFormatting(_displayed); } }
 
         /// <summary>
@@ -69,7 +75,7 @@ namespace SFML_GE.System
         public Vector2 position = new Vector2(50, 50);
 
         /// <summary>
-        /// if true, all lines will be centered at the position.
+        /// Dictates the horizontal alignment of new lines.
         /// </summary>
         public TextAlignment alignment = TextAlignment.Left;
 
@@ -96,10 +102,20 @@ namespace SFML_GE.System
         Color[] charColors = new Color[1]; // keeps track of char colors
 
         Font _font = null!;
+
+        /// <summary>
+        /// The <see cref="SFML.Graphics.Font"/> used to render this RichText.
+        /// </summary>
         public Font Font { get { return _font; } set { if (value == _font) { return; } _font = value; EvalFormatting(_displayed); } }
 
         Sprite charSprite = new Sprite();
 
+        /// <summary>
+        /// Creates a new RichText object.
+        /// </summary>
+        /// <param name="font">The font to use</param>
+        /// <param name="DisplayedString">The default displayed string</param>
+        /// <param name="characterSize">The font size</param>
         public RichText(Font font, string DisplayedString = "Rich Text", uint characterSize = 16)
         {
             Font = font;
@@ -107,6 +123,7 @@ namespace SFML_GE.System
             this.DisplayedString = DisplayedString;
             CharacterSize = characterSize;
             EvalFormatting(DisplayedString);
+
         }
 
         void ParseToken(string bit)
@@ -198,12 +215,20 @@ namespace SFML_GE.System
 
         FloatRect lastLocalBounds = new FloatRect();
 
+        /// <summary>
+        /// Gets the bounds of this <see cref="RichText"/> plus its position.
+        /// </summary>
+        /// <returns></returns>
         public BoundBox GetGlobalBounds()
         {
             if (!boundsAccurate) { GenLocalBounds(DisplayedString); }
             return new BoundBox(new FloatRect(lastLocalBounds.Position + (Vector2f)position, lastLocalBounds.Size));
         }
 
+        /// <summary>
+        /// Gets the local bounds of this <see cref="RichText"/>, with the origin at 0,0
+        /// </summary>
+        /// <returns></returns>
         public BoundBox GetLocalBounds()
         {
             if (!boundsAccurate) { GenLocalBounds(DisplayedString); }
