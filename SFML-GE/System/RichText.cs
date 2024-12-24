@@ -47,6 +47,7 @@ namespace SFML_GE.System
         int _maxChars = -1;
         uint _charSize = 16;
         bool _bold = false;
+        bool _roundpos = false;
         Color _color;
 
         /// <summary>
@@ -68,6 +69,11 @@ namespace SFML_GE.System
         /// If true, all text will be bold.
         /// </summary>
         public bool IsBold { get { return _bold; } set { if (value == _bold) { return; } _bold = value; EvalFormatting(_displayed); } }
+
+        /// <summary>
+        /// If true, character positions will be rounded when drawn, keeping text crisp and reducing bluring
+        /// </summary>
+        public bool RoundCharacterPositions { get { return _roundpos; } set { if (value == _roundpos) { return; } _roundpos = value; EvalFormatting(_displayed); } }
 
         /// <summary>
         /// The position this RichText object will be drawn at.
@@ -413,6 +419,11 @@ namespace SFML_GE.System
                 if (charSprite.Position.X + glyph.Bounds.Width - position.x > width) { width = charSprite.Position.X + glyph.Bounds.Width - position.x; }
 
                 nextPos.x += glyph.Advance;
+
+                if (RoundCharacterPositions)
+                {
+                    charSprite.Position = Vector2.Round((Vector2)charSprite.Position);
+                }
 
                 rt.Draw(charSprite);
                 if (MaxCharacters < 0) { continue; }
