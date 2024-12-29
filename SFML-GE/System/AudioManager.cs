@@ -4,7 +4,10 @@ using SFML_GE.Resources;
 namespace SFML_GE.System
 {
     /// <summary>
-    /// An instance of a <see cref="Sound"/>
+    /// An instance of a SFML <see cref="Sound"/>, managed by the <see cref="AudioManager"/>.
+    /// If <see cref="allowCleanup"/> is <c>true</c>, the <see cref="AudioManager"/> will automatically
+    /// dispose the <see cref="SFML.Audio.Sound"/> instance when this sound is no longer playing.
+    /// All <see cref="ManagedSound"/>'s will be stopped when a scene is unloaded.
     /// </summary>
     public class ManagedSound : IDisposable
     {
@@ -24,7 +27,7 @@ namespace SFML_GE.System
         public bool Disposed { get; private set; } = false;
 
         /// <summary>
-        /// If true, this instance will be automatically disposed of.
+        /// If true, this instance will be automatically disposed of when not playing.
         /// </summary>
         public bool allowCleanup = true;
 
@@ -86,6 +89,7 @@ namespace SFML_GE.System
             ownerScene = owner;
         }
 
+        // seems dumb, fix eventually!
         /// <summary>
         /// Updates the internal state of this <see cref="AudioManager"/>
         /// </summary>
@@ -110,7 +114,7 @@ namespace SFML_GE.System
         }
 
         /// <summary>
-        /// Called when the <see cref="Scene"/> this AudioManager is attached to is unloaded
+        /// Called when the <see cref="Scene"/> this AudioManager is attached to gets unloaded
         /// </summary>
         internal void OnUnload()
         {
@@ -122,21 +126,45 @@ namespace SFML_GE.System
         }
 
         /// <summary>
-        /// Plays a given <see cref="SoundResource"/>
+        /// Tries to get the <see cref="SoundResource"/> that's nammed <paramref name="soundResourceName"/>, then plays it.
         /// </summary>
-        /// <param name="sound"></param>
-        public void PlaySound(SoundResource sound)
+        /// <param name="soundResourceName">The name of the <see cref="SoundResource"/> to play.</param>
+        /// <param name="volume">the volume of this sound, from 0 - 100</param>
+        /// <exception cref="NullReferenceException">if <see cref="SoundResource"/> could not be found</exception>
+        public void PlaySound(string soundResourceName, float volume = 100f)
         {
-            if (activeSounds.Count > 200) { return; }
-            ManagedSound inst = new ManagedSound(sound.Name, sound);
-            inst.sound.Play();
-            activeSounds.Add(inst);
+            SoundResource? res = ownerScene.Project.GetResource<SoundResource>(soundResourceName);
+            if (res == null)
+            {
+                throw new NullReferenceException($"Sound Resource \"{soundResourceName}\" could not be found!");
+            }
+            PlaySound(res, volume);
+        }
+
+        /// <summary>
+        /// Tries to get the <see cref="SoundResource"/> that's nammed <paramref name="soundResourceName"/>,
+        /// Then returns a newly created <see cref="ManagedSound"/> instance.
+        /// </summary>
+        /// <returns><see cref="ManagedSound"/>, or null if active sounds is greater then 200</returns>
+        /// <param name="soundResourceName">The name of the <see cref="SoundResource"/> to play.</param>
+        /// <param name="volume">the volume of this sound, from 0 - 100</param>
+        /// <exception cref="NullReferenceException">if <see cref="SoundResource"/> could not be found</exception>
+        public ManagedSound? CreateSound(string soundResourceName, float volume = 100f)
+        {
+            SoundResource? res = ownerScene.Project.GetResource<SoundResource>(soundResourceName);
+            if (res == null)
+            {
+                throw new NullReferenceException($"Sound Resource \"{soundResourceName}\" could not be found!");
+            }
+            return CreateSound(res, volume);
         }
 
         /// <summary>
         /// Plays a given <paramref name="sound"/> at a given <paramref name="volume"/> from 0-100
         /// </summary>
-        public void PlaySound(SoundResource sound, float volume)
+        /// <param name="sound">The <see cref="SoundResource"/> to play</param>
+        /// <param name="volume">the volume of this sound, from 0 - 100</param>
+        public void PlaySound(SoundResource sound, float volume = 100f)
         {
             if (activeSounds.Count > 200) { return; }
             ManagedSound inst = new ManagedSound(sound.Name, sound);
@@ -148,22 +176,10 @@ namespace SFML_GE.System
         /// <summary>
         /// Creates a <see cref="ManagedSound"/> from a given <see cref="SoundResource"/>
         /// </summary>
-        /// <param name="sound"></param>
+        /// <param name="sound">The <see cref="SoundResource"/> to instance.</param>
+        /// <param name="volume">the volume of this sound, from 0 - 100</param>
         /// <returns><see cref="ManagedSound"/>, or null if active sounds is greater then 200</returns>
-        public ManagedSound? CreateSound(SoundResource sound)
-        {
-            if (activeSounds.Count > 200) { return null; }
-            ManagedSound inst = new ManagedSound(sound.Name, sound);
-            inst.allowCleanup = false;
-            activeSounds.Add(inst);
-            return inst;
-        }
-
-        /// <summary>
-        /// Creates a <see cref="ManagedSound"/> from a given <see cref="SoundResource"/>
-        /// </summary>
-        /// <returns><see cref="ManagedSound"/>, or null if active sounds is greater then 200</returns>
-        public ManagedSound? CreateSound(SoundResource sound, float volume)
+        public ManagedSound? CreateSound(SoundResource sound, float volume = 100f)
         {
             if (activeSounds.Count > 200) { return null; }
             ManagedSound inst = new ManagedSound(sound.Name, sound);
