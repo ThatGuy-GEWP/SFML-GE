@@ -70,6 +70,14 @@ namespace SFML_GE.System
         /// </summary>
         public bool IsBold { get { return _bold; } set { if (value == _bold) { return; } _bold = value; EvalFormatting(_displayed); } }
 
+        bool _IgnoreRich = false;
+
+        /// <summary>
+        /// If true and <see cref="RichEnabled"/> is true, RichText markers will be removed from the string but not applied.
+        /// Useful for things like custom drop shadows, or just disabling rich formatting without needing another string.
+        /// </summary>
+        public bool IgnoreRich { get { return _IgnoreRich; } set { if (value == _IgnoreRich) { return; } _IgnoreRich = value; EvalFormatting(_displayed); } }
+
         /// <summary>
         /// If true, character positions will be rounded when drawn, keeping text crisp and reducing bluring
         /// </summary>
@@ -97,6 +105,7 @@ namespace SFML_GE.System
         public bool RichEnabled { get { return _richEnabled; } set { if (value == _richEnabled) { return; } _richEnabled = value; EvalFormatting(_displayed); } }
 
         bool _newlineEnabled = true;
+
         /// <summary>
         /// If false, all text will be on one line.
         /// </summary>
@@ -134,6 +143,11 @@ namespace SFML_GE.System
 
         void ParseToken(string bit)
         {
+            if (IgnoreRich)
+            {
+                return;
+            }
+
             if (bit == "r") { targetCharColor = FillColor; targetCharBold = IsBold; return; }
 
             if (bit == "b") { targetCharBold = true; return; }
