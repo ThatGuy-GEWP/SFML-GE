@@ -96,7 +96,7 @@ namespace SFML_GE.System
             App = app;
             this.ResourceDir = ResourceDir;
             GUIStyling = new StylingDef();
-            Resources = new ResourceCollection(this.ResourceDir, this);
+            Resources = new ResourceCollection(this.ResourceDir);
 
             app.MouseWheelScrolled += (sender, args) =>
             {
@@ -183,7 +183,7 @@ namespace SFML_GE.System
                     return;
                 }
             }
-            Console.WriteLine("Failed to load scene '" + sceneName + "'!");
+            DebugLogger.LogWarning("Failed to load scene '" + sceneName + "'!");
         }
 
         /// <summary>
@@ -224,7 +224,11 @@ namespace SFML_GE.System
             Started = true;
             if (ActiveScene is null) { return; }
             ActiveScene.Start();
-            if (writeToConsole) { Console.WriteLine("Project started\n---------------------------"); }
+            if (writeToConsole) 
+            {
+                DebugLogger.LogInfoPriority("Project started");
+                Console.WriteLine("---------------------------"); 
+            }
         }
 
         /// <summary>
@@ -234,7 +238,9 @@ namespace SFML_GE.System
         {
             if (!Started)
             {
-                if (writeToConsole) { Console.WriteLine("Update called without being started, manually starting..."); }
+                if (writeToConsole) { 
+                    DebugLogger.LogWarning("Update called without being started, manually starting..."); 
+                }
                 Start();
             }
 

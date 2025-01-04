@@ -696,7 +696,7 @@ namespace SFML_GE.Editor
                 }
             }
 
-            foreach (Resource res in Project.Resources.resources)
+            foreach (Resource res in Project.Resources.GetAllResources())
             {
                 GUIListEntry entry = new GUIListEntry(25, res.Name + "| uses:" + res.requests + " : " + res.GetType().Name, 0);
                 entry.textPosition = new Vector2(0.05f, 0.5f);
@@ -744,7 +744,7 @@ namespace SFML_GE.Editor
                     AddChildren(go, 30, 5);
                 }
 
-                foreach (Resource res in Project.Resources.resources)
+                foreach (Resource res in Project.Resources.GetAllResources())
                 {
                     GUIListEntry entry = new GUIListEntry(25, res.Name + " : " + res.GetType().Name, 0);
                     entry.textPosition = new Vector2(0.05f, 0.5f);
