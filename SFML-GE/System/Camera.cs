@@ -42,6 +42,12 @@ namespace SFML_GE.System
         }
 
         /// <summary>
+        /// The last scale set by <see cref="SetZoom(float)"/>
+        /// May not be the actual zoom level if view is resized by external means.
+        /// </summary>
+        public float LastZoom = 1f;
+
+        /// <summary>
         /// Gets the current bounds of the camera.
         /// </summary>
         /// <returns></returns>
@@ -82,6 +88,7 @@ namespace SFML_GE.System
             cameraView.Rotation = rot;
             cameraView.Zoom(factor);
             cameraView.Center = pos;
+            LastZoom = factor;
         }
 
         /// <summary>

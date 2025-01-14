@@ -19,7 +19,7 @@
         /// </summary>
         public static class Interpolation
         {
-            static float HALF_PI = MathF.PI / 2;
+            private static readonly double HALF_PI = Math.PI / 2.0;
 
             public static float QuadraticEaseIn(float A, float B, float T)
             {
@@ -36,7 +36,7 @@
             public static float ElasticOut(float A, float B, float T)
             {
                 T = Clamp(T, 0, 1);
-                float nt = MathF.Sin(A - 13.0f * (T + 1.0f) * HALF_PI) * MathF.Pow(2.0f, -10.0f * T) + 1.0f;
+                float nt = MathF.Sin(A - 13.0f * (T + 1.0f) * (float)HALF_PI) * MathF.Pow(2.0f, -10.0f * T) + 1.0f;
                 return Lerp(A, B, nt);
             }
 
