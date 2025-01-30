@@ -50,7 +50,7 @@ namespace SFML_GE.System
         /// <summary>
         /// Converts a Vector2 to a new (float, float) tuple
         /// </summary>
-        public static (float, float) ToTuple(Vector2 vec)
+        public static (float, float) ToTuple(in Vector2 vec)
         {
             return (vec.x, vec.y);
         }
@@ -58,7 +58,7 @@ namespace SFML_GE.System
         /// <summary>
         /// Converts a (float, float) Tuple into a Vector2
         /// </summary>
-        public static Vector2 FromTuple((float x, float y) tuple)
+        public static Vector2 FromTuple(in (float x, float y) tuple)
         {
             return new Vector2(tuple.x, tuple.y);
         }
@@ -69,7 +69,7 @@ namespace SFML_GE.System
         /// <param name="point"></param>
         /// <param name="degrees"></param>
         /// <returns></returns>
-        public static Vector2 Rotate(Vector2 point, float degrees)
+        public static Vector2 Rotate(in Vector2 point, float degrees)
         {
             float deg = degrees * (MathF.PI / 180); // Convert degrees to radians
 
@@ -88,7 +88,7 @@ namespace SFML_GE.System
         /// <param name="origin"></param>
         /// <param name="degrees"></param>
         /// <returns>the rotated point</returns>
-        public static Vector2 RotateAroundPoint(Vector2 point, Vector2 origin, float degrees)
+        public static Vector2 RotateAroundPoint(in Vector2 point, in Vector2 origin, float degrees)
         {
             return Rotate(point - origin, degrees) + origin;
         }
@@ -96,7 +96,7 @@ namespace SFML_GE.System
         /// <summary>
         /// Returns the absolute value of a vector.
         /// </summary>
-        public static Vector2 Abs(Vector2 a)
+        public static Vector2 Abs(in Vector2 a)
         {
             return new Vector2(MathF.Abs(a.x), MathF.Abs(a.y));
         }
@@ -112,7 +112,7 @@ namespace SFML_GE.System
         /// <summary>
         /// Swaps x and y in the given <paramref name="vector"/> and returns a new vector with the result.
         /// </summary>
-        public static Vector2 Flip(Vector2 vector)
+        public static Vector2 Flip(in Vector2 vector)
         {
             return new Vector2(vector.y, vector.x);
         }
@@ -130,7 +130,7 @@ namespace SFML_GE.System
         /// </summary>
         /// <param name="vec">The vector to normalize</param>
         /// <returns></returns>
-        public static Vector2 Normalize(Vector2 vec)
+        public static Vector2 Normalize(in Vector2 vec)
         {
             float mag = MathF.Sqrt(vec.x * vec.x + vec.y * vec.y);
             if (mag == 0 || mag == float.NaN) { return vec; }
@@ -155,7 +155,7 @@ namespace SFML_GE.System
         /// <param name="B">The vector to lerp to</param>
         /// <param name="T">Time where 0.0f is A, and 1.0f is B</param>
         /// <returns></returns>
-        public static Vector2 Lerp(Vector2 A, Vector2 B, float T)
+        public static Vector2 Lerp(in Vector2 A, in Vector2 B, float T)
         {
             return A + (B - A) * T;
         }
@@ -166,7 +166,7 @@ namespace SFML_GE.System
         /// <param name="B">The vector to lerp to</param>
         /// <param name="T">Time where 0.0f is A, and 1.0f is B</param>
         /// <returns></returns>
-        public readonly Vector2 Lerp(Vector2 B, float T)
+        public readonly Vector2 Lerp(in Vector2 B, float T)
         {
             return this + (B - this) * T;
         }
@@ -177,7 +177,7 @@ namespace SFML_GE.System
         /// <param name="A"></param>
         /// <param name="B"></param>
         /// <returns></returns>
-        public static float Distance(Vector2 A, Vector2 B)
+        public static float Distance(in Vector2 A, in Vector2 B)
         {
             return MathF.Sqrt(MathF.Pow(B.x - A.x, 2) + MathF.Pow(B.y - A.y, 2));
         }
@@ -187,7 +187,7 @@ namespace SFML_GE.System
         /// </summary>
         /// <param name="B"></param>
         /// <returns></returns>
-        public readonly float Distance(Vector2 B)
+        public readonly float Distance(in Vector2 B)
         {
             return MathF.Sqrt(MathF.Pow(B.x - x, 2) + MathF.Pow(B.y - y, 2));
         }
@@ -198,7 +198,7 @@ namespace SFML_GE.System
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public readonly Vector2 Clamp(Vector2 min, Vector2 max)
+        public readonly Vector2 Clamp(in Vector2 min, in Vector2 max)
         {
             return new Vector2(MathF.Min(MathF.Max(min.x, x), max.x), MathF.Min(MathF.Max(min.y, y), max.y));
         }
@@ -284,7 +284,7 @@ namespace SFML_GE.System
         /// Gets the Magnitude of a vector
         /// </summary>
         /// <returns></returns>
-        public static float Magnitude(Vector2 vec)
+        public static float Magnitude(in Vector2 vec)
         {
             return MathF.Sqrt(vec.x * vec.x + vec.y * vec.y);
         }
@@ -292,7 +292,7 @@ namespace SFML_GE.System
         /// <summary>
         /// Returns a new Floored Vector2 from <paramref name="vec"/>
         /// </summary>
-        public static Vector2 Floor(Vector2 vec)
+        public static Vector2 Floor(in Vector2 vec)
         {
             return new Vector2(MathF.Floor(vec.x), MathF.Floor(vec.y));
         }
@@ -308,7 +308,7 @@ namespace SFML_GE.System
         /// <summary>
         /// Returns a new Ceil'ed? Vector2 from <paramref name="vec"/>
         /// </summary>
-        public static Vector2 Ceil(Vector2 vec)
+        public static Vector2 Ceil(in Vector2 vec)
         {
             return new Vector2(MathF.Ceiling(vec.x), MathF.Ceiling(vec.y));
         }
@@ -324,7 +324,7 @@ namespace SFML_GE.System
         /// <summary>
         /// Returns a new Rounded Vector2 from <paramref name="vec"/>
         /// </summary>
-        public static Vector2 Round(Vector2 vec)
+        public static Vector2 Round(in Vector2 vec)
         {
             return new Vector2(MathF.Round(vec.x), MathF.Round(vec.y));
         }
@@ -356,45 +356,45 @@ namespace SFML_GE.System
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public static Vector2 operator +(Vector2 a, Vector2 b) => new Vector2(a.x + b.x, a.y + b.y);
+        public static Vector2 operator +(in Vector2 a, in Vector2 b) => new Vector2(a.x + b.x, a.y + b.y);
 
-        public static Vector2 operator -(Vector2 a, Vector2 b) => new Vector2(a.x - b.x, a.y - b.y);
+        public static Vector2 operator -(in Vector2 a, in Vector2 b) => new Vector2(a.x - b.x, a.y - b.y);
 
-        public static Vector2 operator /(Vector2 a, Vector2 b) => new Vector2(a.x / b.x, a.y / b.y);
+        public static Vector2 operator /(in Vector2 a, in Vector2 b) => new Vector2(a.x / b.x, a.y / b.y);
 
-        public static Vector2 operator *(Vector2 a, Vector2 b) => new Vector2(a.x * b.x, a.y * b.y);
+        public static Vector2 operator *(in Vector2 a, in Vector2 b) => new Vector2(a.x * b.x, a.y * b.y);
 
         // Summary here since i dont really think a float multiplied by a vector is that common, normally is the other way around
         /// <summary> returns a new vector of (a * b.x, a * b.y) </summary>
-        public static Vector2 operator *(float a, Vector2 b) => new Vector2(a * b.x, a * b.y);
+        public static Vector2 operator *(float a, in Vector2 b) => new Vector2(a * b.x, a * b.y);
 
-        public static Vector2 operator -(Vector2 a, float b) => new Vector2(a.x - b, a.y - b);
+        public static Vector2 operator -(in Vector2 a, float b) => new Vector2(a.x - b, a.y - b);
 
-        public static Vector2 operator +(Vector2 a, float b) => new Vector2(a.x + b, a.y + b);
+        public static Vector2 operator +(in Vector2 a, float b) => new Vector2(a.x + b, a.y + b);
 
-        public static Vector2 operator *(Vector2 a, float b) => new Vector2(a.x * b, a.y * b);
+        public static Vector2 operator *(in Vector2 a, float b) => new Vector2(a.x * b, a.y * b);
 
-        public static bool operator ==(Vector2 a, Vector2 b) => a.x == b.x && a.y == b.y;
+        public static bool operator ==(in Vector2 a, in Vector2 b) => a.x == b.x && a.y == b.y;
 
-        public static bool operator !=(Vector2 a, Vector2 b) => a.x != b.x || a.y != b.y;
+        public static bool operator !=(in Vector2 a, in Vector2 b) => a.x != b.x || a.y != b.y;
 
-        public static Vector2 operator /(Vector2 a, float b) => new Vector2(a.x / b, a.y / b);
+        public static Vector2 operator /(in Vector2 a, float b) => new Vector2(a.x / b, a.y / b);
 
         // Below is vector conversion hell, i still dont know why we all dont use Vec<> but whatever
 
-        public static implicit operator Vector2f(Vector2 vec) => new Vector2f(vec.x, vec.y);
+        public static implicit operator Vector2f(in Vector2 vec) => new Vector2f(vec.x, vec.y);
 
         public static implicit operator Vector2(Vector2f vec) => new Vector2(vec.X, vec.Y);
 
-        public static implicit operator Vec2(Vector2 vec) => new Vec2(vec.x, vec.y);
+        public static implicit operator Vec2(in Vector2 vec) => new Vec2(vec.x, vec.y);
 
-        public static explicit operator Vector2i(Vector2 vec) => new Vector2i((int)Math.Floor(vec.x), (int)Math.Floor(vec.y));
+        public static explicit operator Vector2i(in Vector2 vec) => new Vector2i((int)Math.Floor(vec.x), (int)Math.Floor(vec.y));
 
         public static explicit operator Vector2(Vector2i vec) => new Vector2(vec.X, vec.Y);
 
         public static explicit operator Vector2(Vector2u v) => new Vector2(v.X, v.Y);
 
-        public static implicit operator Vertex(Vector2 v) => new Vertex(v);
+        public static implicit operator Vertex(in Vector2 v) => new Vertex(v);
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
@@ -404,7 +404,7 @@ namespace SFML_GE.System
         /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode() // https://stackoverflow.com/questions/7813687/right-way-to-implement-gethashcode-for-this-struct
         {
-            unchecked // Overflow is fine, just wrap | no idea what that means! thank you random internet person!!!
+            unchecked // Overflow is fine, just wrap | thank you random internet person!!!
             {
                 int hash = 17;
                 hash = hash * 23 + x.GetHashCode();
