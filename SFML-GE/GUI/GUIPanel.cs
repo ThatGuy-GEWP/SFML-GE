@@ -155,7 +155,7 @@ namespace SFML_GE.GUI
                 return lastGUIPanel.GetSize();
             }
 
-            return (Vector2)Project.App.Size;
+            return (Vector2)Project.RenderTargetSize;
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace SFML_GE.GUI
                 return lastGUIPanel.GetBounds();
             }
 
-            return new BoundBox(new FloatRect(0, 0, (int)Project.App.Size.X, (int)Project.App.Size.Y));
+            return new BoundBox(new FloatRect(0, 0, (int)Project.RenderTargetSize.x, (int)Project.RenderTargetSize.y));
         }
 
         /// <summary>

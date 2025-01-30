@@ -84,6 +84,11 @@ namespace SFML_GE.System
         List<ManagedSound> activeSounds = new List<ManagedSound>(200);
         Scene ownerScene;
 
+        /// <summary>
+        /// Returns a refrence to the list of active sounds that are managed.
+        /// </summary>
+        public List<ManagedSound> ActiveSounds { get { return activeSounds; } }
+
         internal AudioManager(Scene owner)
         {
             ownerScene = owner;

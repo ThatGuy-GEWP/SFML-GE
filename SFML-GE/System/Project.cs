@@ -41,8 +41,19 @@ namespace SFML_GE.System
         /// </summary>
         public float ScrollDelta = 0.0f;
 
+        /// <summary>
+        /// The size of the <see cref="RenderTarget"/> this project last rendered to.
+        /// </summary>
+        public Vector2 RenderTargetSize { get; private set; } = Vector2.zero;
+
+        /// <summary>
+        /// If false, the project has yet to be started.
+        /// </summary>
         public bool Started { get; private set; } = false;
 
+        /// <summary>
+        /// If true, the project will write stuff to the console
+        /// </summary>
         public bool writeToConsole = true;
 
         Dictionary<Mouse.Button, bool> pressedDict = new Dictionary<Mouse.Button, bool>();
@@ -262,6 +273,7 @@ namespace SFML_GE.System
         public void Render(RenderTarget rt)
         {
             if (ActiveScene is null) { return; }
+            RenderTargetSize = (Vector2)rt.Size;
             ActiveScene.Render(rt);
         }
 

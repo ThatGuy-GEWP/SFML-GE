@@ -56,6 +56,8 @@ namespace SFML_GE.GUI
 
         protected RichText text = null!;
 
+        public RichText? RichText { get { return text; } }
+
         /// <summary>
         /// Creates a new GUILabel that will use the default font, if its there.
         /// </summary>

@@ -331,7 +331,7 @@ namespace SFML_GE.System
                 }
             }
 
-            DeltaTime = deltaWatch.ElapsedMilliseconds * 0.001f;
+            DeltaTime = (float)deltaWatch.Elapsed.TotalSeconds;
             deltaWatch.Restart();
             AudioManager.Update();
             Camera.Update();
@@ -343,10 +343,10 @@ namespace SFML_GE.System
         {
             if (!IsLoaded) { return; }
 
-            if (screenText == null || screenText.Size != Project.App.Size)
+            if (screenText == null || (Vector2)screenText.Size != Project.RenderTargetSize)
             {
                 screenText?.Dispose();
-                screenText = new RenderTexture(Project.App.Size.X, Project.App.Size.Y);
+                screenText = new RenderTexture((uint)Project.RenderTargetSize.x, (uint)Project.RenderTargetSize.y);
                 drawSprite.TextureRect = new IntRect(0, 0, (int)screenText.Size.X, (int)screenText.Size.Y);
             }
 

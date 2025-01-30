@@ -148,6 +148,14 @@ namespace SFML_GE.GUI
             interactable = lastInerac;
         }
 
+        public override void OnUnload()
+        {
+            if (Hovering)
+            {
+                Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow));
+            }
+        }
+
         /// <inheritdoc/>
         protected override void PrePass(RenderTarget rt, ref Vector2 pos, ref Vector2 size)
         {
