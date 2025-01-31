@@ -1,6 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using SFML_GE.Debugging;
 using SFML_GE.Resources;
 using System.Diagnostics;
 
@@ -362,10 +363,15 @@ namespace SFML_GE.System
 
             RenderManager.Render(screenText);
 
+#if DEBUG
+            Gizmo.RenderInternalCalls(screenText);
+#endif
+
             View oldView = new View(screenText.GetView());
             screenText.SetView(screenText.DefaultView);
 
             RenderManager.RenderOverlay(screenText);
+
 
             screenText.Display();
             drawSprite.Texture = screenText.Texture;
