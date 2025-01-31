@@ -77,6 +77,7 @@ namespace SFML_GE.GUI
         /// <inheritdoc/>
         public override void Update()
         {
+            currentColor = backgroundColor;
             if (!Project.App.HasFocus()) { return; }
 
             Vector2 mousePos = Scene.GetMouseScreenPosition();
@@ -100,47 +101,53 @@ namespace SFML_GE.GUI
 
             bool lastHovering = Hovering;
 
-            if (bounds.WithinBounds(mousePos) && interactable)
+            // for click blocking stuff
+            bool localInteractable = interactable && Scene.HoveredClickable == this;
+
+            // for click blocking stuff
+            bool localUseHoverEffects = useHoverEffects;
+
+            if (bounds.WithinBounds(mousePos) && localInteractable)
             {
                 Hovering = true;
-                if (useHoverEffects) { currentColor = hoverColor; }
+                if (localUseHoverEffects) { currentColor = hoverColor; }
             }
-            else { Hovering = false; if (useHoverEffects) { currentColor = backgroundColor; } }
+            else { Hovering = false; if (localUseHoverEffects) { currentColor = backgroundColor; } }
 
             bool hoveringEnded = lastHovering == true && Hovering == false;
             bool hoveringStarted = lastHovering == false && Hovering == true;
 
             if (hoveringStarted)
             {
-                if (useHoverEffects) { Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Hand)); }
-                if (interactable) { OnHoveringStart?.Invoke(this); }
+                if (localUseHoverEffects) { Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Hand)); }
+                if (localInteractable) { OnHoveringStart?.Invoke(this); }
             }
             if (hoveringEnded)
             {
-                if (useHoverEffects) { Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow)); }
-                if (interactable) { OnHoveringEnd?.Invoke(this); }
+                if (localUseHoverEffects) { Project.App.SetMouseCursor(new Cursor(Cursor.CursorType.Arrow)); }
+                if (localInteractable) { OnHoveringEnd?.Invoke(this); }
             }
 
             if (Hovering)
             {
                 if (lastClickState == false && isMousePressed)
                 {
-                    if (interactable) { OnClick?.Invoke(this); }
+                    if (localInteractable) { OnClick?.Invoke(this); }
                     clickedThis = true;
                 }
             }
 
             if (Hovering && isMousePressed)
             {
-                if (interactable) { OnHold?.Invoke(this); }
+                if (localInteractable) { OnHold?.Invoke(this); }
                 HeldDown = true;
-                if (useHoverEffects && interactable) { currentColor = heldColor; };
+                if (useHoverEffects && localInteractable) { currentColor = heldColor; };
             }
             else { HeldDown = false; }
 
             if (lastClickState == true && !isMousePressed && clickedThis)
             {
-                if (interactable && interactable) { OnRelease?.Invoke(this); }
+                if (localInteractable) { OnRelease?.Invoke(this); }
                 clickedThis = false;
             }
 

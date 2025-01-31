@@ -146,6 +146,31 @@
             }
         }
 
+        internal void GetClickables(MouseBlockManager manager)
+        {
+            if (DestroyQueued || !enabled) return;
+
+            for (int i = 0; i < Components.Count; i++)
+            {
+                Component comp = Components[i];
+                if (!comp.Started) { continue; }
+                if (!comp.Enabled) { continue; }
+
+                if (comp is IMouseBlockable blok)
+                {
+                    if (blok.BlockingMouse == true)
+                    {
+                        manager.QueueComp(comp);
+                    }
+                }
+            }
+
+            for (int i = 0; i < Children.Count; i++)
+            {
+                Children[i].GetClickables(manager);
+            }
+        }
+
         void StartComponent(Component comp)
         {
             comp.Scene = Scene;

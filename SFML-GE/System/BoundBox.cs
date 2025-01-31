@@ -136,43 +136,19 @@ namespace SFML_GE.System
 
         readonly float GetMinX()
         {
-            // not using a for loop since it seems slower then just hard coding.
-            float minX = float.MaxValue;
-            minX = TopLeft.x < minX ? TopLeft.x : minX;
-            minX = BottomLeft.x < minX ? BottomLeft.x : minX;
-            minX = TopRight.x < minX ? TopRight.x : minX;
-            minX = BottomRight.x < minX ? BottomRight.x : minX;
-            return minX;
+            return new float[] { float.MaxValue, TopLeft.x, BottomLeft.x, TopRight.x, BottomRight.x }.Min();
         }
         readonly float GetMinY()
         {
-            // not using a for loop since it seems slower then just hard coding.
-            float minY = float.MaxValue;
-            minY = TopLeft.y < minY ? TopLeft.y : minY;
-            minY = BottomLeft.y < minY ? BottomLeft.y : minY;
-            minY = TopRight.y < minY ? TopRight.y : minY;
-            minY = BottomRight.y < minY ? BottomRight.y : minY;
-            return minY;
+            return new float[] { float.MaxValue, TopLeft.y, BottomLeft.y, TopRight.y, BottomRight.y }.Min();
         }
         readonly float GetMaxX()
         {
-            // not using a for loop since it seems slower then just hard coding.
-            float max = float.MinValue;
-            max = TopLeft.x > max ? TopLeft.x : max;
-            max = BottomLeft.x > max ? BottomLeft.x : max;
-            max = TopRight.x > max ? TopRight.x : max;
-            max = BottomRight.x > max ? BottomRight.x : max;
-            return max;
+            return new float[] { float.MinValue, TopLeft.x, BottomLeft.x, TopRight.x, BottomRight.x }.Max();
         }
         readonly float GetMaxY()
         {
-            // not using a for loop since it seems slower then just hard coding.
-            float minY = float.MinValue;
-            minY = TopLeft.y > minY ? TopLeft.y : minY;
-            minY = BottomLeft.y > minY ? BottomLeft.y : minY;
-            minY = TopRight.y > minY ? TopRight.y : minY;
-            minY = BottomRight.y > minY ? BottomRight.y : minY;
-            return minY;
+            return new float[] { float.MinValue, TopLeft.y, BottomLeft.y, TopRight.y, BottomRight.y }.Max();
         }
 
         /// <summary>

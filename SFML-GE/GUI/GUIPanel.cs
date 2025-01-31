@@ -8,7 +8,7 @@ namespace SFML_GE.GUI
     /// <summary>
     /// A Panel, can be used to hold other GUI Components inside of it. also used as a base for every GUI Component
     /// </summary>
-    public class GUIPanel : Component, IRenderable
+    public class GUIPanel : Component, IRenderable, IMouseBlockable
     {
         // works for now, should be configurable later.
         internal static Color defaultForeground = new Color(0xE0EBF1FF);
@@ -28,6 +28,19 @@ namespace SFML_GE.GUI
         /// The outline color of this GUI object
         /// </summary>
         public Color outlineColor = defaultSecondary;
+
+
+        bool _mouseOcclusion = true;
+
+        /// <summary>
+        /// If true, the pannel will prevent the mouse from clicking/interacting with things
+        /// below/under it.
+        /// </summary>
+        public bool BlockingMouse
+        {
+            get { return _mouseOcclusion; }
+            set { _mouseOcclusion = value; }
+        }
 
         /// <summary>Controls the thickness of the outline, values less then 0 will not render with rounded corners. 0 to disable the outline.</summary>
         public float outlineThickness = 2.0f;
@@ -75,6 +88,7 @@ namespace SFML_GE.GUI
         public bool Visible { get; set; } = true;
         public bool AutoQueue { get; set; } = true;
         public RenderQueueType QueueType { get; set; } = RenderQueueType.OverlayQueue;
+        public BoundBox MouseBounds { get { return GetBounds(); } }
 
         void generateCornerTexture()
         {

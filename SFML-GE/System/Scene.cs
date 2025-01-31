@@ -95,19 +95,27 @@ namespace SFML_GE.System
         /// </summary>
         public Dictionary<int, List<GameObject>> ZTree { get; private set; } = new Dictionary<int, List<GameObject>>();
 
-        readonly Stopwatch deltaWatch = new Stopwatch();
+        /// <summary>
+        /// The time in seconds since the last frame
+        /// </summary>
+        public float DeltaTime { get; private set; } = 0;
 
-        readonly List<GameObject> gameObjects = new List<GameObject>();
+        /// <summary>
+        /// The component thats the mouse is currently over.
+        /// Only works for components inheriting <see cref="IMouseBlockable"/>
+        /// </summary>
+        public Component? HoveredClickable { get { return mouseBlockManager.HoveredComponent; } }
 
         /// <summary>
         /// A HashSet containing all used names by gameObjects within this scene
         /// </summary>
         readonly HashSet<string> usedNames = new HashSet<string>();
 
-        /// <summary>
-        /// The time in seconds since the last frame
-        /// </summary>
-        public float DeltaTime { get; private set; } = 0;
+        readonly Stopwatch deltaWatch = new Stopwatch();
+
+        readonly List<GameObject> gameObjects = new List<GameObject>();
+
+        internal MouseBlockManager mouseBlockManager;
 
         /// <summary>
         /// Creates a new <see cref="Scene"/> and adds it to a given <paramref name="project"/>
@@ -122,6 +130,8 @@ namespace SFML_GE.System
             AudioManager = new AudioManager(this);
             root = new GameObject(project, this);
             root.name = "ROOT";
+
+            mouseBlockManager = new MouseBlockManager(this);
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
@@ -332,6 +342,7 @@ namespace SFML_GE.System
                 }
             }
 
+            mouseBlockManager.Update();
             DeltaTime = (float)deltaWatch.Elapsed.TotalSeconds;
             deltaWatch.Restart();
             AudioManager.Update();
@@ -358,8 +369,8 @@ namespace SFML_GE.System
             foreach (GameObject gm in curChildren)
             {
                 gm.GetRenderables(RenderManager);
+                gm.GetClickables(mouseBlockManager);
             }
-
 
             RenderManager.Render(screenText);
 
