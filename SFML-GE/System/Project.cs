@@ -45,7 +45,7 @@ namespace SFML_GE.System
         /// <summary>
         /// The size of the <see cref="RenderTarget"/> this project last rendered to.
         /// </summary>
-        public Vector2 RenderTargetSize { get; private set; } = Vector2.zero;
+        public Vector2 RenderTargetSize { get; private set; } = new Vector2(50, 50);
 
         /// <summary>
         /// If false, the project has yet to be started.
