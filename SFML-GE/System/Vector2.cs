@@ -330,11 +330,27 @@ namespace SFML_GE.System
         }
 
         /// <summary>
+        /// Returns a new Rounded Vector2 from <paramref name="vec"/>
+        /// </summary>
+        public static Vector2 Round(in Vector2 vec, in int digits)
+        {
+            return new Vector2(MathF.Round(vec.x, digits), MathF.Round(vec.y, digits));
+        }
+
+        /// <summary>
         /// Returns a new Rounded Vector2 from the current vector
         /// </summary>
         public readonly Vector2 Round()
         {
             return new Vector2(MathF.Round(x), MathF.Round(y));
+        }
+
+        /// <summary>
+        /// Returns a new Rounded Vector2 from the current vector
+        /// </summary>
+        public readonly Vector2 Round(int digits)
+        {
+            return new Vector2(MathF.Round(x, digits), MathF.Round(y, digits));
         }
 
         public override readonly string ToString() => x.ToString() + "," + y.ToString();

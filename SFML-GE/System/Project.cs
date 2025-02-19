@@ -45,7 +45,11 @@ namespace SFML_GE.System
         /// <summary>
         /// The size of the <see cref="RenderTarget"/> this project last rendered to.
         /// </summary>
-        public Vector2 RenderTargetSize { get; private set; } = new Vector2(1);
+        public Vector2 RenderTargetSize { get; private set; } = new Vector2(50, 50);
+        // Defaults to 50,50 as for some GODFORSAKEN REASON the build will just
+        // *hang* on github actions
+        // im guessing its a division error or something as its the same with 1 or zero just not 50
+        // il look into it when i dont want to waste 6 hours of github server time, for now this works and stops the hang.
 
         /// <summary>
         /// If false, the project has yet to be started.
