@@ -11,13 +11,13 @@ Where a Project holds all resources and multiple scenes, and each scene has its 
 ![graph1](https://github.com/ThatGuy-GEWP/SFML-GE/assets/24467262/49245733-0017-4859-837f-a696390d128d)
 
   
-Every component including the built-in ones derive from the same Abstract class [Component](SFMLGE%20Local%20deps/Engine/Component.cs), which includes many expected functions like
+Every component including the built-in ones derive from the same Abstract class [Component](SFML-GE/System/Component.cs), which includes many expected functions like
 Awake, Start, Update, OnDestroy, OnUnload, etc.    
 
 > [!NOTE]
 > Almost all components and functions have XML Comments that work nicely with Visual Studio's Documentation Generation
 
-Making components that can draw/render things is also easy, and requires a [Component](SFMLGE%20Local%20deps/Engine/Component.cs) subclass to also use the [IRenderable](SFMLGE%20Local%20deps/Engine/IRenderable.cs) interface.
+Making components that can draw/render things is also easy, and requires a [Component](SFML-GE/System/Component.cs) subclass to also use the [IRenderable](SFML-GE/System/IRenderable.cs) interface.
 
 # Getting started
 ## Installation
@@ -102,7 +102,7 @@ sprite.fitTexture = true;
 > on my RTX 3050 its 32768x32768, but you should expect 8192x8192 or lower for most cards.
 
 ## Your First Component
-For custom behaviour like a script, you should make a new class that inherits from [Component](SFMLGE%20Local%20deps/Engine/Component.cs),  
+For custom behaviour like a script, you should make a new class that inherits from [Component](SFML-GE/System/Component.cs),  
 then add it to a GameObject.
   
 For the sake of a simple example, we will create a custom component that slowly moves a GameObject to the right.  
