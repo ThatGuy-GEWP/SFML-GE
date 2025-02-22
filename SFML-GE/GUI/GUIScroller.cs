@@ -6,18 +6,24 @@ namespace SFML_GE.GUI
     // Summary is a bit weird but should work for now
     /// <summary>
     /// Allows you to setup GUI content that can scroll.
-    /// Any <see cref="GUIPanel"/>'s inside of this GUIScroller will be positioned relative to it,
-    /// and can be scrolled through.
+    /// Any <see cref="GUIPanel"/>'s parented to this GUIScroller's <see cref="GameObject"/> will be drawn
+    /// inside of this <see cref="GUIScroller"/>, and can be scrolled through.
     /// </summary>
     public class GUIScroller : GUIPanel
     {
-        public RenderTexture renderTarget = null!;
+        RenderTexture renderTarget = null!;
 
         readonly List<GUIPanel> embeddedChildren = new List<GUIPanel>();
         readonly List<UDim2> originalPositions = new List<UDim2>();
 
+        /// <summary>
+        /// The scroll speed multiplier of the scroller.
+        /// </summary>
         public float scrollMultiplier = 5f;
 
+        /// <summary>
+        /// The scroll position of the scroller.
+        /// </summary>
         public float ScrollPosition { get; private set; } = 0;
 
         Vector2 lastSize = Vector2.zero;

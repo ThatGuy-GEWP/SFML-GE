@@ -1,6 +1,8 @@
 ﻿using SFML.Graphics;
 using SFML_GE.Resources;
 
+#pragma warning disable 
+
 namespace SFML_GE.System
 {
     /// <summary>
@@ -48,7 +50,7 @@ namespace SFML_GE.System
         }
     }
 
-
+    [Obsolete("This class needs to be rewritten, and is missing lots of docs. do not use.")]
     public class ParticleEmitter : Component, IRenderable
     {
         public int ZOffset { get; set; } = 10;
@@ -78,8 +80,15 @@ namespace SFML_GE.System
 
         int _maxParticles = 2000;
 
-
+        /// <summary>
+        /// The gravity to be applied to each particle every frame its alive.
+        /// Multiplied by <see cref="Scene.DeltaTime"/> of course.
+        /// </summary>
         public Vector2 gravity = new Vector2(0, 92.5f);
+
+        /// <summary>
+        /// The max amount of particles.
+        /// </summary>
         public int MaxParticles
         {
             get { return _maxParticles; }
@@ -92,6 +101,7 @@ namespace SFML_GE.System
                 }
             }
         }
+
         public float drag = 0.0f;
 
         /// <summary>
@@ -154,6 +164,9 @@ namespace SFML_GE.System
         /// </summary>
         public float randomVelocity = 35.0f;
 
+        /// <summary>
+        /// Creates a new ParticleEmitter
+        /// </summary>
         public ParticleEmitter()
         {
             particles = null!;
@@ -188,8 +201,10 @@ namespace SFML_GE.System
         {
             particle.velocity += gravity * DT;
             particle.position += particle.velocity * DT;
+
             particle.velocity -= particle.velocity * DT;
-            particle.position -= particle.position * drag * DT;
+            particle.position -= particle.velocity * drag * DT;
+
             particle.rotation += rotation_speed * DT;
             particle.lifetime += DT;
             if (particle.lifetime > lifetime)
@@ -324,3 +339,5 @@ namespace SFML_GE.System
         }
     }
 }
+
+#pragma warning restore

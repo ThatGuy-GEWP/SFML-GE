@@ -52,7 +52,7 @@ namespace SFML_GE.GUI
         public TextureResource panelContent = null!;
 
         /// <summary> The background panel rectangle from <see cref="GUIPanel"/>, can be
-        /// altered right before its drawn in the <see cref="PrePass(RenderTarget, in Vector2, in Vector2)"/> </summary>
+        /// altered right before its drawn in the <see cref="PrePass(RenderTarget, ref Vector2, ref Vector2)"/> </summary>
         protected RectangleShape backgroundPanelRect = new RectangleShape();
 
         RectangleShape outlineRect = new RectangleShape();

@@ -4,6 +4,9 @@ using SFML_GE.System;
 
 namespace SFML_GE.GUI
 {
+    /// <summary>
+    /// A text box you can type into.
+    /// </summary>
     public class GUIInputBox : GUILabel
     {
         /// <summary>

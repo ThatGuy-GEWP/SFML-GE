@@ -135,6 +135,7 @@ namespace SFML_GE.System
         /// </summary>
         /// <param name="soundResourceName">The name of the <see cref="SoundResource"/> to play.</param>
         /// <param name="volume">the volume of this sound, from 0 - 100</param>
+        /// <param name="pitch">the pitch of this sound, where 1.0 is the default pitch.</param>
         /// <exception cref="NullReferenceException">if <see cref="SoundResource"/> could not be found</exception>
         public void PlaySound(string soundResourceName, float volume = 100f, float pitch = 1.0f)
         {
@@ -153,6 +154,7 @@ namespace SFML_GE.System
         /// <returns><see cref="ManagedSound"/>, or null if active sounds is greater then 200</returns>
         /// <param name="soundResourceName">The name of the <see cref="SoundResource"/> to play.</param>
         /// <param name="volume">the volume of this sound, from 0 - 100</param>
+        /// <param name="pitch">the pitch of this sound, where 1.0 is the default pitch.</param>
         /// <exception cref="NullReferenceException">if <see cref="SoundResource"/> could not be found</exception>
         public ManagedSound? CreateSound(string soundResourceName, float volume = 100f, float pitch = 1.0f)
         {
@@ -169,6 +171,7 @@ namespace SFML_GE.System
         /// </summary>
         /// <param name="sound">The <see cref="SoundResource"/> to play</param>
         /// <param name="volume">the volume of this sound, from 0 - 100</param>
+        /// <param name="pitch">the pitch of this sound, where 1.0 is the default pitch.</param>
         public void PlaySound(SoundResource sound, float volume = 100f, float pitch = 1.0f)
         {
             if (activeSounds.Count > 200) { return; }
@@ -184,6 +187,7 @@ namespace SFML_GE.System
         /// </summary>
         /// <param name="sound">The <see cref="SoundResource"/> to instance.</param>
         /// <param name="volume">the volume of this sound, from 0 - 100</param>
+        /// <param name="pitch">the pitch of this sound, where 1.0 is the default pitch.</param>
         /// <returns><see cref="ManagedSound"/>, or null if active sounds is greater then 200</returns>
         public ManagedSound? CreateSound(SoundResource sound, float volume = 100f, float pitch = 1.0f)
         {

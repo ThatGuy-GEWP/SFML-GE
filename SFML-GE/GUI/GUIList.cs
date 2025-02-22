@@ -5,60 +5,105 @@ using SFML_GE.System;
 
 namespace SFML_GE.GUI
 {
+    /// <summary>
+    /// An entry in a <see cref="GUIList"/>
+    /// </summary>
     public class GUIListEntry
     {
+        /// <summary>
+        /// The order of this entry in the list.
+        /// </summary>
         public int YOrder;
+
+        /// <summary>
+        /// The height of this entry in the list.
+        /// </summary>
         public float YSize;
 
+        /// <summary>
+        /// if true, you can click on this entry.
+        /// </summary>
         public bool clickable = true;
 
+        /// <summary>
+        /// the text displayed on this entry.
+        /// </summary>
         public string DisplayedText = string.Empty;
 
+        /// <summary>
+        /// the color of the text for this entry.
+        /// </summary>
         public Color FontColor = Color.White;
 
+        /// <summary>
+        /// an additional offset to the X position of the entry.
+        /// </summary>
         public int xOffset = 0;
 
+        /// <summary>
+        /// the value this entry holds, if any.
+        /// </summary>
         public object? val;
+
+        /// <summary>
+        /// the type of the value this entry holds, if any.
+        /// </summary>
         public Type? valType;
 
         /// <summary>
         /// Position of the text, from 0.0-1.0
         /// </summary>
         public Vector2 textPosition = new Vector2(0.5f, 0.5f);
+
         /// <summary>
         /// Anchor of the text, from 0.0-1.0
         /// </summary>
         public Vector2 textAnchor = new Vector2(0.5f, 0.5f);
 
+        /// <summary>
+        /// Creates an empty entry.
+        /// </summary>
         public GUIListEntry() { }
 
-        public GUIListEntry(float ySize, string displayedText, int xOffset = 0)
+        /// <summary>
+        /// Creates a new entry, does not add it the list.
+        /// </summary>
+        /// <param name="ySize">the height of this entry.</param>
+        /// <param name="displayedText">the text displayed on this entry.</param>
+        /// <param name="clickable">if true, the entry can be selected.</param>
+        /// <param name="yOrder">the position in the list</param>
+        /// <param name="xOffset">an offset to the x position of this entry.</param>
+        public GUIListEntry(float ySize, string displayedText, bool clickable = true, int yOrder = 0, int xOffset = 0)
         {
             YSize = ySize;
             DisplayedText = displayedText;
             this.xOffset = xOffset;
         }
-
-        public GUIListEntry(int yOrder, float ySize, bool clickable, string displayedText)
-        {
-            YOrder = yOrder;
-            YSize = ySize;
-            this.clickable = clickable;
-            DisplayedText = displayedText;
-        }
     }
 
     /// <summary>
-    /// A GUIPanel that contains a list of <see cref="GUIListEntry"/>'s that can be selected and scrolled too.
+    /// A GUIPanel that contains a list of <see cref="GUIListEntry"/>'s that can be selected and scrolled through.
     /// </summary>
     public class GUIList : GUIPanel
     {
+        /// <summary>
+        /// All <see cref="GUIListEntry"/>s in this <see cref="GUIList"/>
+        /// </summary>
         public List<GUIListEntry> content = null!;
 
+        /// <summary>
+        /// The pixel offset between each entry.
+        /// </summary>
         public float entrySpacing = 2;
 
+        /// <summary>
+        /// the current scroll position of the list.
+        /// </summary>
         public float scrollPos = 0f;
 
+        /// <summary>
+        /// how quickly you can scroll through the list.
+        /// </summary>
         public float scrollSpeed = 5f;
 
         Sprite spr = new Sprite();
@@ -67,12 +112,21 @@ namespace SFML_GE.GUI
 
         Vector2 lastSize = new Vector2(0, 0);
 
+        /// <summary>
+        /// true if hovering over this lists <see cref="GUIPanel"/>
+        /// </summary>
         public bool Hovering { get; private set; } = false;
 
+        /// <summary>
+        /// the <see cref="GUIListEntry"/> selected, or -1 if nothing is selected.
+        /// </summary>
         public int SelectedEntry { get; private set; } = -1;
 
         RectangleShape contentRect = new RectangleShape();
 
+        /// <summary>
+        /// Called each time an entry is selected.
+        /// </summary>
         public event Action<GUIListEntry> EntrySelected = null!;
 
         Text contentText = new Text();
@@ -88,17 +142,6 @@ namespace SFML_GE.GUI
 
             lastSize = GetSize();
             scrollTexture = new RenderTexture((uint)lastSize.x, (uint)lastSize.y);
-
-            // REMOVE WHEN DONE!!!
-            if (content == null)
-            {
-                content = new List<GUIListEntry>();
-
-                for (int i = 0; i < 5; i++)
-                {
-                    content.Add(new GUIListEntry(0, RandomGen.NextSingle(15f, 45f), true, "Test!! " + i));
-                }
-            }
         }
 
         bool pressed = false;

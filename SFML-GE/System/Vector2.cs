@@ -4,9 +4,19 @@ using SFML.System;
 
 namespace SFML_GE.System
 {
+    /// <summary>
+    /// A Vector containing 2 floats X and Y. 
+    /// Represents many things from points to directions.
+    /// </summary>
     public struct Vector2
     {
+        /// <summary>
+        /// The first component of the vector, usually left and right where -x is left and +x is right.
+        /// </summary>
         public float x;
+        /// <summary>
+        /// The second component of the vector, usually up and down, where -y is up and +y is down.
+        /// </summary>
         public float y;
 
         // used to be a thing here complaining about readonly X and Y, but its no longer read only, get bent C# nerds im still on the stack!
@@ -29,7 +39,10 @@ namespace SFML_GE.System
          * 
          */
 
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public Vector2(float x, float y)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             this.x = x;
             this.y = y;
@@ -45,6 +58,9 @@ namespace SFML_GE.System
             y = xy;
         }
 
+        /// <summary>
+        /// A Vector2 that equals (0, 0)
+        /// </summary>
         public static readonly Vector2 zero = new Vector2(0f, 0f);
 
         /// <summary>
@@ -112,6 +128,7 @@ namespace SFML_GE.System
         /// <summary>
         /// Swaps x and y in the given <paramref name="vector"/> and returns a new vector with the result.
         /// </summary>
+        /// <returns>The new Vector2 where X=Y and Y=X</returns>
         public static Vector2 Flip(in Vector2 vector)
         {
             return new Vector2(vector.y, vector.x);
@@ -120,6 +137,7 @@ namespace SFML_GE.System
         /// <summary>
         /// Swaps x and y in the current vector and returns a new vector with the result.
         /// </summary>
+        /// <returns>The new Vector2 where X=Y and Y=X</returns>
         public readonly Vector2 Flip()
         {
             return new Vector2(y, x);
@@ -129,22 +147,22 @@ namespace SFML_GE.System
         /// Returns a new normalized Vector from <paramref name="vec"/>
         /// </summary>
         /// <param name="vec">The vector to normalize</param>
-        /// <returns></returns>
+        /// <returns>the normalized Vector2</returns>
         public static Vector2 Normalize(in Vector2 vec)
         {
             float mag = MathF.Sqrt(vec.x * vec.x + vec.y * vec.y);
-            if (mag == 0 || mag == float.NaN) { return vec; }
+            if (mag == 0 || float.IsNaN(mag)) { return vec; }
             return vec / mag;
         }
 
         /// <summary>
         /// Returns a new normalized Vector from this vector.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>the normalized Vector2</returns>
         public readonly Vector2 Normalize()
         {
             float mag = MathF.Sqrt(x * x + y * y);
-            if (mag == 0 || mag == float.NaN) { return this; }
+            if (mag == 0 || float.IsNaN(mag)) { return this; }
             return this / mag;
         }
 
@@ -154,7 +172,7 @@ namespace SFML_GE.System
         /// <param name="A">The vector to lerp from</param>
         /// <param name="B">The vector to lerp to</param>
         /// <param name="T">Time where 0.0f is A, and 1.0f is B</param>
-        /// <returns></returns>
+        /// <returns>a new Vector Lerped between <paramref name="A"/> and <paramref name="B"/></returns>
         public static Vector2 Lerp(in Vector2 A, in Vector2 B, float T)
         {
             return A + (B - A) * T;
@@ -165,7 +183,7 @@ namespace SFML_GE.System
         /// </summary>
         /// <param name="B">The vector to lerp to</param>
         /// <param name="T">Time where 0.0f is A, and 1.0f is B</param>
-        /// <returns></returns>
+        /// <returns>a new Vector Lerped between this vectors value and <paramref name="B"/></returns>
         public readonly Vector2 Lerp(in Vector2 B, float T)
         {
             return this + (B - this) * T;
@@ -174,9 +192,9 @@ namespace SFML_GE.System
         /// <summary>
         /// Gets the distance between <paramref name="A"/> and <paramref name="B"/>
         /// </summary>
-        /// <param name="A"></param>
-        /// <param name="B"></param>
-        /// <returns></returns>
+        /// <param name="A">The starting vector</param>
+        /// <param name="B">The ending vector</param>
+        /// <returns>The distance between both vectors as a float</returns>
         public static float Distance(in Vector2 A, in Vector2 B)
         {
             return MathF.Sqrt(MathF.Pow(B.x - A.x, 2) + MathF.Pow(B.y - A.y, 2));
@@ -185,8 +203,8 @@ namespace SFML_GE.System
         /// <summary>
         /// Gets the distance between this <see cref="Vector2"/> and <paramref name="B"/>
         /// </summary>
-        /// <param name="B"></param>
-        /// <returns></returns>
+        /// <param name="B">the second vector to get the distance too.</param>
+        /// <returns>The distance between both vectors as a float</returns>
         public readonly float Distance(in Vector2 B)
         {
             return MathF.Sqrt(MathF.Pow(B.x - x, 2) + MathF.Pow(B.y - y, 2));
@@ -195,8 +213,8 @@ namespace SFML_GE.System
         /// <summary>
         /// Clamps a vector between two vectors, <paramref name="min"/> and <paramref name="max"/>
         /// </summary>
-        /// <param name="min"></param>
-        /// <param name="max"></param>
+        /// <param name="min">A Vector representing the minumum of both X and Y</param>
+        /// <param name="max">A Vector representing the maximum of both X and Y</param>
         /// <returns></returns>
         public readonly Vector2 Clamp(in Vector2 min, in Vector2 max)
         {
@@ -204,10 +222,10 @@ namespace SFML_GE.System
         }
 
         /// <summary>
-        /// Clamps a vector between two floats, <paramref name="min"/> and <paramref name="max"/>
+        /// Clamps both X and Y of this Vector between two floats, <paramref name="min"/> and <paramref name="max"/>
         /// </summary>
-        /// <param name="min"></param>
-        /// <param name="max"></param>
+        /// <param name="min">The minimum of X and Y</param>
+        /// <param name="max">The maximum of X and Y</param>
         /// <returns></returns>
         public readonly Vector2 Clamp(float min, float max)
         {
@@ -218,11 +236,11 @@ namespace SFML_GE.System
         /// Clamps a vector with four floats, clamps X between <paramref name="xMin"/> and <paramref name="xMax"/>, then clamps
         /// Y between <paramref name="yMin"/> and <paramref name="yMax"/>
         /// </summary>
-        /// <param name="xMin"></param>
-        /// <param name="xMax"></param>
-        /// <param name="yMin"></param>
-        /// <param name="yMax"></param>
-        /// <returns></returns>
+        /// <param name="xMin">The minimum X can be</param>
+        /// <param name="xMax">The maximum X can be</param>
+        /// <param name="yMin">The minimum Y can be</param>
+        /// <param name="yMax">The maximum Y can be</param>
+        /// <returns>A new clamped vector.</returns>
         public readonly Vector2 Clamp(float xMin, float xMax, float yMin, float yMax)
         {
             return new Vector2(MathF.Min(MathF.Max(xMin, x), xMax), MathF.Min(MathF.Max(yMin, y), yMax));
@@ -231,10 +249,10 @@ namespace SFML_GE.System
         //https://stackoverflow.com/questions/10163083/parse-method-for-the-custom-class-c-sharp
         /// <summary>
         /// Parses a string where <c>"5,6"</c> would create a vector where X is 5 and Y is 6.
-        /// Throws an exception if it cant parse the string.
+        /// Throws an exception if it cannot parse the string.
         /// </summary>
         /// <param name="input"></param>
-        /// <returns></returns>
+        /// <returns>The parsed Vector2 if successful, throws <see cref="ArgumentException"/> otherwise.</returns>
         /// <exception cref="ArgumentException"></exception>
         public static Vector2 Parse(string input)
         {
@@ -251,10 +269,9 @@ namespace SFML_GE.System
         /// Tries Parses a string where <c>"5,6"</c> would create a vector where X is 5 and Y is 6, then stores it in <paramref name="output"/>.
         /// Output defaults to 0,0.
         /// </summary>
-        /// <param name="input"></param>
-        /// <param name="output"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="input">The string to attempt to parse, should be in the format "x,y"</param>
+        /// <param name="output">The parsed vector, defaults to 0,0 if the parse failed.</param>
+        /// <returns>true if the parse was successful, false otherwise.</returns>
         public static bool TryParse(string input, out Vector2 output)
         {
             output = new Vector2(0, 0);
@@ -272,33 +289,58 @@ namespace SFML_GE.System
         }
 
         /// <summary>
-        /// Gets the Magnitude of a vector
+        /// Gets the Magnitude of this vector<para/>
+        /// Identical to <see cref="Vector2.Length()"/>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The Length/Magnitude of this vector as a float</returns>
         public readonly float Magnitude()
         {
             return MathF.Sqrt(x * x + y * y);
         }
 
         /// <summary>
-        /// Gets the Magnitude of a vector
+        /// Gets the Magnitude of <paramref name="vec"/><para/>
+        /// Identical to <see cref="Vector2.Length(in Vector2)"/>
         /// </summary>
-        /// <returns></returns>
+        /// <param name="vec">The Vector to get the Length/Magnitude of</param>
+        /// <returns>The Length/Magnitude of this vector as a float</returns>
         public static float Magnitude(in Vector2 vec)
         {
             return MathF.Sqrt(vec.x * vec.x + vec.y * vec.y);
         }
 
         /// <summary>
-        /// Returns a new Floored Vector2 from <paramref name="vec"/>
+        /// Gets the Length of this vector.<para/>
+        /// Identical to <see cref="Vector2.Magnitude()"/>
         /// </summary>
+        /// <returns>The Length/Magnitude of this vector as a float</returns>
+        public readonly float Length()
+        {
+            return MathF.Sqrt(x * x + y * y);
+        }
+
+        /// <summary>
+        /// Gets the Length of <paramref name="vec"/>.<para/>
+        /// Identical to <see cref="Vector2.Magnitude(in Vector2)"/>
+        /// </summary>
+        /// <param name="vec">The Vector to get the Length/Magnitude of</param>
+        /// <returns>The Length/Magnitude of this vector as a float</returns>
+        public static float Length(in Vector2 vec)
+        {
+            return MathF.Sqrt(vec.x * vec.x + vec.y * vec.y);
+        }
+
+        /// <summary>
+        /// <see cref="MathF.Floor(float)"/>'s the X and Y component of this <paramref name="vec"/>.
+        /// </summary>
+        /// <param name="vec">The Vector2 to floor.</param>
         public static Vector2 Floor(in Vector2 vec)
         {
             return new Vector2(MathF.Floor(vec.x), MathF.Floor(vec.y));
         }
 
         /// <summary>
-        /// Returns a new Floored Vector2 from the current vector
+        /// <see cref="MathF.Floor(float)"/>'s the X and Y component of this vector.
         /// </summary>
         public readonly Vector2 Floor()
         {
@@ -306,7 +348,7 @@ namespace SFML_GE.System
         }
 
         /// <summary>
-        /// Returns a new Ceil'ed? Vector2 from <paramref name="vec"/>
+        /// <see cref="MathF.Ceiling(float)"/>'s the X and Y component of <paramref name="vec"/>
         /// </summary>
         public static Vector2 Ceil(in Vector2 vec)
         {
@@ -314,7 +356,7 @@ namespace SFML_GE.System
         }
 
         /// <summary>
-        /// Returns a new Ceil'ed? Vector2 from the current vector
+        /// <see cref="MathF.Ceiling(float)"/>'s the X and Y component of this vector.
         /// </summary>
         public readonly Vector2 Ceil()
         {
@@ -324,6 +366,7 @@ namespace SFML_GE.System
         /// <summary>
         /// Returns a new Rounded Vector2 from <paramref name="vec"/>
         /// </summary>
+        /// <param name="vec">The Vector2 to be rounded</param>
         public static Vector2 Round(in Vector2 vec)
         {
             return new Vector2(MathF.Round(vec.x), MathF.Round(vec.y));
@@ -332,6 +375,9 @@ namespace SFML_GE.System
         /// <summary>
         /// Returns a new Rounded Vector2 from <paramref name="vec"/>
         /// </summary>
+        /// <param name="vec">The Vector2 to be rounded</param>
+        /// <param name="digits">how many digits to round to, uses <see cref="MathF.Round(float, int)"/></param>
+        /// <returns>The rounded Vector2</returns>
         public static Vector2 Round(in Vector2 vec, in int digits)
         {
             return new Vector2(MathF.Round(vec.x, digits), MathF.Round(vec.y, digits));
@@ -339,6 +385,7 @@ namespace SFML_GE.System
 
         /// <summary>
         /// Returns a new Rounded Vector2 from the current vector
+        /// <returns>The rounded Vector2</returns>
         /// </summary>
         public readonly Vector2 Round()
         {
@@ -348,24 +395,32 @@ namespace SFML_GE.System
         /// <summary>
         /// Returns a new Rounded Vector2 from the current vector
         /// </summary>
+        /// <param name="digits">how many digits to round to, uses <see cref="MathF.Round(float, int)"/></param>
+        /// <returns></returns>
         public readonly Vector2 Round(int digits)
         {
             return new Vector2(MathF.Round(x, digits), MathF.Round(y, digits));
         }
 
+        /// <summary>
+        /// Converts this Vector2 to its string representation: 
+        /// <c>
+        /// "x,y"
+        /// </c>
+        /// </summary>
+        /// <returns></returns>
         public override readonly string ToString() => x.ToString() + "," + y.ToString();
 
         /// <summary>
         /// Returns true if this Vector2 matches another Vector2
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        /// <param name="obj">the object to check against</param>
+        /// <returns>true if <paramref name="obj"/> is a Vector2, matches the xy values of this vector2, and isnt null</returns>
         public override readonly bool Equals(object? obj)
         {
             if (obj is null) { return false; }
-            if (obj is Vector2)
+            if (obj is Vector2 ob)
             {
-                Vector2 ob = (Vector2)obj;
                 return ob.x == x && ob.y == y;
             }
             return base.Equals(obj);
@@ -418,15 +473,9 @@ namespace SFML_GE.System
         /// Returns the hash code for this instance
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode() // https://stackoverflow.com/questions/7813687/right-way-to-implement-gethashcode-for-this-struct
+        public override readonly int GetHashCode() // https://stackoverflow.com/questions/7813687/right-way-to-implement-gethashcode-for-this-struct
         {
-            unchecked // Overflow is fine, just wrap | thank you random internet person!!!
-            {
-                int hash = 17;
-                hash = hash * 23 + x.GetHashCode();
-                hash = hash * 23 + y.GetHashCode();
-                return hash;
-            }
+            return HashCode.Combine(x, y);
         }
     }
 }

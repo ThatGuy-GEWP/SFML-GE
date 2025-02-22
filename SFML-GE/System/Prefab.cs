@@ -10,6 +10,9 @@
     /// </summary>
     public class Prefab : Resource
     {
+        /// <summary>
+        /// Creates this prefab the returns the <see cref="GameObject"/> containing it.
+        /// </summary>
         public Func<Project, Scene, GameObject> CreatePrefab;
 
         /* Example code for people who are new to C#
@@ -19,12 +22,23 @@
          * GameObject prefabInstance = myScene.InstanciatePrefab(myPrefab)
          */
 
+        /// <summary>
+        /// Creates a new prefab.
+        /// </summary>
+        /// <param name="name">the (SHOULD BE UNIQUE) name of this <see cref="Resource"/></param>
+        /// <param name="createPrefab">
+        ///     A Function that takes a <see cref="Project"/> and a <see cref="Scene"/>
+        ///     then returns a <see cref="GameObject"/> containing the prefab you want to instance.
+        /// </param>
         public Prefab(string name, Func<Project, Scene, GameObject> createPrefab)
         {
             Name = name;
             CreatePrefab = createPrefab;
         }
 
+        /// <summary>
+        /// Does nothing for this <see cref="Resource"/> type.
+        /// </summary>
         public override void Dispose()
         {
             return;

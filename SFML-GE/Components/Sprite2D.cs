@@ -9,10 +9,21 @@ namespace SFML_GE.Components
     /// </summary>
     public class Sprite2D : Component, IRenderable
     {
+        /// <summary>
+        /// The size of this Sprite2D in pixels.
+        /// </summary>
         public Vector2 size = new Vector2(50, 50);
 
+        /// <summary>
+        /// The drawing origin of this Sprite2D, (0, 0) would draw
+        /// the sprite from the left corner at <see cref="System.Transform.GlobalPosition"/>,
+        /// (1, 1) would draw from the bottom right corner, and (0.5, 0.5) would draw the sprite centered.
+        /// </summary>
         public Vector2 origin = new Vector2(0.5f, 0.5f);
 
+        /// <summary>
+        /// A pixel offset to the sprite, added after <see cref="origin"/> is applied.
+        /// </summary>
         public Vector2 offset = new Vector2(0.0f, 0.0f);
 
         /// <summary>
@@ -51,24 +62,44 @@ namespace SFML_GE.Components
         public bool AutoQueue { get; set; } = true;
         public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;
 
+        /// <summary>
+        /// Creates a new Sprite2D of size <paramref name="sizeX"/> and <paramref name="sizeY"/>
+        /// </summary>
+        /// <param name="sizeX">the size in the x direction</param>
+        /// <param name="sizeY">the size in the y direction</param>
         public Sprite2D(float sizeX, float sizeY)
         {
             size = new Vector2(sizeX, sizeY);
             fitTexture = false;
         }
 
+        /// <summary>
+        /// Creates a new Sprite2D of size <paramref name="Size"/>
+        /// </summary>
+        /// <param name="Size">The size of the Sprite2D</param>
         public Sprite2D(Vector2 Size)
         {
             size = Size;
             fitTexture = false;
         }
 
+        /// <summary>
+        /// Creates a new Sprite2D using a given <see cref="TextureResource"/> <paramref name="Texture"/>.
+        /// sets <see cref="fitTexture"/> to <c>true</c> which will auto fit the texture.
+        /// </summary>
+        /// <param name="Texture">The texture of this sprite</param>
         public Sprite2D(TextureResource Texture)
         {
             this.Texture = Texture;
             fitTexture = true;
         }
 
+        /// <summary>
+        /// Creates a new Sprite2D using a given <see cref="TextureResource"/> <paramref name="Texture"/>,
+        /// thats sized with <paramref name="Size"/>.
+        /// </summary>
+        /// <param name="Size">The size of this sprite</param>
+        /// <param name="Texture">The texture of this sprite</param>
         public Sprite2D(Vector2 Size, TextureResource Texture)
         {
             size = Size;
@@ -76,6 +107,11 @@ namespace SFML_GE.Components
             this.Texture = Texture;
         }
 
+        /// <summary>
+        /// Creates a new Sprite2D of size <paramref name="Size"/> and with an origin of <paramref name="Origin"/>
+        /// </summary>
+        /// <param name="Size">The size of this Sprite2D</param>
+        /// <param name="Origin">The Origin of this Sprite2D, where (0,0) is the top left, and (1, 1) is the bottom right</param>
         public Sprite2D(Vector2 Size, Vector2 Origin)
         {
             size = Size;
@@ -83,6 +119,13 @@ namespace SFML_GE.Components
             origin = Origin;
         }
 
+        /// <summary>
+        /// Creates a new Sprite2D of size <paramref name="Size"/> and with an origin of <paramref name="Origin"/>,
+        /// and a texture set to <paramref name="Texture"/>
+        /// </summary>
+        /// <param name="Size">The size of this Sprite2D</param>
+        /// <param name="Origin">The Origin of this Sprite2D, where (0,0) is the top left, and (1, 1) is the bottom right</param>
+        /// <param name="Texture">The Texture of this Sprite2D</param>
         public Sprite2D(Vector2 Size, Vector2 Origin, TextureResource Texture)
         {
             size = Size;

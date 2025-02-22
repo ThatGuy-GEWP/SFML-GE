@@ -27,6 +27,9 @@ namespace SFML_GE.System
         /// </summary>
         public readonly float max = 1;
 
+        /// <summary>
+        /// Creates a new RandomRange from 0f to 1f
+        /// </summary>
         public RandomRange()
         {
 
@@ -34,7 +37,7 @@ namespace SFML_GE.System
 
         /// <summary>
         /// Creates a random range that will always return <paramref name="num"/>
-        /// great for if you dont actually want a random range but want the option for one
+        /// great for if you dont actually need a random range but want the option for one
         /// </summary>
         /// <param name="num"></param>
         public RandomRange(float num)
@@ -64,7 +67,6 @@ namespace SFML_GE.System
                 if (min == max) { return min; }
                 return RandomGen.NextSingle(min, max);
             }
-
         }
     }
 }

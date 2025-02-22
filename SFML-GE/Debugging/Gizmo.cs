@@ -66,6 +66,12 @@ namespace SFML_GE.Debugging
         }
 
 
+        /// <summary>
+        /// Draws two lines representing the X axis and Y axis
+        /// </summary>
+        /// <param name="atPoint">The point to draw at</param>
+        /// <param name="rotation">The rotation of the axis</param>
+        /// <param name="scale">The length of the axis lines</param>
         public static void DrawAxis(Vector2 atPoint, float rotation = 0f, float scale = 2.5f)
         {
 #if DEBUG

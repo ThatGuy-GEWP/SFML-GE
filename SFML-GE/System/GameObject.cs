@@ -56,7 +56,7 @@
         public Transform transform;
 
         /// <summary>
-        /// <see cref="Scene.CreateGameObject(string)"/> should be used instead.
+        /// <see cref="Scene.CreateGameObject(string, GameObject?)"/> should be used instead.
         /// </summary>
         internal GameObject(Project project, Scene scene, GameObject? parent = null)
         {

@@ -1,5 +1,11 @@
 ﻿namespace SFML_GE.System
 {
+    /// <summary>
+    /// Contains a bunch of helper math functions for things like 
+    /// <para/><see cref="Lerp(float, float, float)"/> (and <see cref="MathGE.Interpolation"/>)
+    /// <para/><see cref="DegToRad(float)"/>, <see cref="RadToDeg(float)"/>
+    /// <para/><see cref="Map(float, float, float, float, float)"/>
+    /// </summary>
     public static class MathGE
     {
         /// <summary>
@@ -14,8 +20,9 @@
             return A + (B - A) * T;
         }
 
+        // Feel free to expand!!!
         /// <summary>
-        /// Contains some helpful easing functions, feel free to expand!
+        /// Contains some helpful easing functions.
         /// </summary>
         public static class Interpolation
         {

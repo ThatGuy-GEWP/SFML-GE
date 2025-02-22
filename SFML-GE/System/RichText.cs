@@ -138,7 +138,6 @@ namespace SFML_GE.System
             this.DisplayedString = DisplayedString;
             CharacterSize = characterSize;
             EvalFormatting(DisplayedString);
-
         }
 
         void ParseToken(string bit)
@@ -168,7 +167,7 @@ namespace SFML_GE.System
         }
 
         Color targetCharColor = Color.White;
-        Texture fontTexture;
+        Texture? fontTexture = null;
         bool targetCharBold = false;
 
         void EvalFormatting(string val)
@@ -356,7 +355,7 @@ namespace SFML_GE.System
             return width;
         }
 
-        void DrawText(RenderTarget rt, string textToDraw)
+        void DrawText(RenderTarget rt, string textToDraw, RenderStates states)
         {
             charSprite.Position = position;
 
@@ -439,7 +438,7 @@ namespace SFML_GE.System
                     charSprite.Position = Vector2.Round((Vector2)charSprite.Position);
                 }
 
-                rt.Draw(charSprite);
+                rt.Draw(charSprite, states);
                 if (MaxCharacters < 0) { continue; }
                 drawnChars++;
                 if (drawnChars >= MaxCharacters)
@@ -449,10 +448,14 @@ namespace SFML_GE.System
             }
         }
 
-
+        /// <summary>
+        /// Draws the text to the given <see cref="RenderTarget"/> <paramref name="target"/>
+        /// </summary>
+        /// <param name="target">the target to draw too.</param>
+        /// <param name="states">the <see cref="RenderStates"/> to use.</param>
         public void Draw(RenderTarget target, RenderStates states)
         {
-            DrawText(target, DisplayedString);
+            DrawText(target, DisplayedString, states);
         }
     }
 }

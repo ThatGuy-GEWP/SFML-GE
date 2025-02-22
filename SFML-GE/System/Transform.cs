@@ -8,7 +8,7 @@ namespace SFML_GE.System
 {
 
     /// <summary>
-    /// A class that defines how to position an object
+    /// A class that defines how to position and rotate an object
     /// </summary>
     public class Transform
     {
@@ -55,6 +55,10 @@ namespace SFML_GE.System
         }
 
 
+        /// <summary>
+        /// Creates a new Transform and sets its owner to <paramref name="owner"/>
+        /// </summary>
+        /// <param name="owner">The owner of this Transform</param>
         public Transform(GameObject owner)
         {
             this.owner = owner;

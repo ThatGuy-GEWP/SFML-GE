@@ -18,10 +18,15 @@ namespace SFML_GE.System
         OverlayQueue
     }
 
+    /// <summary>
+    /// Tells the <see cref="RenderManager"/> that a <see cref="Component"/> is renderable.
+    /// Contains the function <see cref="OnRender(RenderTarget)"/> that will be called after
+    /// each update.
+    /// </summary>
     public interface IRenderable
     {
         /// <summary>
-        /// An additional offset to apply to the gameObject this component is attached too
+        /// An additional offset to apply to the GameObject this component is attached too
         /// </summary>
         public int ZOffset { get; set; }
 
@@ -38,7 +43,6 @@ namespace SFML_GE.System
         /// <summary>
         /// Dictates which renderQueue this IRenderable will be added two when using <see cref="AutoQueue"/>
         /// </summary>
-        [Spacing]
         public RenderQueueType QueueType { get; set; }
 
         public void OnRender(RenderTarget rt);

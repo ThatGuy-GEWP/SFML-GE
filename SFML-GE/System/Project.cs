@@ -11,18 +11,38 @@ namespace SFML_GE.System
     /// </summary>
     public class Project
     {
+        /// <summary>
+        /// A <see cref="Stopwatch"/> That is started once this <see cref="Project"/> instance is created.
+        /// </summary>
         public Stopwatch sinceProjectCreation { get; private set; } = Stopwatch.StartNew();
 
+        /// <summary>
+        /// The <see cref="ResourceCollection"/> holding all the <see cref="Resource"/>s of the project.
+        /// </summary>
         public ResourceCollection Resources;
 
+        /// <summary>
+        /// The <see cref="StylingDef"/> all newly created <see cref="GUIPanel"/>'s will use.
+        /// </summary>
         public StylingDef GUIStyling;
 
+        /// <summary>
+        /// The active <see cref="Scene"/> of the project, null if no scene is loaded.
+        /// </summary>
         public Scene? ActiveScene;
 
         List<Scene> scenes = new List<Scene>();
 
+        /// <summary>
+        /// The <see cref="RenderWindow"/> this project uses for inputs.
+        /// </summary>
         public RenderWindow App;
 
+        /// <summary>
+        /// A Dictionary containing all monitored inputs,
+        /// You should use <see cref="AddInput(string, Keyboard.Key)"/> to add any,
+        /// And only use this Dictionary to find used ones.
+        /// </summary>
         public Dictionary<string, Keyboard.Key> inputs = new Dictionary<string, Keyboard.Key>()
         {
             {"exit" ,      Keyboard.Key.Escape},
@@ -33,9 +53,9 @@ namespace SFML_GE.System
             {"ui_confirm", Keyboard.Key.Enter}
         };
 
-        Dictionary<string, bool> inputPressed = new Dictionary<string, bool>();
-        Dictionary<string, bool> inputJustPressed = new Dictionary<string, bool>();
-        Dictionary<string, bool> inputJustReleased = new Dictionary<string, bool>();
+        private readonly Dictionary<string, bool> inputPressed = new Dictionary<string, bool>();
+        private readonly Dictionary<string, bool> inputJustPressed = new Dictionary<string, bool>();
+        private readonly Dictionary<string, bool> inputJustReleased = new Dictionary<string, bool>();
 
         /// <summary>
         /// The Delta of the scroll wheel
@@ -77,12 +97,15 @@ namespace SFML_GE.System
         /// <summary> if false, input querys will always return false. </summary>
         public bool allowInputs = true;
 
+        /// <summary>
+        /// The path (as a string) given when this project was created to collect resources from.
+        /// </summary>
         public string? ResourceDir { get; private set; } = null;
 
         Cursor.CursorType _cursorState = Cursor.CursorType.Arrow;
 
         /// <summary>
-        /// The current state of the cursor.
+        /// The current <see cref="Cursor.CursorType"/> of the cursor.
         /// </summary>
         public Cursor.CursorType CursorState
         {

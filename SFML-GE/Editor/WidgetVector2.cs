@@ -3,6 +3,10 @@ using SFML_GE.System;
 
 namespace SFML_GE.Editor
 {
+    // Used for the possibly to be unsupported editor.
+    // All widgets and such will have no comments as a result :P
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class WidgetVector2 : Widget
     {
         public GUILabel xLabel = null!;
@@ -55,4 +59,5 @@ namespace SFML_GE.Editor
             if (!yInput.focused) { yInput.displayedString = vec.y.ToString(); }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

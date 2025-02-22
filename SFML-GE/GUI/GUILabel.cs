@@ -54,8 +54,14 @@ namespace SFML_GE.GUI
 
         Vector2 lastSize = new Vector2(0, 0); // used to update internalRenderTexture's size
 
+        /// <summary>
+        /// The underlying <see cref="RichText"/> this label uses.
+        /// </summary>
         protected RichText text = null!;
 
+        /// <summary>
+        /// The <see cref="RichText"/> this label renders with.
+        /// </summary>
         public RichText? RichText { get { return text; } }
 
         /// <summary>

@@ -32,13 +32,6 @@ namespace SFML_GE.Editor
         public ClassMemberInfo(object? obj, FieldInfo field)
         {
             this.field = field;
-            if (field.CustomAttributes.Count() > 0)
-            {
-                if (field.CustomAttributes.First().AttributeType == typeof(SpacingAttribute))
-                {
-                    hasSpacer = true;
-                }
-            }
             Name = field.Name;
             this.obj = obj;
         }
@@ -46,13 +39,6 @@ namespace SFML_GE.Editor
         public ClassMemberInfo(object? Class, PropertyInfo property)
         {
             prop = property;
-            if (prop.CustomAttributes.Count() > 0)
-            {
-                if (prop.CustomAttributes.First().AttributeType == typeof(SpacingAttribute))
-                {
-                    hasSpacer = true;
-                }
-            }
             Name = property.Name;
             obj = Class;
         }
@@ -117,6 +103,11 @@ namespace SFML_GE.Editor
     /// </summary>
     public class GUIEditor : GUIInteractiveWindow
     {
+
+        /// <summary>
+        /// Creates a new editor linked to a <see cref="Project"/>
+        /// </summary>
+        /// <param name="project"></param>
         public GUIEditor(Project project)
         {
             Project = project;
@@ -130,7 +121,7 @@ namespace SFML_GE.Editor
         // size of each variable in a component
         static float varYSize = 25;
 
-        event Action<GUIEditor> EditorUpdate;
+        event Action<GUIEditor> EditorUpdate = null!;
 
         GameObject? selectedGameObject = null;
 
@@ -691,14 +682,14 @@ namespace SFML_GE.Editor
             {
                 if (go.editorVisible)
                 {
-                    GameObjectScroller.content.Add(new GUIListEntry(35, go.name, 0));
+                    GameObjectScroller.content.Add(new GUIListEntry(35, go.name));
                     AddChildren(go, 30, 5);
                 }
             }
 
             foreach (Resource res in Project.Resources.GetAllResources())
             {
-                GUIListEntry entry = new GUIListEntry(25, res.Name + "| uses:" + res.requests + " : " + res.GetType().Name, 0);
+                GUIListEntry entry = new GUIListEntry(25, res.Name + "| uses:" + res.requests + " : " + res.GetType().Name);
                 entry.textPosition = new Vector2(0.05f, 0.5f);
                 entry.textAnchor = new Vector2(0f, 0.5f);
                 entry.clickable = true;
@@ -736,7 +727,7 @@ namespace SFML_GE.Editor
                 foreach (GameObject go in Scene.GetGameObjects(0))
                 {
                     if (!go.editorVisible) { continue; }
-                    GUIListEntry entry = new GUIListEntry(35, go.name, 0);
+                    GUIListEntry entry = new GUIListEntry(35, go.name);
                     entry.val = go;
                     entry.valType = go.GetType();
 
@@ -746,7 +737,7 @@ namespace SFML_GE.Editor
 
                 foreach (Resource res in Project.Resources.GetAllResources())
                 {
-                    GUIListEntry entry = new GUIListEntry(25, res.Name + " : " + res.GetType().Name, 0);
+                    GUIListEntry entry = new GUIListEntry(25, res.Name + " : " + res.GetType().Name);
                     entry.textPosition = new Vector2(0.05f, 0.5f);
                     entry.textAnchor = new Vector2(0f, 0.5f);
                     entry.val = res;
@@ -782,7 +773,7 @@ namespace SFML_GE.Editor
         {
             foreach (GameObject child in from.GetChildren())
             {
-                GUIListEntry entry = new GUIListEntry(lastSize, child.name, lastOffset);
+                GUIListEntry entry = new GUIListEntry(lastSize, child.name, true, 0, lastOffset);
                 entry.val = child;
                 entry.valType = child.GetType();
 

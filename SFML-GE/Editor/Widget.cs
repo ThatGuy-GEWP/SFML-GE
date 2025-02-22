@@ -3,6 +3,8 @@ using SFML_GE.System;
 
 namespace SFML_GE.Editor
 {
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class Widget
     {
         protected Scene scene;
@@ -27,4 +29,5 @@ namespace SFML_GE.Editor
             this.scene = scene;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
