@@ -15,7 +15,6 @@ namespace SFML_GE.Debugging
     /// Gizmo functions have to called constantly to be drawn to the screen,
     /// In either an update call or a render call.
     /// Gizmos will *not* be drawn before a project is made, and can only bind to one project at a time.
-    /// Method calls will return if in release.<para></para>
     /// Gizmos will be drawn on top of the <see cref="RenderQueueType.DefaultQueue"/>, and under the
     /// <see cref="RenderQueueType.OverlayQueue"/>
     /// </summary>
@@ -53,16 +52,12 @@ namespace SFML_GE.Debugging
         /// <param name="endPoint">The ending point</param>
         public static void DrawLine(Vector2 startPoint, Vector2 endPoint)
         {
-#if DEBUG
             if (LinkedProject == null) { return; }
 
             GizmoCalls.Add((rt) =>
             {
                 rt.Draw(new Vertex[] { (Vertex)startPoint, (Vertex)endPoint }, PrimitiveType.Lines);
             });
-#else
-            return;
-#endif
         }
 
 
@@ -74,7 +69,6 @@ namespace SFML_GE.Debugging
         /// <param name="scale">The length of the axis lines</param>
         public static void DrawAxis(Vector2 atPoint, float rotation = 0f, float scale = 2.5f)
         {
-#if DEBUG
             Vector2 up = Vector2.Rotate(new Vector2(0, -scale), rotation);
             up = atPoint + up;
             Vector2 right = Vector2.Rotate(new Vector2(scale, 0), rotation);
@@ -92,9 +86,6 @@ namespace SFML_GE.Debugging
                     new Vertex(up, Color.Green)
                 }, PrimitiveType.Lines);
             });
-#else
-            return
-#endif
         }
 
 
