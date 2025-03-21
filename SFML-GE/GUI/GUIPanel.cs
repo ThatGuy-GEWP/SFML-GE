@@ -206,7 +206,7 @@ namespace SFML_GE.GUI
             GUIPanel? foundPan = null;
             GUIPanel? lastPan = this;
             int searchIndx = 0;
-            while (searchIndx < 100)
+            while (searchIndx < 100) 
             {
                 searchIndx++;
                 GUIPanel? curPan = lastPan.GUIParent();

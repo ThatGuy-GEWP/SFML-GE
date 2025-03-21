@@ -89,7 +89,7 @@ namespace SFML_GE.GUI
         /// <summary>
         /// All <see cref="GUIListEntry"/>s in this <see cref="GUIList"/>
         /// </summary>
-        public List<GUIListEntry> content = null!;
+        public List<GUIListEntry> content = new List<GUIListEntry>();
 
         /// <summary>
         /// The pixel offset between each entry.
@@ -142,6 +142,27 @@ namespace SFML_GE.GUI
 
             lastSize = GetSize();
             scrollTexture = new RenderTexture((uint)lastSize.x, (uint)lastSize.y);
+        }
+
+        /// <summary>
+        /// Adds an entry to the <see cref="GUIList"/> then returns it.
+        /// </summary>
+        /// <param name="entry">The <see cref="GUIListEntry"/> to add.</param>
+        public GUIListEntry AddEntry(GUIListEntry entry)
+        {
+            content.Add(entry);
+            return entry;
+        }
+
+        /// <summary>
+        /// Creates then adds a new <see cref="GUIListEntry"/> to the <see cref="GUIList"/>, then returns it.
+        /// </summary>
+        /// <param name="entryName">the name of the entry, will be displayed in the list.</param>
+        public GUIListEntry AddEntry(string entryName)
+        {
+            GUIListEntry entr = new GUIListEntry(25, entryName, true);
+            content.Add(entr);
+            return entr;
         }
 
         bool pressed = false;

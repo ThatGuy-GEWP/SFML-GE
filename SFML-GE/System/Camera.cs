@@ -7,7 +7,7 @@ namespace SFML_GE.System
     /// </summary>
     public class Camera
     {
-        readonly RenderWindow app;
+        readonly GEWindow app;
 
         /// <summary>
         /// The <see cref="View"/> of this camera.
@@ -57,10 +57,10 @@ namespace SFML_GE.System
         }
 
         /// <summary>
-        /// Creates a camera bound to a <see cref="RenderWindow"/>
+        /// Creates a camera bound to a <see cref="GEWindow"/>
         /// </summary>
         /// <param name="app"></param>
-        public Camera(RenderWindow app)
+        public Camera(GEWindow app)
         {
             this.app = app;
             cameraView = new View(app.DefaultView);

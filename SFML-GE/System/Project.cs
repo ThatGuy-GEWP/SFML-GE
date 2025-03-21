@@ -34,9 +34,9 @@ namespace SFML_GE.System
         List<Scene> scenes = new List<Scene>();
 
         /// <summary>
-        /// The <see cref="RenderWindow"/> this project uses for inputs.
+        /// The <see cref="GEWindow"/> this project uses for inputs.
         /// </summary>
-        public RenderWindow App;
+        public GEWindow App;
 
         /// <summary>
         /// A Dictionary containing all monitored inputs,
@@ -130,7 +130,7 @@ namespace SFML_GE.System
         /// </summary>
         /// <param name="ResourceDir"></param>
         /// <param name="app"></param>
-        public Project(string? ResourceDir, RenderWindow app)
+        public Project(string? ResourceDir, GEWindow app)
         {
             App = app;
             this.ResourceDir = ResourceDir;
