@@ -10,7 +10,7 @@ namespace Testing
         [TestMethod]
         public void TestBasicLoop()
         {
-            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(512, 512), "Basic Loop Testing");
+            GEWindow app = new GEWindow(new SFML.Window.VideoMode(512, 512), "Basic Loop Testing");
             Project newProject = new Project(null, app);
             Scene testScene = newProject.CreateSceneAndLoad("TestScene");
 
@@ -33,7 +33,7 @@ namespace Testing
         [TestMethod]
         public void TestSceneTransitions()
         {
-            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(512, 512), "Scene-Transition Testing");
+            GEWindow app = new GEWindow(new SFML.Window.VideoMode(512, 512), "Scene-Transition Testing");
             Project newProject = new Project(null, app);
 
             Scene SceneA = newProject.CreateScene("Scene A");
@@ -75,7 +75,7 @@ namespace Testing
         [TestMethod]
         public void TestSceneWithEditor()
         {
-            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(512, 512), "Editor Testing");
+            GEWindow app = new GEWindow(new SFML.Window.VideoMode(512, 512), "Editor Testing");
             Project newProject = new Project("Res", app);
             Scene testScene = newProject.CreateSceneAndLoad("TestScene");
 

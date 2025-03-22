@@ -12,7 +12,7 @@ namespace Testing
         [TestMethod]
         public void TestSceneClearing()
         {
-            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(512, 512), "Screen-Clearing test");
+            GEWindow app = new GEWindow(new SFML.Window.VideoMode(512, 512), "Screen-Clearing test");
             Project newProject = new Project("", app);
             Scene testScene = newProject.CreateSceneAndLoad("TestScene");
 
@@ -49,7 +49,7 @@ namespace Testing
         [TestMethod]
         public void TestDelegatedRendering()
         {
-            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(512, 512), "Delegated Rendering test");
+            GEWindow app = new GEWindow(new SFML.Window.VideoMode(512, 512), "Delegated Rendering test");
             Project newProject = new Project("", app);
             Scene testScene = newProject.CreateSceneAndLoad("TestScene");
 
@@ -79,7 +79,7 @@ namespace Testing
         [TestMethod]
         public void TestRichTextRendering()
         {
-            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(512, 512), "Rich-Text test");
+            GEWindow app = new GEWindow(new SFML.Window.VideoMode(512, 512), "Rich-Text test");
             Project newProject = new Project("Res", app);
             Scene testScene = newProject.CreateSceneAndLoad("TestScene");
 

@@ -21,7 +21,7 @@ namespace Testing
             if (true) { return; }
 
 #pragma warning disable CS0162 // Unreachable code detected
-            RenderWindow app = new RenderWindow(new SFML.Window.VideoMode(1280, 720), "Editor Testing");
+            GEWindow app = new GEWindow(new SFML.Window.VideoMode(1280, 720), "Editor Testing");
             Project newProject = new Project(null, app);
             Scene testScene = newProject.CreateSceneAndLoad("TestScene");
 

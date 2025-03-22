@@ -22,6 +22,12 @@ namespace SFML_GE.System
 
 
 
+        /// <summary>
+        /// Sets the style of this window.
+        /// Recreates a new internal <see cref="RenderWindow"/> then rebinds all events to it.
+        /// Some values might change as a result, such as default view.
+        /// </summary>
+        /// <param name="styles">the new styles to use</param>
         public void SetStyle(Styles styles)
         {
             RenderWindow newApp = new RenderWindow(new VideoMode(app.Size.X, app.Size.Y), title, styles, app.Settings);
@@ -30,8 +36,6 @@ namespace SFML_GE.System
             app = newApp;
             RebindEvents();
         }
-
-
 
         void OnCreated()
         {
