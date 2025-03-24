@@ -18,7 +18,7 @@
         /// <summary>
         /// If false, <see cref="Update"/> will not be called.
         /// </summary>
-        public bool enabled = true;
+        public bool Enabled = true;
 
         /// <summary>
         /// If false, this GameObject and its children will not be visible in the editor.
@@ -114,7 +114,7 @@
         /// <param name="renderManager">the rendermanager to add all renderables too</param>
         internal void GetRenderables(RenderManager renderManager)
         {
-            if (DestroyQueued || !enabled) return;
+            if (DestroyQueued || !Enabled) return;
 
             for (int i = 0; i < Components.Count; i++)
             {
@@ -148,7 +148,7 @@
 
         internal void GetClickables(MouseBlockManager manager)
         {
-            if (DestroyQueued || !enabled) return;
+            if (DestroyQueued || !Enabled) return;
 
             for (int i = 0; i < Components.Count; i++)
             {
@@ -222,7 +222,7 @@
             }
             Children.Clear();
             ShouldCleanup = true;
-            enabled = false;
+            Enabled = false;
         }
 
         /// <summary>
@@ -230,7 +230,7 @@
         /// </summary>
         public void Update()
         {
-            if (!enabled) return;
+            if (!Enabled) return;
 
             if (DestroyQueued) // queued so stuff does not get removed mid update.
             {

@@ -134,21 +134,28 @@ namespace SFML_GE.System
         }
 
 
-        readonly float GetMinX()
+        /// <summary> Gets the Minimum X position of this boundbox </summary>
+        public float GetMinX()
         {
-            return new float[] { float.MaxValue, TopLeft.x, BottomLeft.x, TopRight.x, BottomRight.x }.Min();
+            return (new float[] { TopLeft.x, BottomLeft.x, TopRight.x, BottomRight.x }).Min();
         }
-        readonly float GetMinY()
+
+        /// <summary> Gets the Minimum Y position of this boundbox </summary>
+        public float GetMinY()
         {
-            return new float[] { float.MaxValue, TopLeft.y, BottomLeft.y, TopRight.y, BottomRight.y }.Min();
+            return (new float[] { TopLeft.y, BottomLeft.y, TopRight.y, BottomRight.y }).Min();
         }
-        readonly float GetMaxX()
+
+        /// <summary> Gets the Maximum y position of this boundbox </summary>
+        public float GetMaxX()
         {
-            return new float[] { float.MinValue, TopLeft.x, BottomLeft.x, TopRight.x, BottomRight.x }.Max();
+            return (new float[] { TopLeft.x, BottomLeft.x, TopRight.x, BottomRight.x }).Max();
         }
-        readonly float GetMaxY()
+
+        /// <summary> Gets the Maximum Y position of this boundbox </summary>
+        public float GetMaxY()
         {
-            return new float[] { float.MinValue, TopLeft.y, BottomLeft.y, TopRight.y, BottomRight.y }.Max();
+            return (new float[] { TopLeft.y, BottomLeft.y, TopRight.y, BottomRight.y }).Max();
         }
 
         /// <summary>
