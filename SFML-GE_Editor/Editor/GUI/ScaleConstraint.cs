@@ -22,6 +22,8 @@ namespace SFML_GE_Editor.Editor.GUI
         /// </summary>
         public Vector2 position_scale = new Vector2(0.5f);
 
+        public Vector2 offset = new Vector2(0);
+
         /// <summary>
         /// the size of the gameobject this constraint is moving
         /// </summary>
@@ -31,13 +33,11 @@ namespace SFML_GE_Editor.Editor.GUI
         {
             Vector2 screenSize = Project.RenderTargetSize;
 
-            Console.WriteLine(Project.RenderTargetSize);
-
             Vector2 position = screenSize * position_scale;
 
-            Vector2 final_position = position + (objectSize * anchor);
+            Vector2 final_position = position - (objectSize * anchor);
 
-            gameObject.transform.Position = final_position;
+            gameObject.transform.Position = final_position + offset;
         }
     }
 }

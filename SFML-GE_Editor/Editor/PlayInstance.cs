@@ -39,7 +39,15 @@ namespace SFML_GE_Editor.Editor
         public void Update()
         {
             if (!Playing) { return; }
-            InstanceProject.Update();
+            try
+            {
+                InstanceProject.Update();
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogError(e.Message);
+                Stop();
+            }
         }
 
         public void Render(RenderTarget RT)

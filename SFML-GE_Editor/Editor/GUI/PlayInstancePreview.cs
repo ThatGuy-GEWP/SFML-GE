@@ -34,8 +34,9 @@ namespace SFML_GE_Editor.Editor.GUI
 
             sc.objectSize = new Vector2(800, 600);
 
-            sc.anchor = new Vector2(0.5f, 0.5f);
-            sc.position_scale = new Vector2(0f, 0f);
+            sc.anchor = new Vector2(0.5f, 0f);
+            sc.position_scale = new Vector2(0.5f, 0f);
+            sc.offset = new Vector2(0, 30f);
 
 
             renderTexture = new RenderTexture(800, 600);

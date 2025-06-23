@@ -32,6 +32,7 @@ namespace SFML_GE_Editor
 
             Project EditorProject = new Project("res", app);
             Scene EditorScene = EditorProject.CreateSceneAndLoad("Editor");
+            EditorScene.ClearColor = new Color(15, 15, 17);
 
             PlayInstance = new PlayInstance("res_game", app);
 

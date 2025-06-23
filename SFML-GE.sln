@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFML-GE", "SFML-GE\SFML-GE.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testing", "Testing\Testing.csproj", "{09312030-8EB5-455C-9B31-EDB7D44CF0D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFML-GE_Editor", "SFML-GE_Editor\SFML-GE_Editor.csproj", "{B59A2BFA-AD63-4A76-AE16-DFEB64C0E00D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{09312030-8EB5-455C-9B31-EDB7D44CF0D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09312030-8EB5-455C-9B31-EDB7D44CF0D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09312030-8EB5-455C-9B31-EDB7D44CF0D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B59A2BFA-AD63-4A76-AE16-DFEB64C0E00D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B59A2BFA-AD63-4A76-AE16-DFEB64C0E00D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B59A2BFA-AD63-4A76-AE16-DFEB64C0E00D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B59A2BFA-AD63-4A76-AE16-DFEB64C0E00D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
