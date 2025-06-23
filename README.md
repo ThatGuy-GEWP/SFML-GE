@@ -31,7 +31,9 @@ Simply cloning the repo to a local project then building SFML-GE should produce 
 public class Program
     {
         //Here you can set the resolution and name of your window.
-        public static RenderWindow App { get; private set; } = new RenderWindow(new VideoMode(1280, 720), "SFML-GE Template", Styles.Close | Styles.Titlebar);
+        public static GEWindow App { get; private set; } = new GEWindow(new VideoMode(1280, 720), "SFML-GE Template", Styles.Close | Styles.Titlebar);
+        //GEWindow is a wrapper around RenderWindow that auto-rebinds events, so you can *finally* edit window styles easily
+        //Also handles changing the defaultView when resized
 
         static void Main(string[] args)
         {
@@ -105,7 +107,7 @@ sprite.fitTexture = true;
 For custom behaviour like a script, you should make a new class that inherits from [Component](SFML-GE/System/Component.cs),  
 then add it to a GameObject.
   
-For the sake of a simple example, we will create a custom component that slowly moves a GameObject to the right.  
+For example, we will create a custom component that slowly moves a GameObject to the right.  
 ```cs
 public class ExampleComponent : Component
 {
@@ -127,6 +129,10 @@ now you can add this component to any GameObject you would like!
 // Create then add the ExampleComponent to a GameObject
 myGameObject.AddComponent(new ExampleComponent());
 ```
+or if you are in a hurry, you can just make a new GameObject for a component
+```cs
+scene.CreateGameObjectWithComp(new ExampleComponent());
+```
 > [!CAUTION]
 > Trying to access ``Component.gameObject``, ``Component.Scene``, or ``Component.Project``    
   *before* ``Component.Start()`` or ``Component.OnAdded()`` (like in a class constructor) will result in an error.
@@ -145,10 +151,7 @@ public class ExampleComponent : Component, IRenderable
 
   public bool AutoQueue { get; set; } = true; // If false, you will manually have to queue the IRenderable to the Scene.RenderManager
 
-  // Default Queue is drawn relative to the world, whereas Overlay Queue is drawn relative to the screen.
-  // An example of this is that, if being drawn with DefaultQueue at 0,0 and the camera moves to 10000, 10000 the
-  // Object would not be visible, however if drawn on the Overlay queue at 0,0 then it will always be visible regardless of where the camera is, at the top left of the screen.
-  public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;
+  public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue; // sets the render queue to be used
 
   RectangleShape rectShape = new RectangleShape(new Vector2(20, 20));
 
@@ -163,3 +166,14 @@ public class ExampleComponent : Component, IRenderable
 Before being drawn to the screen all IRenderables are collected, sorted by ZOrder then drawn.  
 > [!NOTE]
 > If ``AutoQueue`` is ``false`` then you will have to manually add the component to the RenderQueue.
+
+There is one special line in the above example
+```cs
+public RenderQueueType QueueType { get; set; } = RenderQueueType.DefaultQueue;
+```
+By default, most objects get added to the ```RenderQueueType.DefaultQueue```, these will be draw in world and in order dictated by ZOrder.
+However for things like UI, you should use ```RenderQueueType.OverlayQueue``` instead.
+
+```RenderQueueType.OverlayQueue``` gets drawn in screen space, where (0,0) is always the top left corner of the screen.
+Then ZOrder is used to sort against other overlay renderables.
+
