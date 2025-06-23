@@ -96,6 +96,11 @@ namespace SFML_GE.System
         /// </summary>
         public void Update()
         {
+            if(app.DefaultView != cameraView)
+            {
+                cameraView = app.DefaultView;
+            }
+
             app.SetView(cameraView);
         }
     }

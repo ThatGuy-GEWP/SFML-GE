@@ -11,7 +11,7 @@ namespace SFML_GE.System
 {
     /// <summary>
     /// Encapsulates a <see cref="SFML.Graphics.RenderWindow"/>.
-    /// Mostly exists as resizing a window is impossible without rebinding EVERY SINGLE EVENT
+    /// Mostly exists as restyling a window is impossible without rebinding EVERY SINGLE EVENT, which this class does.
     /// 
     /// Also paves way for a diffrent backend to be used.
     /// </summary>
@@ -46,7 +46,6 @@ namespace SFML_GE.System
 
         void Resize(Vector2u newSize)
         {
-            app.Size = newSize;
             _defaultView = new View(new FloatRect(0, 0, newSize.X, newSize.Y));
         }
 
@@ -154,10 +153,6 @@ namespace SFML_GE.System
         public void SetMouseCursor(Cursor cursor)
         {
             app.SetMouseCursor(cursor);
-        }
-
-        void OnCreation()
-        { 
         }
 
         /// <summary>
