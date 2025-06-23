@@ -41,6 +41,18 @@ namespace SFML_GE.System
         {
             UnbindEvents();
             RebindEvents();
+            _defaultView = app.DefaultView;
+        }
+
+        void Resize(Vector2u newSize)
+        {
+            app.Size = newSize;
+            _defaultView = new View(new FloatRect(0, 0, newSize.X, newSize.Y));
+        }
+
+        void OnResize(object? sender, SizeEventArgs args)
+        {
+            Resize(new Vector2u(args.Width, args.Height));
         }
 
         void UnbindEvents()
@@ -73,6 +85,8 @@ namespace SFML_GE.System
             app.MouseMoved += MouseMoved;
             app.MouseWheelScrolled += MouseWheelScrolled;
             app.Resized += Resized;
+
+            app.Resized += OnResize;
         }
 
 
@@ -140,6 +154,10 @@ namespace SFML_GE.System
         public void SetMouseCursor(Cursor cursor)
         {
             app.SetMouseCursor(cursor);
+        }
+
+        void OnCreation()
+        { 
         }
 
         /// <summary>
@@ -342,8 +360,11 @@ namespace SFML_GE.System
         public Vector2u Size { get { return app.Size; } }
         /// <inheritdoc/>
         public bool IsSrgb { get { return app.IsSrgb; } }
+
+        View _defaultView;
+
         /// <inheritdoc/>
-        public View DefaultView { get { return app.DefaultView; } }
+        public View DefaultView { get { return _defaultView; } }
 
 
 

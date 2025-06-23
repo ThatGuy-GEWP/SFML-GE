@@ -55,6 +55,17 @@ namespace SFML_GE.System
         }
 
         /// <summary>
+        /// Picks a random item from the given array.
+        /// </summary>
+        /// <typeparam name="T">the type in the array</typeparam>
+        /// <param name="table">the table to pick from</param>
+        /// <returns></returns>
+        public static T PickRandom<T>(T[] table)
+        {
+            return table[RandomGen.Next(table.Length)];
+        }
+
+        /// <summary>
         /// returns a random integer that is within a specified range
         /// </summary>
         /// <param name="minValue">the lowest (inclusive) number of the random integer</param>

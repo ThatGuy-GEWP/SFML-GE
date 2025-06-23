@@ -111,6 +111,8 @@ namespace SFML_GE.System
         /// </summary>
         readonly HashSet<string> usedNames = new HashSet<string>();
 
+        public float timeScale = 1f;
+
         readonly Stopwatch deltaWatch = new Stopwatch();
 
         readonly List<GameObject> gameObjects = new List<GameObject>();
@@ -284,6 +286,28 @@ namespace SFML_GE.System
             }
         }
 
+        public bool IsPaused { get; private set; } = false;
+
+        /// <summary>
+        /// Pauses this scene's deltaTime timer, and stops all update calls.
+        /// </summary>
+        public void Pause()
+        {
+            if(IsPaused) return;
+            IsPaused = true;
+            deltaWatch.Stop();
+        }
+
+        /// <summary>
+        /// Resumes this scenes' deltaTime timer, and resumes all update calls.
+        /// </summary>
+        public void Resume()
+        {
+            if (!IsPaused) return;
+            IsPaused = false;
+            deltaWatch.Start();
+        }
+
         /// <summary>
         /// Starts the scene and its gameObjects
         /// </summary>
@@ -326,6 +350,7 @@ namespace SFML_GE.System
         internal void Update()
         {
             if (!IsLoaded) { return; }
+            if (IsPaused) return;
             if (!Started) { Start(); return; }
 
             root.Update();
@@ -343,7 +368,7 @@ namespace SFML_GE.System
             }
 
             mouseBlockManager.Update();
-            DeltaTime = (float)deltaWatch.Elapsed.TotalSeconds;
+            DeltaTime = (float)deltaWatch.Elapsed.TotalSeconds * timeScale;
             deltaWatch.Restart();
             AudioManager.Update();
             Camera.Update();
