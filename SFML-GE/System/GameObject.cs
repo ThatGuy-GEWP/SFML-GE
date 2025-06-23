@@ -158,7 +158,7 @@
 
                 if (comp is IMouseBlockable blok)
                 {
-                    if (blok.BlockingMouse == true)
+                    if (blok.BlocksMouse == true)
                     {
                         manager.QueueComp(comp);
                     }

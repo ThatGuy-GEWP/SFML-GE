@@ -36,7 +36,7 @@ namespace SFML_GE.GUI
         /// If true, the pannel will prevent the mouse from clicking/interacting with things
         /// below/under it.
         /// </summary>
-        public bool BlockingMouse
+        public bool BlocksMouse
         {
             get { return _mouseOcclusion; }
             set { _mouseOcclusion = value; }

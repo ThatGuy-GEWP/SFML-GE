@@ -61,6 +61,7 @@ namespace SFML_GE.GUI
                 {
                     if (panel.Started == false) { continue; }
                     panel.Update();
+                    panel.Scene.mouseBlockManager.QueueComp(panel);
                 }
             }
         }
@@ -166,6 +167,7 @@ namespace SFML_GE.GUI
                 panel.Position = new UDim2(panel.Position.Scale, originalPositions[i].Offset + new Vector2(0, -ScrollPosition));
                 panel.Update();
                 UpdateDescendants(panel.gameObject);
+                Scene.mouseBlockManager.QueueComp(panel);
             }
         }
 

@@ -324,7 +324,8 @@ namespace SFML_GE.Editor
             {
                 createdVal = true;
                 GUIButton button = AddToObj(new GUIButton(), "valbut", panel);
-                button.clipInteraction = false;
+                button.ZOffset = 50;
+                button.clipInteraction = true;
 
                 button.Size = new UDim2(0.1f, 1f, 0, 0);
                 button.Position = new UDim2(0.9f, 0, 0, 0);

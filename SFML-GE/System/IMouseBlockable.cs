@@ -1,4 +1,6 @@
-﻿namespace SFML_GE.System
+﻿using System;
+
+namespace SFML_GE.System
 {
     /// <summary>
     /// This interface should be applied to <see cref="Component"/>'s to subscribe them to various
@@ -22,6 +24,6 @@
         /// <summary>
         /// If false, the blocker will be ignored.
         /// </summary>
-        public bool BlockingMouse { get; set; }
+        public bool BlocksMouse { get; set; }
     }
 }
