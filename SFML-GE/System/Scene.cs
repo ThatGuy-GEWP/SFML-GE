@@ -361,6 +361,7 @@ namespace SFML_GE.System
                 if (go.ShouldCleanup == true)
                 {
                     gameObjects.RemoveAt(i);
+                    root.Children.Remove(go);
                     if (ZTree.ContainsKey(go.ZOrder)) { ZTree[go.ZOrder].Remove(go); }
                     usedNames.Remove(go.name);
                     i--;
