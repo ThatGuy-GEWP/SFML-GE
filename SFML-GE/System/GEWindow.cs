@@ -359,7 +359,7 @@ namespace SFML_GE.System
         View _defaultView;
 
         /// <inheritdoc/>
-        public View DefaultView { get { return _defaultView; } }
+        public View DefaultView { get { return new View(_defaultView); } }
 
 
 
@@ -458,5 +458,13 @@ namespace SFML_GE.System
         {
             app.ResetGLStates();
         }
+
+        /// <summary>
+        /// Converts this GEWindow into a RenderWindow, required for any internal functions.
+        /// </summary>
+        /// <param name="window"></param>
+        public static explicit operator RenderWindow(GEWindow window) { return window.app; }
+
+
     }
 }

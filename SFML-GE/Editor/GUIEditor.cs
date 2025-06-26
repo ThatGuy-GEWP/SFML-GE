@@ -633,7 +633,7 @@ namespace SFML_GE.Editor
 
             Scene.CreateGameObject("goWin").AddComponent(win);
             Scene.CreateGameObject("goInfo", win.gameObject).AddComponent(GameObjectInfo);
-            GameObjectInfo.gameObject.ZOrder = 15;
+            GameObjectInfo.gameObject.ZOrder = 9_500;
 
             win.Position = new UDim2(1f, 0f, -5, 5);
             win.Size = new UDim2(0, 1f, 400, -15);
@@ -652,7 +652,7 @@ namespace SFML_GE.Editor
             allowResizeTop = false;
             allowResizeBottom = true;
 
-            gameObject.ZOrder = 90;
+            gameObject.ZOrder = 10_000;
 
             minSize = new Vector2(-10, -500);
             maxSize = new Vector2(250, -10);

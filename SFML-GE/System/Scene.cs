@@ -431,7 +431,7 @@ namespace SFML_GE.System
         /// <summary> Gets the mouse position in Screen space </summary>
         public Vector2 GetMouseScreenPosition()
         {
-            return (Vector2)Mouse.GetPosition(Project.App);
+            return (Vector2)Mouse.GetPosition((RenderWindow)Project.App);
         }
 
         /// <summary> Gets the mouse position in World space </summary>

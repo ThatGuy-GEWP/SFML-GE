@@ -96,9 +96,18 @@ namespace SFML_GE.System
         /// </summary>
         public void Update()
         {
-            if(app.DefaultView != cameraView)
+            // There is a better solution not seen through the fog of my exhaustion
+            // however, i am exhausted, and so this will do
+            // TODO: Optmize the fuck out of this
+            if (app.DefaultView.Size != cameraView.Size)
             {
+                Vector2 pos = cameraView.Center;
+                float rot = cameraView.Rotation;
+
                 cameraView = app.DefaultView;
+                cameraView.Center = pos;
+                cameraView.Rotation = rot;
+                cameraView.Zoom(LastZoom);
             }
 
             app.SetView(cameraView);
