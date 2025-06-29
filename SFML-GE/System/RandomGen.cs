@@ -59,10 +59,21 @@ namespace SFML_GE.System
         /// </summary>
         /// <typeparam name="T">the type in the array</typeparam>
         /// <param name="table">the table to pick from</param>
-        /// <returns></returns>
+        /// <returns>a random item from that list</returns>
         public static T PickRandom<T>(T[] table)
         {
             return table[RandomGen.Next(table.Length)];
+        }
+
+        /// <summary>
+        /// Picks a random item from the given list.
+        /// </summary>
+        /// <typeparam name="T">the type in the list</typeparam>
+        /// <param name="table">the list to pick from</param>
+        /// <returns>a random item from that list</returns>
+        public static T PickRandom<T>(List<T> table)
+        {
+            return table[RandomGen.Next(table.Count)];
         }
 
         /// <summary>

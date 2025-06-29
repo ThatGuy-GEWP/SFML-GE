@@ -226,6 +226,26 @@
         }
 
         /// <summary>
+        /// Checks if the given gameObject is null or destroyed
+        /// </summary>
+        /// <param name="go"></param>
+        /// <returns>true if null or destroyed, false otherwise</returns>
+        public static bool IsNullOrDestroyed(GameObject? go)
+        {
+            if(go == null) return true;
+            return go.IsDestroyed();
+        }
+
+        /// <summary>
+        /// Checks if the GameObject is destroyed
+        /// </summary>
+        /// <returns>true if destroyed, false otherwise.</returns>
+        public bool IsDestroyed()
+        {
+            return DestroyQueued;
+        }
+
+        /// <summary>
         /// Updates the current GameObject, its <see cref="Components"/> and its <see cref="Children"/>
         /// </summary>
         public void Update()
