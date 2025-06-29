@@ -221,6 +221,12 @@
                 Children[i].DestroyNow();
             }
             Children.Clear();
+
+            if(Parent != null)
+            {
+                Parent.RemoveChild(this);
+            }
+
             ShouldCleanup = true;
             Enabled = false;
         }
