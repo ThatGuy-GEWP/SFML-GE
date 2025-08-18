@@ -52,6 +52,7 @@ namespace SFML_GE.System
         void OnResize(object? sender, SizeEventArgs args)
         {
             Resize(new Vector2u(args.Width, args.Height));
+            ResizeFinished?.Invoke(new Vector2i((int)args.Width, (int)args.Height));
         }
 
         void UnbindEvents()
@@ -141,6 +142,11 @@ namespace SFML_GE.System
         public event EventHandler<MouseWheelScrollEventArgs> MouseWheelScrolled = null!;
         /// <summary> Event handler for the Resized event </summary>
         public event EventHandler<SFML.Window.SizeEventArgs> Resized = null!;
+
+        /// <summary>
+        /// Calls once the window has been fully resized.
+        /// </summary>
+        public event Action<Vector2i> ResizeFinished = null!;
 
 
         /// <inheritdoc cref="RenderWindow.HasFocus"/>

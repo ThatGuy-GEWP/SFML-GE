@@ -12,6 +12,15 @@ namespace SFML_GE.System
     /// </summary>
     public static class DebugLogger
     {
+        static bool do_logging = false;
+        static string log_path = "";
+
+        public static void SetLogging(bool do_log, string logpath)
+        {
+            do_logging = do_log;
+            log_path = logpath;
+        }
+
         /// <summary> The line color for <see cref="LogInfo(string)"/> </summary>
         public static ConsoleColor InfoColor { get; set; } = ConsoleColor.Gray;
 
@@ -36,6 +45,17 @@ namespace SFML_GE.System
             set;
         } = true;
 
+        static uint log_events = 0;
+        static void Log(string message)
+        {
+            if (log_events == 0)
+            {
+                File.WriteAllText(log_path, "");
+            }
+            log_events++;
+            File.AppendAllLines(log_path, new string[] { message });
+        }
+
         /// <summary>
         /// Logs a message to the console with "Info" formatting.
         /// </summary>
@@ -44,7 +64,9 @@ namespace SFML_GE.System
         {
             if (!Enabled) { return; }
             Console.ForegroundColor = InfoColor;
-            Console.WriteLine("[Info] " + message);
+            string log_string = "[Info] " + message;
+            Console.WriteLine(log_string);
+            Log(log_string);
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -56,7 +78,9 @@ namespace SFML_GE.System
         {
             if (!Enabled) { return; }
             Console.ForegroundColor = PriorityInfoColor;
-            Console.WriteLine("[Info] " + message);
+            string log_string = "[Info] " + message;
+            Console.WriteLine(log_string);
+            Log(log_string);
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -68,7 +92,8 @@ namespace SFML_GE.System
         {
             if (!Enabled) { return; }
             Console.ForegroundColor = WarningColor;
-            Console.WriteLine("[Warning] " + message);
+            string log_string = "[Warning] " + message;
+            Console.WriteLine(log_string);
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -80,7 +105,9 @@ namespace SFML_GE.System
         {
             if (!Enabled) { return; }
             Console.ForegroundColor = ErrorColor;
-            Console.WriteLine("[Error] " + message);
+            string log_string = "[Error] " + message;
+            Console.WriteLine(log_string);
+            Log(log_string);
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -112,7 +139,13 @@ namespace SFML_GE.System
             LogError(output);
         }
 
-        internal static void InternalLogDebug(string message,
+        /// <summary>
+        /// Logs a debug message.
+        /// Debug messages automatically grab the line number of the caller,
+        /// as well as the memeber name, and file path, and adds it to the log.
+        /// </summary>
+        /// <param name="message">The message to log</param>
+        internal static void LogDebug(string message,
             [CallerLineNumber] int lineNumber = 0,
             [CallerMemberName] string memberName = "",
             [CallerFilePath] string sourceFilePath = "")
@@ -123,19 +156,10 @@ namespace SFML_GE.System
             string fileName = Path.GetFileName(sourceFilePath).Replace(".cs", "");
 
             Console.ForegroundColor = DebugColor;
-            Console.WriteLine($"[{lineNumber}: {fileName}.{memberName}()] {message}");
+            string log_string = $"[{lineNumber}: {fileName}.{memberName}()] {message}";
+            Console.WriteLine(log_string);
+            Log(log_string);
             Console.ForegroundColor = ConsoleColor.White;
-        }
-
-        /// <summary>
-        /// Logs a debug message.
-        /// Debug messages automatically grab the line number of the caller,
-        /// as well as the memeber name, and file path, and adds it to the log.
-        /// </summary>
-        /// <param name="message">The message to log</param>
-        public static void LogDebug(string message)
-        {
-            InternalLogDebug(message);
         }
 
         /// <inheritdoc cref="LogDebug(string)"/>

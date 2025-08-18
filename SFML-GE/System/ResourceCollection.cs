@@ -119,11 +119,11 @@ namespace SFML_GE.System
             {
                 if (extension == ".frag")
                 {
-                    Add(new ShaderResource(name + ".f", null, null, file));
+                    Add(new ShaderResource(name + ".frag", null, null, file));
                 }
                 if (extension == ".vert")
                 {
-                    Add(new ShaderResource(name + ".v", file, null, null));
+                    Add(new ShaderResource(name + ".vert", file, null, null));
                 }
             }
 
@@ -205,7 +205,7 @@ namespace SFML_GE.System
                 res.requests++;
                 return (T)res;
             }
-
+            DebugLogger.LogDebug($"Could not get resource with name \"{name}\"");
             return null;
         }
 
