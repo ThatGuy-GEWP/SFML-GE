@@ -48,6 +48,7 @@ namespace SFML_GE.System
         static uint log_events = 0;
         static void Log(string message)
         {
+            if (!do_logging) { return; }
             if (log_events == 0)
             {
                 File.WriteAllText(log_path, "");
