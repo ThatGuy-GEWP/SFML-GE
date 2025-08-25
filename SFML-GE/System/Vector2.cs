@@ -403,6 +403,25 @@ namespace SFML_GE.System
         }
 
         /// <summary>
+        /// Returns the dot product between this vector and another
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public readonly float Dot(in Vector2 other)
+        {
+            return (x * other.x) + (y *  other.y);
+        }
+
+        /// <summary>
+        /// Returns the dot product between two vectors
+        /// </summary>
+        /// <returns></returns>
+        public static float Dot(in Vector2 A, in Vector2 B)
+        {
+            return (A.x * B.x) + (A.y * B.y);
+        }
+
+        /// <summary>
         /// Converts this Vector2 to its string representation: 
         /// <c>
         /// "x,y"

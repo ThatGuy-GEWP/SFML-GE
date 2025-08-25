@@ -418,6 +418,8 @@ namespace SFML_GE.System
             rt.SetView(rt.DefaultView);
             if (overlayShader != null)
             {
+                overlayShader.Resource.SetUniform("screen_texture", drawSprite.Texture);
+                overlayShader.Resource.SetUniform("resolution", (Vector2)drawSprite.Texture.Size);
                 rt.Draw(drawSprite, (RenderStates)overlayShader);
             }
             else

@@ -3,6 +3,9 @@ using SFML_GE.Resources;
 
 namespace SFML_GE.System
 {
+    // SOMETHING IS MAKING EXTRA AUDIO FIX IT 
+
+
     /// <summary>
     /// An instance of a SFML <see cref="Sound"/>, managed by the <see cref="AudioManager"/>.
     /// If <see cref="allowCleanup"/> is <c>true</c>, the <see cref="AudioManager"/> will automatically
@@ -81,7 +84,7 @@ namespace SFML_GE.System
     /// </summary>
     public class AudioManager
     {
-        List<ManagedSound> activeSounds = new List<ManagedSound>(200);
+        List<ManagedSound> activeSounds = new List<ManagedSound>(1024);
         Scene ownerScene;
 
         /// <summary>
@@ -107,7 +110,7 @@ namespace SFML_GE.System
 
                 if (cur.Disposed) { continue; }
                 if (cur.sound == null) { continue; }
-                if (cur.sound.Status == SoundStatus.Stopped && cur.allowCleanup)
+                if ((cur.sound.Status == SoundStatus.Stopped) && cur.allowCleanup)
                 {
                     cur.Dispose();
                     continue;

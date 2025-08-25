@@ -1,4 +1,7 @@
-﻿namespace SFML_GE.System
+﻿using SFML.Graphics;
+using System.Runtime.CompilerServices;
+
+namespace SFML_GE.System
 {
     /// <summary>
     /// Contains a bunch of helper math functions for things like 
@@ -9,13 +12,44 @@
     public static class MathGE
     {
         /// <summary>
-        /// Lerps <paramref name="A"/> to <paramref name="B"/> lineraly using <paramref name="T"/>
+        /// Lerps a float <paramref name="A"/> to another float <paramref name="B"/> lineraly using <paramref name="T"/>
         /// </summary>
         /// <param name="A"></param>
         /// <param name="B"></param>
         /// <param name="T"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Lerp(float A, float B, float T)
+        {
+            return A + (B - A) * T;
+        }
+
+        /// <summary>
+        /// Lerps a color <paramref name="A"/> to another color <paramref name="B"/> lineraly using <paramref name="T"/>
+        /// </summary>
+        /// <param name="A"></param>
+        /// <param name="B"></param>
+        /// <param name="T"></param>
+        /// <returns></returns>
+        public static Color Lerp(Color A, Color B, float T)
+        {
+            byte r = (byte)MathF.Round(Lerp(A.R, B.R, T));
+            byte g = (byte)MathF.Round(Lerp(A.G, B.G, T));
+            byte b = (byte)MathF.Round(Lerp(A.B, B.B, T));
+            byte a = (byte)MathF.Round(Lerp(A.A, B.A, T));
+
+            return new Color(r, g, b, a);
+        }
+
+        /// <summary>
+        /// Lerps a float <paramref name="A"/> to another float <paramref name="B"/> lineraly using <paramref name="T"/>
+        /// </summary>
+        /// <param name="A"></param>
+        /// <param name="B"></param>
+        /// <param name="T"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double Lerp(double A, double B, double T)
         {
             return A + (B - A) * T;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -46,15 +47,28 @@ namespace SFML_GE.System
         } = true;
 
         static uint log_events = 0;
-        static void Log(string message)
+
+        static object file_locker = new object();
+
+        static void Log(string message, ConsoleColor col)
         {
-            if (!do_logging) { return; }
-            if (log_events == 0)
+            // prob not the best way of doing it, but it works!
+            // also locks the output!
+            lock (file_locker)
             {
-                File.WriteAllText(log_path, "");
+                if (!do_logging) { return; }
+
+                if (log_events == 0)
+                {
+                    File.WriteAllText(log_path, message);
+                }
+                log_events++;
+                File.AppendAllLines(log_path, new string[] { message });
+
+                Console.ForegroundColor = col;
+                Console.WriteLine(message);
+                Console.ForegroundColor = ConsoleColor.White;
             }
-            log_events++;
-            File.AppendAllLines(log_path, new string[] { message });
         }
 
         /// <summary>
@@ -64,11 +78,8 @@ namespace SFML_GE.System
         public static void LogInfo(string message)
         {
             if (!Enabled) { return; }
-            Console.ForegroundColor = InfoColor;
             string log_string = "[Info] " + message;
-            Console.WriteLine(log_string);
-            Log(log_string);
-            Console.ForegroundColor = ConsoleColor.White;
+            Log(log_string, InfoColor);
         }
 
         /// <summary>
@@ -78,11 +89,8 @@ namespace SFML_GE.System
         public static void LogInfoPriority(string message)
         {
             if (!Enabled) { return; }
-            Console.ForegroundColor = PriorityInfoColor;
             string log_string = "[Info] " + message;
-            Console.WriteLine(log_string);
-            Log(log_string);
-            Console.ForegroundColor = ConsoleColor.White;
+            Log(log_string, PriorityInfoColor);
         }
 
         /// <summary>
@@ -92,10 +100,8 @@ namespace SFML_GE.System
         public static void LogWarning(string message)
         {
             if (!Enabled) { return; }
-            Console.ForegroundColor = WarningColor;
             string log_string = "[Warning] " + message;
-            Console.WriteLine(log_string);
-            Console.ForegroundColor = ConsoleColor.White;
+            Log(log_string, WarningColor);
         }
 
         /// <summary>
@@ -105,11 +111,8 @@ namespace SFML_GE.System
         public static void LogError(string message)
         {
             if (!Enabled) { return; }
-            Console.ForegroundColor = ErrorColor;
             string log_string = "[Error] " + message;
-            Console.WriteLine(log_string);
-            Log(log_string);
-            Console.ForegroundColor = ConsoleColor.White;
+            Log(log_string, ErrorColor);
         }
 
         /// <inheritdoc cref="LogInfo(string)"/>
@@ -146,28 +149,42 @@ namespace SFML_GE.System
         /// as well as the memeber name, and file path, and adds it to the log.
         /// </summary>
         /// <param name="message">The message to log</param>
-        internal static void LogDebug(string message,
-            [CallerLineNumber] int lineNumber = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "")
+        internal static void LogDebug(string message, bool show_stacktrace = true)
         {
             if (!Enabled) { return; }
 
+            string log_string = "[Debug] \"" + message;
 
-            string fileName = Path.GetFileName(sourceFilePath).Replace(".cs", "");
+            if(show_stacktrace)
+            {
+                StackTrace stackTrace = new StackTrace();
+                StackFrame[] frames = stackTrace.GetFrames();
 
-            Console.ForegroundColor = DebugColor;
-            string log_string = $"[{lineNumber}: {fileName}.{memberName}()] {message}";
-            Console.WriteLine(log_string);
-            Log(log_string);
-            Console.ForegroundColor = ConsoleColor.White;
+                log_string += "\"\n Stack Trace :";
+
+                foreach (StackFrame frame in frames)
+                {
+                    if (frame.GetMethod() == null) { break; }
+
+
+                    string class_name = frame.GetMethod()!.DeclaringType!.Name;
+
+                    if (class_name == typeof(DebugLogger).Name) { continue; }
+
+                    string method_name = frame.GetMethod()!.Name;
+
+                    log_string += $"\n\t-> {class_name}.{method_name}()";
+                }
+            }
+
+            Log(log_string, DebugColor);
         }
 
         /// <inheritdoc cref="LogDebug(string)"/>
-        public static void LogDebug(object message)
+        public static void LogDebug(object message, bool show_stacktrace = true)
         {
             string output = message.ToString() ?? "null";
-            LogDebug(output);
+            LogDebug(output, show_stacktrace);
         }
     }
 }

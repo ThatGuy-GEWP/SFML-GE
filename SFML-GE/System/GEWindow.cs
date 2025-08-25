@@ -44,6 +44,7 @@ namespace SFML_GE.System
             _defaultView = app.DefaultView;
         }
 
+
         void Resize(Vector2u newSize)
         {
             _defaultView = new View(new FloatRect(0, 0, newSize.X, newSize.Y));
@@ -87,6 +88,9 @@ namespace SFML_GE.System
             app.Resized += Resized;
 
             app.Resized += OnResize;
+
+            app.SetVerticalSyncEnabled(_vsync_state);
+            app.SetFramerateLimit(frame_rate_limit);
         }
 
 
@@ -276,6 +280,7 @@ namespace SFML_GE.System
             app.SetActive(active);
         }
 
+        uint frame_rate_limit = 0;
         /// <summary>
         /// Limit the framerate to a maximum fixed frequency
         /// </summary>
@@ -283,6 +288,7 @@ namespace SFML_GE.System
         public void SetFramerateLimit(uint framerate)
         {
             app.SetFramerateLimit(framerate);
+            frame_rate_limit = framerate;
         }
 
         /// <summary>
@@ -319,12 +325,15 @@ namespace SFML_GE.System
             app.SetMouseCursorVisible(visible);
         }
 
+        bool _vsync_state = false;
+
         /// <summary>
         /// Enable / disable vertical synchronization
         /// </summary>
         /// <param name="enabled"></param>
         public void SetVerticalSyncEnabled(bool enabled)
         {
+            _vsync_state = enabled;
             app.SetVerticalSyncEnabled(enabled);
         }
 
@@ -358,7 +367,7 @@ namespace SFML_GE.System
 
 
         /// <inheritdoc/>
-        public Vector2u Size { get { return app.Size; } }
+        public Vector2u Size { get { return app.Size; } set { app.Size = value; } }
         /// <inheritdoc/>
         public bool IsSrgb { get { return app.IsSrgb; } }
 
