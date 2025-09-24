@@ -56,14 +56,17 @@ namespace SFML_GE.System
             // also locks the output!
             lock (file_locker)
             {
-                if (!do_logging) { return; }
-
-                if (log_events == 0)
+                if (do_logging) 
                 {
-                    File.WriteAllText(log_path, message);
+                    if (log_events == 0)
+                    {
+                        File.WriteAllText(log_path, message);
+                    }
+                    log_events++;
+                    File.AppendAllLines(log_path, new string[] { message });
                 }
-                log_events++;
-                File.AppendAllLines(log_path, new string[] { message });
+
+                
 
                 Console.ForegroundColor = col;
                 Console.WriteLine(message);

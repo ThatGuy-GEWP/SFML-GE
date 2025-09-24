@@ -106,5 +106,42 @@ namespace SFML_GE.System
         {
             return Random.Shared.Next(0, 2) == 0;
         }
+
+        /// <summary>
+        /// Returns a <see cref="Vector2"/> with X and Y each in a random range of (0.0 - 1.0)
+        /// </summary>
+        /// <returns></returns>
+        public static Vector2 NextVector()
+        {
+            return new Vector2(NextSingle(), NextSingle());
+        }
+
+        /// <summary>
+        /// Returns a <see cref="Vector2"/> with X and Y each in a random range of (<paramref name="min"/> - <paramref name="max"/>)
+        /// </summary>
+        /// <returns></returns>
+        public static Vector2 NextVector(float min, float max)
+        {
+            return new Vector2(NextSingle(min, max), NextSingle(min, max));
+        }
+
+        /// <summary>
+        /// Returns a <see cref="Vector2"/> with X in a range of (<paramref name="minX"/> - <paramref name="maxX"/>) and Y in a range of (<paramref name="minY"/> and <paramref name="maxY"/>)
+        /// </summary>
+        /// <returns></returns>
+        public static Vector2 NextVector(float minX, float maxX, float minY, float maxY)
+        {
+            return new Vector2(NextSingle(minX, maxX), NextSingle(minY, maxY));
+        }
+
+        /// <summary>
+        /// Returns a Vector2 facing in a random normalized direction, from -1 to 1 in both X and Y
+        /// </summary>
+        /// <returns></returns>
+        public static Vector2 NextVectorDirection()
+        {
+            // rotating a 1 length vector here as im *fairly* sure the result is still normalized while not using sqrt (because sqrt is evil and slow)
+            return Vector2.Rotate(new Vector2(1, 0), RandomGen.NextSingle(360));
+        }
     }
 }

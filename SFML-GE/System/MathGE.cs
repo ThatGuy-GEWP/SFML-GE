@@ -99,6 +99,7 @@ namespace SFML_GE.System
         /// <param name="toMin">The target Minimum</param>
         /// <param name="toMax">The target Maximum</param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Map(float value, float fromMin, float fromMax, float toMin, float toMax)
         {
             return (value - fromMin) / (fromMax - fromMin) * (toMax - toMin) + toMin;
@@ -111,6 +112,7 @@ namespace SFML_GE.System
         /// <param name="min">The minimum the value can be</param>
         /// <param name="max">The max the value can be</param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Clamp(float value, float min, float max)
         {
             return Math.Min(MathF.Max(value, min), max);
@@ -120,6 +122,7 @@ namespace SFML_GE.System
         /// Converts degrees to radians
         /// </summary>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DegToRad(float degrees)
         {
             return degrees * (MathF.PI / 180); // Convert degrees to radians
@@ -130,6 +133,7 @@ namespace SFML_GE.System
         /// </summary>
         /// <param name="x"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float ZeroSin(float x)
         {
             return MathF.Sin(x) / 2f + 0.5f;
@@ -140,6 +144,7 @@ namespace SFML_GE.System
         /// </summary>
         /// <param name="x"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float ZeroCos(float x)
         {
             return MathF.Cos(x) / 2f + 0.5f;
@@ -150,9 +155,56 @@ namespace SFML_GE.System
         /// </summary>
         /// <param name="radians"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float RadToDeg(float radians)
         {
             return radians * (180 / MathF.PI); // Convert radians to degrees
+        }
+
+        // exists solely since the C# % isnt fucking mod but the remainder and is useless on negative numbers
+        // most stupid mind numbing decision the C# dev team has made yet
+        // and thats not even mentioning async functions
+
+        /// <summary>
+        /// The modulo operator of a float, which returns the remainder of a division operation between two values
+        /// </summary>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Mod(float a, float b)
+        {
+            return a - b * MathF.Floor(a / b);
+        }
+
+        /// <summary>
+        /// Multiplies a SFML Color by a float.
+        /// </summary>
+        /// <param name="color">the color to multiply</param>
+        /// <param name="by">the number to multiply the float by</param>
+        /// <param name="overflow">if true, each color value will overflow back around, false and it will be clamped</param>
+        /// <returns></returns>
+        public static Color MultiplyColor(Color color, float by, bool multiply_alpha = true, bool overflow = false)
+        {
+            float r = ((int)color.R) * by;
+            float g = ((int)color.G) * by;
+            float b = ((int)color.B) * by;
+            float a = multiply_alpha ? ((int)color.A) * by : (int)color.A;
+
+            if(overflow)
+            {
+                r = MathF.Round(Mod(r, 256));
+                g = MathF.Round(Mod(g, 256));
+                b = MathF.Round(Mod(b, 256));
+                a = MathF.Round(Mod(a, 256));
+            }
+            else
+            {
+                r = MathGE.Clamp(r, 0, 255);
+                g = MathGE.Clamp(g, 0, 255);
+                b = MathGE.Clamp(b, 0, 255);
+                a = MathGE.Clamp(a, 0, 255);
+            }
+
+            return new Color((byte)r, (byte)g, (byte)b, (byte)a);
         }
     }
 }

@@ -69,6 +69,8 @@ namespace SFML_GE.Debugging
         /// <param name="scale">The length of the axis lines</param>
         public static void DrawAxis(Vector2 atPoint, float rotation = 0f, float scale = 2.5f)
         {
+            if(LinkedProject == null) { return; }
+
             Vector2 up = Vector2.Rotate(new Vector2(0, -scale), rotation);
             up = atPoint + up;
             Vector2 right = Vector2.Rotate(new Vector2(scale, 0), rotation);
@@ -85,6 +87,60 @@ namespace SFML_GE.Debugging
                     new Vertex(atPoint, Color.Green),
                     new Vertex(up, Color.Green)
                 }, PrimitiveType.Lines);
+            });
+        }
+
+        /// <summary>
+        /// Draws the lines of a rectangle at the given position, with a given size.
+        /// </summary>
+        /// <param name="position">Position of the top left corner of the rectangle</param>
+        /// <param name="size">Width/height of the rectangle</param>
+        /// <param name="color">Color of the lines of the rectangle</param>
+        public static void DrawRect(Vector2 position, Vector2 size, Color color)
+        {
+            if (LinkedProject == null) { return; }
+
+            GizmoCalls.Add((rt) =>
+            {
+                rt.Draw(new Vertex[] {
+                    new Vertex(position, color),
+                    new Vertex(position + new Vector2(size.x, 0), color),
+                    new Vertex(position, color),
+                    new Vertex(position + new Vector2(0, size.y), color),
+                    new Vertex(position + new Vector2(0, size.y), color),
+                    new Vertex(position + new Vector2(size.x, size.y), color),
+                    new Vertex(position + new Vector2(size.x, 0), color),
+                    new Vertex(position + new Vector2(size.x, size.y), color)
+                }, PrimitiveType.Lines);
+            });
+        }
+
+        /// <summary>
+        /// Draws a white point at the given position
+        /// </summary>
+        /// <param name="point">The position to draw the point</param>
+        public static void DrawPoint(Vector2 point)
+        {
+            if (LinkedProject == null) { return; }
+
+            GizmoCalls.Add((rt) =>
+            {
+                rt.Draw(new Vertex[] { new Vertex(point, Color.White) }, PrimitiveType.Points);
+            });
+        }
+
+        /// <summary>
+        /// Draws a point with the given color
+        /// </summary>
+        /// <param name="point">The position to draw the point</param>
+        /// <param name="color">The color of the point</param>
+        public static void DrawPoint(Vector2 point, Color color)
+        {
+            if (LinkedProject == null) { return; }
+
+            GizmoCalls.Add((rt) =>
+            {
+                rt.Draw(new Vertex[] { new Vertex(point, color) }, PrimitiveType.Points);
             });
         }
 

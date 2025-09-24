@@ -19,6 +19,9 @@ namespace Testing
 
             Vector2 lerped = Vector2.Lerp(new Vector2(0, 0), new Vector2(5, 5), 0.5f);
             Assert.IsTrue(lerped.Equals(new Vector2(2.5f, 2.5f)), "Lerp is incorrect!");
+
+            Vector2 rotated = Vector2.Rotate(new Vector2(1, 0), 90).Round(4); // rounding to avoid floating point precision issues
+            Assert.IsTrue(rotated.Equals(new Vector2(0, 1)), "Rotate is incorrect!");
         }
 
     }
