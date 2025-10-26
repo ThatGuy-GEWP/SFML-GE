@@ -27,7 +27,12 @@ namespace SFML_GE.Components
         public Vector2 offset = new Vector2(0.0f, 0.0f);
 
         /// <summary>
-        /// If true, the <see cref="size"/> will match the <see cref="Texture"/>'s size
+        /// A sub-section of the texture to render, in pixels.
+        /// </summary>
+        public IntRect TextureRect = new IntRect(0,0, 100, 100);
+
+        /// <summary>
+        /// If true, the <see cref="size"/> will match the <see cref="Texture"/>'s size, and so will its <see cref="TextureRect"/>
         /// </summary>
         public bool fitTexture = true;
 
@@ -71,6 +76,7 @@ namespace SFML_GE.Components
         {
             size = new Vector2(sizeX, sizeY);
             fitTexture = false;
+            TextureRect = new IntRect(0, 0, (int)size.x, (int)size.y);
         }
 
         /// <summary>
@@ -81,6 +87,7 @@ namespace SFML_GE.Components
         {
             size = Size;
             fitTexture = false;
+            TextureRect = new IntRect(0, 0, (int)size.x, (int)size.y);
         }
 
         /// <summary>
@@ -91,6 +98,7 @@ namespace SFML_GE.Components
         public Sprite2D(TextureResource Texture)
         {
             this.Texture = Texture;
+            TextureRect = new IntRect(0, 0, (int)Texture.Resource.Size.X, (int)Texture.Resource.Size.Y);
             fitTexture = true;
         }
 
@@ -105,6 +113,7 @@ namespace SFML_GE.Components
             size = Size;
             fitTexture = false;
             this.Texture = Texture;
+            TextureRect = new IntRect(0, 0, (int)size.x, (int)size.y);
         }
 
         /// <summary>
@@ -117,6 +126,7 @@ namespace SFML_GE.Components
             size = Size;
             fitTexture = false;
             origin = Origin;
+            TextureRect = new IntRect(0, 0, (int)size.x, (int)size.y);
         }
 
         /// <summary>
@@ -147,15 +157,24 @@ namespace SFML_GE.Components
             {
                 Texture = Project.GetResource<TextureResource>("DefaultSprite")!;
             }
-            if (fitTexture) { size = new Vector2(Texture.Resource.Size.X, Texture.Resource.Size.Y); }
             shape.Texture = Texture.Resource;
-            shape.TextureRect = new IntRect(0, 0, (int)Texture.Resource.Size.X, (int)Texture.Resource.Size.Y);
+            shape.TextureRect = TextureRect;
+
+            if (fitTexture)
+            {
+                shape.TextureRect = new IntRect(0, 0, (int)Texture.Resource.Size.X, (int)Texture.Resource.Size.Y);
+                size = new Vector2(Texture.Resource.Size.X, Texture.Resource.Size.Y);
+            }
+
             shape.Position = gameObject.transform.GlobalPosition + offset;
             shape.Size = size;
             shape.Origin = size * origin;
+
             shape.FillColor = fillColor;
             shape.OutlineColor = outlineColor;
+
             shape.OutlineThickness = outlineThickness;
+
             shape.Rotation = gameObject.transform.rotation;
             rt.Draw(shape);
         }

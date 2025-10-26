@@ -174,6 +174,11 @@ namespace SFML_GE.GUI
         Sprite drawSprite = new Sprite();
         protected override void PostPass(RenderTarget rt)
         {
+            if(renderTarget == null)
+            {
+                return;
+            }
+
             renderTarget.Clear(Color.Transparent);
 
             embeddedChildren.Sort((x, y) => { return x.gameObject.ZOrder - y.gameObject.ZOrder; });

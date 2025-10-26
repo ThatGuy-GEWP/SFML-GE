@@ -52,6 +52,8 @@ namespace SFML_GE.System
 
         static void Log(string message, ConsoleColor col)
         {
+            if(Enabled == false) { return; }
+
             // prob not the best way of doing it, but it works!
             // also locks the output!
             lock (file_locker)

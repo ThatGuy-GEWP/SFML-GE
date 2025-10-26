@@ -69,6 +69,7 @@ namespace SFML_GE.System
                     file.ToLower().EndsWith(".wav") ||
                     file.ToLower().EndsWith(".ogg") ||
                     file.ToLower().EndsWith(".ttf") ||
+                    file.ToLower().EndsWith(".otf") ||
                     file.ToLower().EndsWith(".vert") ||
                     file.ToLower().EndsWith(".frag")
                     )
@@ -127,7 +128,7 @@ namespace SFML_GE.System
                 }
             }
 
-            if (extension == ".ttf")
+            if (extension == ".ttf" || extension == ".otf")
             {
                 Add(new FontResource(file, name));
                 return true;
