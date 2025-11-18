@@ -1,11 +1,9 @@
 ﻿using SFML.Audio;
+using SFML.System;
 using SFML_GE.Resources;
 
 namespace SFML_GE.System
 {
-    // SOMETHING IS MAKING EXTRA AUDIO FIX IT 
-
-
     /// <summary>
     /// An instance of a SFML <see cref="Sound"/>, managed by the <see cref="AudioManager"/>.
     /// If <see cref="allowCleanup"/> is <c>true</c>, the <see cref="AudioManager"/> will automatically
@@ -18,11 +16,92 @@ namespace SFML_GE.System
         /// The <see cref="Sound"/> within this instance
         /// </summary>
         public Sound sound;
+        
         /// <summary>
         /// The name of this sound
         /// </summary>
         public string name;
 
+        /// <summary>
+        /// When false, the sound will be played from its position in the world.
+        /// When true, the sound will be played relative to the Camera.
+        /// </summary>
+        public bool RelativeToListener
+        {
+            get { return sound.RelativeToListener; }
+            set { sound.RelativeToListener = value; }
+        }
+
+        /// <summary>
+        /// The volume of this sound, from 0f to 1f.
+        /// </summary>
+        public float Volume
+        {
+            get { return sound.Volume; }
+            set { sound.Volume = value; }
+        }
+
+        /// <summary>
+        /// The pitch of this sound.
+        /// </summary>
+        public float Pitch
+        {
+            get { return sound.Pitch; }
+            set { sound.Pitch = value; }
+        }
+
+        /// <summary>
+        /// Current playing position of the sound, can be changed while paused or playing.
+        /// </summary>
+        public Time PlayingOffset
+        {
+            get { return sound.PlayingOffset; }
+            set { sound.PlayingOffset = value; }
+        }
+
+        /// <summary>
+        /// The position of this sound.
+        /// see <see cref="RelativeToListener"/> to change how this position is used.
+        /// </summary>
+        public Vector2 Position
+        {
+            get { return new Vector2(sound.Position.X, sound.Position.Z); }
+            set { sound.Position = new Vector3f(value.x, 0, value.y); }
+        }
+
+        public float MinDistance
+        {
+            get { return sound.MinDistance; }
+            set { sound.MinDistance = value; }
+        }
+
+        /// <summary>
+        /// The Attenuation of this sound, controls how quickly a sounds volume drops off over distance.
+        /// 0 Would make the sound play at the same volume regardless of distance, 100 would cause the sound to drop off very quickly over distance.
+        /// Default value is 1.
+        /// </summary>
+        public float Attenuation
+        {
+            get { return sound.Attenuation; }
+            set { sound.Attenuation = value; }
+        }
+
+        /// <summary>
+        /// Controls if the sound loops once it finishes or not.
+        /// </summary>
+        public bool Loop
+        {
+            get { return sound.Loop; }
+            set { sound.Loop = value; }
+        }
+
+        /// <summary>
+        /// The current status of this sound, could be Paused, Playing or Stopped
+        /// </summary>
+        public SoundStatus Status
+        {
+            get { return sound.Status; }
+        }
 
         /// <summary>
         /// false while the sound has yet to be disposed
@@ -63,7 +142,16 @@ namespace SFML_GE.System
         /// <summary> Sets the volume of the current <see cref="sound"/> </summary>
         public void SetVolume(float volume)
         {
-            sound.Volume = volume;
+            this.Volume = volume;
+        }
+
+        /// <summary>
+        /// Sets the position of the current <see cref="sound"/>
+        /// </summary>
+        /// <param name="position"></param>
+        public void SetPosition(Vector2 position)
+        {
+            this.Position = position;
         }
 
         /// <summary>

@@ -116,6 +116,19 @@ namespace SFML_GE.Debugging
         }
 
         /// <summary>
+        /// Draws the given sprite on the gizmo layer.
+        /// </summary>
+        /// <param name="spr"></param>
+        public static void DrawSprite(Sprite spr, Vector2 position)
+        {
+            GizmoCalls.Add((rt) =>
+            {
+                spr.Position = position;
+                rt.Draw(spr);
+            });
+        }
+
+        /// <summary>
         /// Draws a white point at the given position
         /// </summary>
         /// <param name="point">The position to draw the point</param>

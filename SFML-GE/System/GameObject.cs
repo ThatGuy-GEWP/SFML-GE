@@ -316,6 +316,21 @@
         }
 
         /// <summary>
+        /// Finalizes changes the parent of this gameObject.
+        /// </summary>
+        /// <param name="to"></param>
+        internal void ParentChanged(GameObject? to)
+        {
+            this.Parent = to;
+
+            foreach (var comp in Components)
+            {
+                comp.ParentChanged();
+            }
+        }
+
+
+        /// <summary>
         /// Adds a child to this gameObject, returns the child.
         /// If called twice with the same child, it will still return the child
         /// </summary>
@@ -346,6 +361,9 @@
 
             child.Parent = this;
             Children.Add(child);
+
+            child.ParentChanged(this);
+
             return child;
         }
 
@@ -425,6 +443,7 @@
         {
             if (Children.Remove(child))
             {
+                child.ParentChanged(null);
                 return child;
             }
             return null;

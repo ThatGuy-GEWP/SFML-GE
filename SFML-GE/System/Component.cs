@@ -103,5 +103,8 @@
 
         /// <summary> Called when this <see cref="gameObject"/>'s scene is loaded</summary>
         public virtual void OnLoad() { return; }
+
+        /// <summary> Called when the <see cref="GameObject.Parent"/> this component is attached to changes. </summary>
+        public virtual void ParentChanged() { return; }
     }
 }

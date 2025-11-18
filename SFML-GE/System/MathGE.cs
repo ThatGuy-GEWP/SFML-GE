@@ -180,6 +180,7 @@ namespace SFML_GE.System
         /// </summary>
         /// <param name="color">the color to multiply</param>
         /// <param name="by">the number to multiply the float by</param>
+        /// <param name="multiply_alpha">if false, alpha wont be multiplied</param>
         /// <param name="overflow">if true, each color value will overflow back around, false and it will be clamped</param>
         /// <returns></returns>
         public static Color MultiplyColor(Color color, float by, bool multiply_alpha = true, bool overflow = false)
@@ -205,6 +206,55 @@ namespace SFML_GE.System
             }
 
             return new Color((byte)r, (byte)g, (byte)b, (byte)a);
+        }
+
+        /// <summary>
+        /// Multiplies a SFML Color by another SFML Color.
+        /// </summary>
+        /// <param name="color">the color to multiply</param>
+        /// <param name="by">the color to multiply the float by</param>
+        /// <param name="multiply_alpha">if false, alpha wont be multiplied</param>
+        /// <param name="overflow">if true, each color value will overflow back around, false and it will be clamped</param>
+        /// <returns></returns>
+        public static Color MultiplyColor(Color color, Color by, bool multiply_alpha = true, bool overflow = false)
+        {
+            float r = ((float)color.R / 255f) * ((float)by.R / 255f);
+            float g = ((float)color.G / 255f) * ((float)by.G / 255f);
+            float b = ((float)color.B / 255f) * ((float)by.B / 255f);
+            float a = multiply_alpha ? ((float)color.A / 255f) * ((float)by.A / 255f) : color.A;
+
+            if (overflow)
+            {
+                r = MathF.Round(Mod(r * 255, 256));
+                g = MathF.Round(Mod(g * 255, 256));
+                b = MathF.Round(Mod(b * 255, 256));
+                a = MathF.Round(Mod(a * 255, 256));
+            }
+            else
+            {
+                r = MathGE.Clamp(r * 255, 0, 255);
+                g = MathGE.Clamp(g * 255, 0, 255);
+                b = MathGE.Clamp(b * 255, 0, 255);
+                a = MathGE.Clamp(a * 255, 0, 255);
+            }
+
+            return new Color((byte)r, (byte)g, (byte)b, (byte)a);
+        }
+
+        /// <summary>
+        /// Adds two colors to each other, clamps the resulting values at 255.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="to_add"></param>
+        /// <returns></returns>
+        public static Color AddColor(Color color, Color to_add)
+        {
+            byte r = (byte)MathGE.Clamp((color.R) + (to_add.R), 0, 255);
+            byte g = (byte)MathGE.Clamp((color.G) + (to_add.G), 0, 255);
+            byte b = (byte)MathGE.Clamp((color.B) + (to_add.B), 0, 255);
+            byte a = (byte)MathGE.Clamp((color.A) + (to_add.A), 0, 255);
+
+            return new Color(r, g, b, a);
         }
     }
 }

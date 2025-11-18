@@ -147,10 +147,11 @@ namespace SFML_GE.System
         /// <summary>
         /// Instances a given <paramref name="prefab"/>
         /// </summary>
-        public GameObject? InstancePrefab(Prefab prefab)
+        public GameObject? InstancePrefab(Prefab prefab, string? withname = null)
         {
             GameObject? instance = prefab.CreatePrefab?.Invoke(Project, this);
             if (instance == null) { return null; }
+            instance.name = withname == null ? instance.name : withname;
             root.AddChild(instance);
             gameObjects.Add(instance);
             return instance;

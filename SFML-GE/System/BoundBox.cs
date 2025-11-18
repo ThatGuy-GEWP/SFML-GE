@@ -110,14 +110,14 @@ namespace SFML_GE.System
         /// <summary>
         /// Creates a BoundBox from some <see cref="Vector2"/>'s
         /// </summary>
-        /// <param name="Position">The Top left point of this bound box.</param>
-        /// <param name="Size">The size of this bound box from the point <paramref name="Position"/></param>
-        public BoundBox(Vector2 Position, Vector2 Size)
+        /// <param name="TopLeftPosition">The Top left point of this bound box.</param>
+        /// <param name="Size">The size of this bound box from the point <paramref name="TopLeftPosition"/></param>
+        public BoundBox(Vector2 TopLeftPosition, Vector2 Size)
         {
-            Vector2 TopLeft = Position;
-            Vector2 TopRight = Position + new Vector2(Size.x, 0);
-            Vector2 BottomRight = Position + Size;
-            Vector2 BottomLeft = Position + new Vector2(0, Size.y);
+            Vector2 TopLeft = TopLeftPosition;
+            Vector2 TopRight = TopLeftPosition + new Vector2(Size.x, 0);
+            Vector2 BottomRight = TopLeftPosition + Size;
+            Vector2 BottomLeft = TopLeftPosition + new Vector2(0, Size.y);
 
             Rect = new FloatRect(TopLeft.x, TopLeft.y, TopRight.x - TopLeft.x, BottomLeft.y - TopLeft.y);
             this.TopLeft = TopLeft;

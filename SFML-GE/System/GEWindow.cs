@@ -176,6 +176,16 @@ namespace SFML_GE.System
         }
 
         /// <summary>
+        /// Create the window with default style and creation settings
+        /// </summary>
+        /// <param name="width">Width of the window, in pixels</param>
+        /// <param name="height">Height of the window, in pixels</param>
+        /// <param name="title">Title of the window</param>
+        public GEWindow(uint width, uint height, string title = "SFML-GE Window") : this(new VideoMode(width, height), title)
+        {
+        }
+
+        /// <summary>
         /// Create the window with default creation settings
         /// </summary>
         /// <param name="mode">Video mode to use</param>
