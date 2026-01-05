@@ -64,6 +64,11 @@ namespace SFML_GE.System
         public static readonly Vector2 zero = new Vector2(0f, 0f);
 
         /// <summary>
+        /// A Vector2 that equals (1, 1)
+        /// </summary>
+        public static readonly Vector2 one = new Vector2(1f, 1f);
+
+        /// <summary>
         /// Converts a Vector2 to a new (float, float) tuple
         /// </summary>
         public static (float, float) ToTuple(in Vector2 vec)

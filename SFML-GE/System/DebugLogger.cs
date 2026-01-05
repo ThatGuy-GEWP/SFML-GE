@@ -16,6 +16,11 @@ namespace SFML_GE.System
         static bool do_logging = false;
         static string log_path = "";
 
+        /// <summary>
+        /// Enables or disables the DebugLogger from writing to a log file
+        /// </summary>
+        /// <param name="do_log">Enables or disables logging to an external file</param>
+        /// <param name="logpath">The path to the file including extension to log to, this will clear the file!</param>
         public static void SetLogging(bool do_log, string logpath)
         {
             do_logging = do_log;
@@ -62,7 +67,7 @@ namespace SFML_GE.System
                 {
                     if (log_events == 0)
                     {
-                        File.WriteAllText(log_path, message);
+                        File.WriteAllBytes(log_path, new byte[] {});
                     }
                     log_events++;
                     File.AppendAllLines(log_path, new string[] { message });

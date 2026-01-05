@@ -2,10 +2,12 @@
 using SFML_GE.System;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Color = SFML.Graphics.Color;
 
 namespace SFML_GE.Debugging
 {
@@ -25,6 +27,13 @@ namespace SFML_GE.Debugging
         private static List<Action<RenderTarget>> GizmoCalls = new List<Action<RenderTarget>>();
 
 
+        static bool _enabled = false;
+
+        /// <summary>
+        /// Toggles if gizmo draw calls will actually happen!
+        /// </summary>
+        public static bool Enabled { get { return _enabled; } set { _enabled = value; } }
+
         internal static void LinkToProject(Project proj)
         {
             LinkedProject = proj;
@@ -37,7 +46,7 @@ namespace SFML_GE.Debugging
         /// <param name="to">Target to render to.</param>
         internal static void RenderInternalCalls(RenderTarget to)
         {
-            if(LinkedProject == null) { GizmoCalls.Clear(); return; }
+            if(LinkedProject == null || !_enabled) { GizmoCalls.Clear(); return; }
             for(int i = 0; i < GizmoCalls.Count; i++)
             {
                 GizmoCalls[i].Invoke(to);
@@ -52,7 +61,7 @@ namespace SFML_GE.Debugging
         /// <param name="endPoint">The ending point</param>
         public static void DrawLine(Vector2 startPoint, Vector2 endPoint)
         {
-            if (LinkedProject == null) { return; }
+            if (LinkedProject == null || !_enabled) { return; }
 
             GizmoCalls.Add((rt) =>
             {
@@ -60,6 +69,21 @@ namespace SFML_GE.Debugging
             });
         }
 
+        /// <summary>
+        /// Draws a line between two points.
+        /// </summary>
+        /// <param name="startPoint">The starting point</param>
+        /// <param name="endPoint">The ending point</param>
+        /// <param name="color">The color of the line</param>
+        public static void DrawLine(Vector2 startPoint, Vector2 endPoint, Color color)
+        {
+            if (LinkedProject == null || !_enabled) { return; }
+
+            GizmoCalls.Add((rt) =>
+            {
+                rt.Draw(new Vertex[] { new Vertex(startPoint, color), new Vertex(endPoint, color) }, PrimitiveType.Lines);
+            });
+        }
 
         /// <summary>
         /// Draws two lines representing the X axis and Y axis
@@ -69,7 +93,7 @@ namespace SFML_GE.Debugging
         /// <param name="scale">The length of the axis lines</param>
         public static void DrawAxis(Vector2 atPoint, float rotation = 0f, float scale = 2.5f)
         {
-            if(LinkedProject == null) { return; }
+            if (LinkedProject == null || !_enabled) { return; }
 
             Vector2 up = Vector2.Rotate(new Vector2(0, -scale), rotation);
             up = atPoint + up;
@@ -98,7 +122,7 @@ namespace SFML_GE.Debugging
         /// <param name="color">Color of the lines of the rectangle</param>
         public static void DrawRect(Vector2 position, Vector2 size, Color color)
         {
-            if (LinkedProject == null) { return; }
+            if (LinkedProject == null || !_enabled) { return; }
 
             GizmoCalls.Add((rt) =>
             {
@@ -116,11 +140,31 @@ namespace SFML_GE.Debugging
         }
 
         /// <summary>
+        /// Draws the outline of a rectangle using the given <see cref="RectangleShape"/>.
+        /// Its important to note this does not actually draw the rectangle itself,
+        /// only passes its size, position and color into a local scope and calls <see cref="Gizmo.DrawRect(Vector2, Vector2, Color)"/>.
+        /// This function is mostly just for convenience.
+        /// </summary>
+        /// <param name="rs">the rectangle to use for drawing</param>
+        public static void DrawRect(RectangleShape rs)
+        {
+            if (LinkedProject == null || !_enabled) { return; }
+
+            Vector2 position = rs.Position; // hopefully pulls away from the rect refrence.
+            Vector2 size = rs.Size; // hopefully pulls away from the rect refrence.
+            Color color = rs.FillColor; // hopefully pulls away from the rect refrence.
+
+            DrawRect(position, size, color);
+        }
+
+        /// <summary>
         /// Draws the given sprite on the gizmo layer.
         /// </summary>
         /// <param name="spr"></param>
         public static void DrawSprite(Sprite spr, Vector2 position)
         {
+            if (LinkedProject == null || !_enabled) { return; }
+
             GizmoCalls.Add((rt) =>
             {
                 spr.Position = position;
@@ -134,7 +178,7 @@ namespace SFML_GE.Debugging
         /// <param name="point">The position to draw the point</param>
         public static void DrawPoint(Vector2 point)
         {
-            if (LinkedProject == null) { return; }
+            if (LinkedProject == null || !_enabled) { return; }
 
             GizmoCalls.Add((rt) =>
             {
@@ -149,7 +193,7 @@ namespace SFML_GE.Debugging
         /// <param name="color">The color of the point</param>
         public static void DrawPoint(Vector2 point, Color color)
         {
-            if (LinkedProject == null) { return; }
+            if (LinkedProject == null || !_enabled) { return; }
 
             GizmoCalls.Add((rt) =>
             {

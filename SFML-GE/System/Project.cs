@@ -370,6 +370,17 @@ namespace SFML_GE.System
         }
 
         /// <summary>
+        /// Returns true the first frame a mouse button is pressed down
+        /// </summary>
+        /// <param name="button">the button to check as an int, 0 is left, 1 is right, 2 is middle, 3-4 are the extra buttons</param>
+        /// <returns></returns>
+        public bool IsMouseButtonPressed(int button)
+        {
+            button = (int)MathGE.Clamp(button, 0, 4); // eh fuck it why not
+            return pressedDict[(Mouse.Button)button];
+        }
+
+        /// <summary>
         /// Returns true the first frame a mouse button is released
         /// </summary>
         /// <param name="button">the button to check</param>

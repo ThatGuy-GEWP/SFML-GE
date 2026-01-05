@@ -16,9 +16,45 @@ namespace SFML_GE.System
         public GameObject owner;
 
         /// <summary>The rotation of this transform</summary>
-        public float rotation;
+        public float Rotation
+        {
+            get 
+            { 
+                return _rotation; 
+            }
+            set
+            {
+                _rotation = value;
+            }
+        }
 
+        float _rotation = 0f;
         Vector2 _position;
+
+        /// <summary>
+        /// The added up rotation of this game object and all parents up the tree
+        /// </summary>
+        public float GlobalRotation
+        {
+            get
+            {
+                if (owner.Parent != null)
+                {
+                    return Rotation + owner.Parent.transform.GlobalRotation;
+                }
+                return Rotation;
+            }
+
+            set
+            {
+                if (owner.Parent != null)
+                {
+                    float c = value - owner.Parent.transform.GlobalRotation;
+                    Rotation = c;
+                }
+                Rotation = value;
+            }
+        }
 
         /// <summary>The position of this transform relative to all parent's transforms</summary>
         public Vector2 GlobalPosition

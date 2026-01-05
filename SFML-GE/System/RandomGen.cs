@@ -47,6 +47,17 @@ namespace SFML_GE.System
         }
 
         /// <summary>
+        /// Picks a random item from the given array.
+        /// </summary>
+        /// <typeparam name="T">the type in the array</typeparam>
+        /// <param name="table">the table to pick from</param>
+        /// <returns>a random item from that list</returns>
+        public static T PickRandom<T>(IEnumerable<T> table)
+        {
+            return table.ElementAt(Next(table.Count()));
+        }
+
+        /// <summary>
         /// Picks a random item from the given list.
         /// </summary>
         /// <typeparam name="T">the type in the list</typeparam>

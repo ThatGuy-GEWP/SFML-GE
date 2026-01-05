@@ -100,6 +100,7 @@ namespace SFML_GE.Components
             this.Texture = Texture;
             TextureRect = new IntRect(0, 0, (int)Texture.Resource.Size.X, (int)Texture.Resource.Size.Y);
             fitTexture = true;
+            size = (Vector2)Texture.Resource.Size;
         }
 
         /// <summary>
@@ -175,7 +176,7 @@ namespace SFML_GE.Components
 
             shape.OutlineThickness = outlineThickness;
 
-            shape.Rotation = gameObject.transform.rotation;
+            shape.Rotation = gameObject.transform.GlobalRotation;
             rt.Draw(shape);
         }
     }

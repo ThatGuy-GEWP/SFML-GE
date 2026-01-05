@@ -1,4 +1,5 @@
 ﻿using SFML.Graphics;
+using SFML_GE.Debugging;
 
 namespace SFML_GE.System
 {
@@ -246,6 +247,17 @@ namespace SFML_GE.System
         public readonly void Draw(RenderTarget rt)
         {
             rt.Draw(new Vertex[] { TopLeft, TopRight, BottomRight, BottomRight, BottomLeft, TopLeft }, PrimitiveType.LineStrip);
+        }
+
+        /// <summary>
+        /// Draws this boundbox using the gizmo library
+        /// </summary>
+        public readonly void DrawGizmo()
+        {
+            Gizmo.DrawLine(TopLeft, TopRight);
+            Gizmo.DrawLine(TopRight, BottomRight);
+            Gizmo.DrawLine(BottomRight, BottomLeft);
+            Gizmo.DrawLine(BottomLeft, TopLeft);
         }
     }
 }

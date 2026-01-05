@@ -258,6 +258,8 @@
         {
             if (!Enabled) return;
 
+            if (!Scene.IsLoaded) return; // as scene can be unloaded mid-update
+
             if (DestroyQueued) // queued so stuff does not get removed mid update.
             {
                 DestroyNow();
@@ -266,6 +268,7 @@
 
             for (int i = 0; i < Components.Count; i++)
             {
+                if (!Scene.IsLoaded) return; // as scene can be unloaded mid-update
                 if (!Components[i].Started)
                 {
                     StartComponent(Components[i]);
@@ -279,6 +282,7 @@
 
             for (int i = 0; i < Children.Count; i++)
             {
+                if (!Scene.IsLoaded) return; // as scene can be unloaded mid-update
                 Children[i].Update();
             }
         }

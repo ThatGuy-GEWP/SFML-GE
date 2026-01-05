@@ -314,6 +314,7 @@ namespace SFML_GE.System
         /// </summary>
         internal void Start()
         {
+            if (Started) return;
             if (!deltaWatch.IsRunning)
             {
                 deltaWatch.Start();
@@ -401,9 +402,7 @@ namespace SFML_GE.System
 
             RenderManager.Render(screenText);
 
-#if DEBUG
             Gizmo.RenderInternalCalls(screenText);
-#endif
 
             View oldView = new View(screenText.GetView());
             screenText.SetView(screenText.DefaultView);
