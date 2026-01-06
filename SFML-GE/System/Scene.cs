@@ -77,6 +77,17 @@ namespace SFML_GE.System
         /// </summary>
         public Camera Camera { get; private set; }
 
+        /// <summary>
+        /// If true, this scene is destroyed and should not be messed with!
+        /// The project will auto clean this up and properly unload it.
+        /// </summary>
+        public bool IsDestroyed { get; private set; } = false;
+
+        /// <summary>
+        /// If true, THE END IS NEAR!!!
+        /// </summary>
+        internal bool destroyQueued = false;
+
         // This MIGHT be hacky AF but *might* be better then constantly re-sorting all game objects when a ZOrder is changed.
         /// <summary>
         /// A Dictionary containing all GameObjects at given ZOrder's.
@@ -140,7 +151,7 @@ namespace SFML_GE.System
         ~Scene()
         {
             screenText?.Dispose();
-            drawSprite.Dispose();
+            drawSprite?.Dispose();
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
@@ -287,6 +298,37 @@ namespace SFML_GE.System
             }
         }
 
+        /// <summary>
+        /// Destroys this scene, you should load a new one before doing this!
+        /// </summary>
+        public void Destory()
+        {
+            if(Project.ActiveScene == this)
+            {
+                Project.UnloadScene();
+            }
+
+            if(destroyQueued)
+            {
+                return;
+            }
+            IsDestroyed = true; // marks this scene as unsafe.
+            destroyQueued = true;
+        }
+
+        /// <summary>
+        /// Called once the project is ready for it to be destroyed.
+        /// </summary>
+        internal void FinalizeDestory()
+        {
+            root.DestroyNow();
+            screenText?.Dispose();
+            drawSprite?.Dispose();
+        }
+
+        /// <summary>
+        /// Returns true if this scene is paused, paused scenes will stop all update calls and the deltatimer.
+        /// </summary>
         public bool IsPaused { get; private set; } = false;
 
         /// <summary>

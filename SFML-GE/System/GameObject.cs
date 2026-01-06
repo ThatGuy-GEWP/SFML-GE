@@ -206,8 +206,8 @@
             DestroyQueued = true;
         }
 
-        /// <summary> Forces a GameObject to finalize itself for cleanup. </summary>
-        protected void DestroyNow()
+        /// <summary> Forces a GameObject to finalize itself for cleanup, should NOT be called outside the assembly. </summary>
+        internal void DestroyNow()
         {
             for (int i = 0; i < Components.Count; i++)
             {

@@ -205,10 +205,21 @@ namespace SFML_GE.System
                 if (Started) { ActiveScene.Start(); }
                 return;
             }
-            ActiveScene.UnloadScene();
+            UnloadScene();
             ActiveScene = scene;
             ActiveScene.LoadScene();
             if (Started) { ActiveScene.Start(); }
+        }
+
+        /// <summary>
+        /// Unloads the active scene if any.
+        /// </summary>
+        public void UnloadScene()
+        {
+            if (ActiveScene == null) { return; }
+            var scn = ActiveScene;
+            ActiveScene = null;
+            scn.UnloadScene();
         }
 
         /// <summary>
@@ -287,6 +298,22 @@ namespace SFML_GE.System
             }
 
             App.DispatchEvents();
+
+            for(int i = 0; i < scenes.Count; i++)
+            {
+                var scene = scenes[i];
+                if(scene.destroyQueued) // we need to start cleaning up
+                {
+                    if(ActiveScene == scene)
+                    {
+                        UnloadScene();
+                    }
+                    scene.FinalizeDestory();
+
+                    scenes.Remove(scene);
+                    i--; continue;
+                }
+            }
 
             if (ActiveScene is null) { return; }
 
