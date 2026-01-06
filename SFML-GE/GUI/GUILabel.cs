@@ -9,8 +9,6 @@ namespace SFML_GE.GUI
     /// </summary>
     public class GUILabel : GUIPanel
     {
-        bool destroyed = false;
-
         /// <summary>The character size, not in pixels</summary>
         public uint charSize = 16;
         /// <summary>The string that will be displayed</summary>
@@ -121,7 +119,6 @@ namespace SFML_GE.GUI
 
         protected override void PostPass(RenderTarget rt)
         {
-            if (destroyed) return;
             if (font == null) { return; }
             if (font != null && text == null) { text = new RichText(font.resource, displayedString, charSize); }
 
@@ -174,8 +171,10 @@ namespace SFML_GE.GUI
 
         public override void OnDestroy(GameObject gameObject)
         {
-            destroyed = true;
             internalRenderTexture.Dispose();
+            text?.Dispose();
+
+            base.OnDestroy(gameObject);
             // dispose text? idk prob later
         }
     }

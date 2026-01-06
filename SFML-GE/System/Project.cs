@@ -232,6 +232,9 @@ namespace SFML_GE.System
             {
                 if (scn.Name == sceneName)
                 {
+                    // scene should still be in the scene list to be cleaned properly, \
+                    // but should be ignored as if its not real.
+                    if(scn.destroyQueued) { continue; }
                     LoadScene(scn);
                     return;
                 }

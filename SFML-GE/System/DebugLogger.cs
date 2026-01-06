@@ -191,9 +191,9 @@ namespace SFML_GE.System
         }
 
         /// <inheritdoc cref="LogDebug(string)"/>
-        public static void LogDebug(object message, bool show_stacktrace = true)
+        public static void LogDebug(object? message, bool show_stacktrace = true)
         {
-            string output = message.ToString() ?? "null";
+            string output = message?.ToString() ?? "null";
             LogDebug(output, show_stacktrace);
         }
     }

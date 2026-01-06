@@ -221,6 +221,16 @@ namespace SFML_GE.System
             }
         }
 
+        internal void OnDestroy()
+        {
+            for(int i = 0; i < activeSounds.Count; i++)
+            {
+                ManagedSound cur = activeSounds[i];
+                cur.Stop();
+                cur.Dispose();
+            }
+        }
+
         /// <summary>
         /// Tries to get the <see cref="SoundResource"/> that's nammed <paramref name="soundResourceName"/>, then plays it.
         /// </summary>

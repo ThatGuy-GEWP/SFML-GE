@@ -41,7 +41,7 @@ namespace SFML_GE.System
     /// </code>
     /// Is a bit more performance heavier then <see cref="Text"/>.
     /// </summary>
-    public class RichText : Drawable
+    public class RichText : Drawable, IDisposable
     {
         string _displayed = string.Empty;
         int _maxChars = -1;
@@ -456,6 +456,11 @@ namespace SFML_GE.System
         public void Draw(RenderTarget target, RenderStates states)
         {
             DrawText(target, DisplayedString, states);
+        }
+
+        public void Dispose()
+        {
+            charSprite.Dispose();
         }
     }
 }

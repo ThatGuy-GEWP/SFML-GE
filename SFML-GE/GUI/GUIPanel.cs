@@ -371,5 +371,10 @@ namespace SFML_GE.GUI
         /// Gets called after the base panel is drawn to the screen.
         /// </summary>
         protected virtual void PostPass(RenderTarget rt) { return; }
+
+        public override void OnDestroy(GameObject gameObject)
+        {
+            cornerText.Dispose();
+        }
     }
 }

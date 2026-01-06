@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
+using SFML_GE.Debugging;
 using SFML_GE.System;
 
 namespace SFML_GE.GUI
@@ -32,7 +33,7 @@ namespace SFML_GE.GUI
         /// <summary>
         /// If <c>true</c>, the button will not respond to clicks outside the base parent container.
         /// </summary>
-        public bool clipInteraction = true;
+        public bool clipInteraction = false; // just spent 4 minutes debugging since this was on by default and i forgot about it, lmao
 
         /// <summary>
         /// If <c>false</c>, the button will not have hovering effects.
@@ -83,6 +84,7 @@ namespace SFML_GE.GUI
             Vector2 mousePos = Scene.GetMouseScreenPosition();
 
             BoundBox bounds = GetBounds();
+
             bool isMousePressed = Project.IsMouseButtonHeld(Mouse.Button.Left);
 
             bool lastInerac = interactable;
@@ -170,29 +172,17 @@ namespace SFML_GE.GUI
             backgroundPanelRect.FillColor = useHoverEffects ? currentColor : backgroundColor;
         }
 
-        /*RectangleShape debugRect = new RectangleShape(new Vector2(50, 50));
+        /// <inheritdoc/>
         protected override void PostPass(RenderTarget rt)
         {
-            debugRect.Position = GetPosition();
-            debugRect.Size = GetSize();
-            debugRect.OutlineThickness = 1;
-            debugRect.FillColor = Color.Transparent;
+            base.PostPass(rt);
 
-            if (!Hovering)
-            {
-                debugRect.OutlineColor = Color.Green;
-            }
-            else
-            {
-                debugRect.OutlineColor = Color.Yellow;
-            }
+            //BoundBox b = GetBounds();
 
-            if (HeldDown)
-            {
-                debugRect.OutlineColor = Color.Cyan;
-            }
-
-            rt.Draw(debugRect);
-        }*/
+            //rt.Draw(new Vertex[] { b.TopLeft, b.TopRight }, PrimitiveType.Lines);
+            //rt.Draw(new Vertex[] { b.TopRight, b.BottomRight }, PrimitiveType.Lines);
+            //rt.Draw(new Vertex[] { b.BottomRight, b.BottomLeft }, PrimitiveType.Lines);
+            //rt.Draw(new Vertex[] { b.BottomLeft, b.TopLeft }, PrimitiveType.Lines);
+        }
     }
 }

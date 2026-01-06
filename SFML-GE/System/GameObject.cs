@@ -76,6 +76,16 @@
         }
 
         /// <summary>
+        /// Sets the parent of this GameObject to another
+        /// </summary>
+        /// <param name="to"></param>
+        public void SetParent(GameObject to)
+        {
+            Parent?.RemoveChild(this);
+            to.AddChild(this);
+        }
+
+        /// <summary>
         /// Gets all children and Descendents of children from a gameobject
         /// </summary>
         /// <returns>all children whos root parent is this gameobject</returns>
@@ -352,6 +362,10 @@
 
             if (child.Parent == this) { return child; }
 
+            // this is.... dumb, im not sure why im doing this?
+            // non-explicit child remove and reparent, the function name is only AddChild not Reparent (Hey thats a good func name!)
+            // its an okay failsafe but weird.
+            // Leaving it as-is, not doing a breaking change of this scale at the moment.
             if (child.Parent != null)
             {
                 if (child.Parent.HasChild(child))

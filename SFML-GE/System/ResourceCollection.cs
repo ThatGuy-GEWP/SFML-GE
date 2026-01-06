@@ -52,6 +52,42 @@ namespace SFML_GE.System
             DebugLogger.LogInfo($"Finished loading {allResources.Count} resources in '{dirToCollect}'!");
         }
 
+        // 1000000% a security risk but whatevs!
+        /// <summary>
+        /// Loads a folder with a passed function.
+        /// This will find all files in a folder (including subdirectories) and run the given func
+        /// Input parameters for the func are: (filepath, filename(without extension and shortened path), extension)
+        /// </summary>
+        /// <param name="path">the path to load</param>
+        /// <param name="func">Input parameters for the func are: (filepath, filename(without extension and shortened path), extension), can return a resource or null if failed.</param>
+        public void LoadWithFunc(string path, Func<string, string, string, Resource?> func)
+        {
+            if (!Directory.Exists(path)) { return; }
+
+            EnumerationOptions enumOps = new EnumerationOptions();
+            enumOps.AttributesToSkip = FileAttributes.Hidden | FileAttributes.System;
+            enumOps.RecurseSubdirectories = true;
+
+            List<string> filteredFiles = Directory
+                .EnumerateFiles(path, "*", enumOps)
+                .ToList();
+
+            string[] files = filteredFiles.ToArray();
+
+            foreach (string file in files)
+            {
+                string extension = Path.GetExtension(file);
+
+                string name = file.Replace(extension, "").Replace(rootName + "\\", "").Replace("\\", "/");
+
+                var resource = func.Invoke(file, name, extension);
+                if (resource != null)
+                {
+                    Add(resource);
+                }
+            }
+        }
+
         void CollectFolder(string path)
         {
             if (!Directory.Exists(path)) { return; }
@@ -81,11 +117,9 @@ namespace SFML_GE.System
             {
                 string extension = Path.GetExtension(file);
 
-                bool loadedSomething = false;
-
                 string name = file.Replace(extension, "").Replace(rootName + "\\", "").Replace("\\", "/");
 
-                loadedSomething = LoadFile(file, name, extension);
+                LoadFile(file, name, extension);
             }
         }
 
