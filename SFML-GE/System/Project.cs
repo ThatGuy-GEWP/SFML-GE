@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
+using SFML_GE.Debugging;
 using SFML_GE.GUI;
 using System.Diagnostics;
 
@@ -152,9 +153,8 @@ namespace SFML_GE.System
             heldDict[Mouse.Button.Left] = false;
             heldDict[Mouse.Button.Right] = false;
             heldDict[Mouse.Button.Middle] = false;
-#if DEBUG
+
             Gizmo.LinkToProject(this);
-#endif
         }
 
         /// <summary>
