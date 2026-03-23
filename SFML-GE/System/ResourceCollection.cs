@@ -30,12 +30,14 @@ namespace SFML_GE.System
         /// <summary>
         /// Collects resources from a directory, pass <c>null</c> if you plan on adding your own manualy.
         /// </summary>
-        public ResourceCollection(string? dirToCollect)
+        /// <param name="dirToCollect">the directory (or folder) to collect</param>
+        /// <param name="collect_hidden">if true, hidden files will be collected</param>
+        public ResourceCollection(string? dirToCollect, bool collect_hidden = false)
         {
             DebugLogger.LogInfo("Max Texture size is : " + Texture.MaximumSize + "x" + Texture.MaximumSize);
 
             DebugLogger.LogInfo($"Loading folder {dirToCollect}...");
-            if (dirToCollect != null) { rootName = dirToCollect; CollectFolder(dirToCollect); }
+            if (dirToCollect != null) { rootName = dirToCollect; CollectFolder(dirToCollect, collect_hidden); }
 
             Image defaultSpriteImg = new Image(25, 25);
             for (uint x = 0; x < 25; x++)
@@ -52,7 +54,7 @@ namespace SFML_GE.System
             DebugLogger.LogInfo($"Finished loading {allResources.Count} resources in '{dirToCollect}'!");
         }
 
-        // 1000000% a security risk but whatevs!
+        // 100,000,000% a security risk but whatevs!
         /// <summary>
         /// Loads a folder with a passed function.
         /// This will find all files in a folder (including subdirectories) and run the given func
@@ -60,13 +62,16 @@ namespace SFML_GE.System
         /// </summary>
         /// <param name="path">the path to load</param>
         /// <param name="func">Input parameters for the func are: (filepath, filename(without extension and shortened path), extension), can return a resource or null if failed.</param>
-        public void LoadWithFunc(string path, Func<string, string, string, Resource?> func)
+        /// <param name="collect_hidden">if true, hidden files will be collected</param>
+        public void LoadWithFunc(string path, Func<string, string, string, Resource?> func, bool collect_hidden = false)
         {
             if (!Directory.Exists(path)) { return; }
 
-            EnumerationOptions enumOps = new EnumerationOptions();
-            enumOps.AttributesToSkip = FileAttributes.Hidden | FileAttributes.System;
-            enumOps.RecurseSubdirectories = true;
+            EnumerationOptions enumOps = new EnumerationOptions
+            {
+                AttributesToSkip = collect_hidden ? FileAttributes.Hidden | FileAttributes.System : FileAttributes.System,
+                RecurseSubdirectories = true
+            };
 
             List<string> filteredFiles = Directory
                 .EnumerateFiles(path, "*", enumOps)
@@ -88,13 +93,15 @@ namespace SFML_GE.System
             }
         }
 
-        void CollectFolder(string path)
+        void CollectFolder(string path, bool collect_hidden = false)
         {
             if (!Directory.Exists(path)) { return; }
 
-            EnumerationOptions enumOps = new EnumerationOptions();
-            enumOps.AttributesToSkip = FileAttributes.Hidden | FileAttributes.System;
-            enumOps.RecurseSubdirectories = true;
+            EnumerationOptions enumOps = new EnumerationOptions
+            {
+                AttributesToSkip = collect_hidden ? FileAttributes.Hidden | FileAttributes.System : FileAttributes.System,
+                RecurseSubdirectories = true
+            };
 
             List<string> filteredFiles = Directory
                 .EnumerateFiles(path, "*", enumOps)
@@ -117,12 +124,14 @@ namespace SFML_GE.System
             {
                 string extension = Path.GetExtension(file);
 
-                string name = file.Replace(extension, "").Replace(rootName + "\\", "").Replace("\\", "/");
+                string name = file.Replace(extension, string.Empty).Replace("\\", "/").Replace($"{rootName}/", string.Empty);
 
                 LoadFile(file, name, extension);
             }
         }
 
+        // TODO
+        // this is hardcoded, but should be split into seperate loaders!
         private bool LoadFile(string file, string name, string extension)
         {
             if (extension == ".png" || extension == ".jpg" || extension == ".jpeg")
@@ -199,10 +208,9 @@ namespace SFML_GE.System
         {
             DebugLogger.LogInfo("Loaded " + resource.Name + " as " + resource.GetType().Name);
 
-            if (!nameResPairs.ContainsKey(resource.Name))
+            if (nameResPairs.TryAdd(resource.Name, resource))
             {
                 allResources.Add(resource);
-                nameResPairs.Add(resource.Name, resource);
                 return true;
             }
 

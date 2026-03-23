@@ -1,5 +1,4 @@
-﻿using SFML.Graphics;
-using SFML_GE.Resources;
+﻿using SFML_GE.Resources;
 
 namespace SFML_GE.System
 {
@@ -41,7 +40,7 @@ namespace SFML_GE.System
         /// <summary>
         /// The current frame of the playing animation.
         /// </summary>
-        public int currentFrame { get; private set; } = 0; // what frame we are on.
+        public int CurrentFrame { get; private set; } = 0; // what frame we are on.
 
         /// <param name="frames">
         /// The frames to use as an animation, expected to already be in the correct order. will be converted to an array
@@ -80,11 +79,11 @@ namespace SFML_GE.System
         {
             if (reversed)
             {
-                currentFrame = frames.Length - 1;
+                CurrentFrame = frames.Length - 1;
             }
             else
             {
-                currentFrame = 0;
+                CurrentFrame = 0;
             }
             curTime = 0f;
             Resume();
@@ -97,11 +96,11 @@ namespace SFML_GE.System
         {
             if (reversed)
             {
-                currentFrame = frames.Length - 1;
+                CurrentFrame = frames.Length - 1;
             }
             else
             {
-                currentFrame = 0;
+                CurrentFrame = 0;
             }
             curTime = 0f;
         }
@@ -112,7 +111,7 @@ namespace SFML_GE.System
         /// <returns>true if the animation is finished, false otherwise, always false when looping</returns>
         public bool IsFinished()
         {
-            return loop ? false : reversed ? currentFrame <= 0 : currentFrame >= frames.Length - 1;
+            return loop ? false : reversed ? CurrentFrame <= 0 : CurrentFrame >= frames.Length - 1;
         }
 
         /// <summary>
@@ -121,9 +120,9 @@ namespace SFML_GE.System
         public void NextFrame()
         {
             curTime = 0f;
-            currentFrame++;
+            CurrentFrame++;
 
-            capCurFrame();
+            CapCurFrame();
         }
 
         /// <summary>
@@ -132,22 +131,22 @@ namespace SFML_GE.System
         public void LastFrame()
         {
             curTime = 0;
-            currentFrame--;
+            CurrentFrame--;
 
-            capCurFrame();
+            CapCurFrame();
         }
 
-        void capCurFrame()
+        void CapCurFrame()
         {
             if (loop)
             {
-                currentFrame = currentFrame < 0 ? frames.Length - 1 : currentFrame;
-                currentFrame = currentFrame > frames.Length - 1 ? 0 : currentFrame;
+                CurrentFrame = CurrentFrame < 0 ? frames.Length - 1 : CurrentFrame;
+                CurrentFrame = CurrentFrame > frames.Length - 1 ? 0 : CurrentFrame;
             }
             else
             {
-                currentFrame = currentFrame < 0 ? 0 : currentFrame;
-                currentFrame = currentFrame > frames.Length - 1 ? frames.Length - 1 : currentFrame;
+                CurrentFrame = CurrentFrame < 0 ? 0 : CurrentFrame;
+                CurrentFrame = CurrentFrame > frames.Length - 1 ? frames.Length - 1 : CurrentFrame;
                 if (IsFinished())
                 {
                     playing = false;
@@ -161,10 +160,14 @@ namespace SFML_GE.System
         /// <returns>The current frame as a <see cref="TextureResource"/></returns>
         public TextureResource GetCurrentFrame()
         {
-            return frames[currentFrame];
+            return frames[CurrentFrame];
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        /// <summary>
+        /// Uses the provided deltaTime to advance the animation
+        /// All this does is check if more than <see cref="frametime"/> has passed then advance the animation if true
+        /// </summary>
+        /// <param name="deltaTime"></param>
         public void Update(float deltaTime)
         {
             if (!playing) { return; }
@@ -176,16 +179,15 @@ namespace SFML_GE.System
 
                 if (reversed)
                 {
-                    currentFrame--;
+                    CurrentFrame--;
                 }
                 else
                 {
-                    currentFrame++;
+                    CurrentFrame++;
                 }
 
-                capCurFrame();
+                CapCurFrame();
             }
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

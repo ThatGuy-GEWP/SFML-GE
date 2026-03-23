@@ -11,6 +11,11 @@ namespace SFML_GE.System
     public struct Vector2
     {
         /// <summary>
+        /// multiply radians by this to get degrees
+        /// </summary>
+        const float to_deg = MathF.PI / 180f;
+
+        /// <summary>
         /// The first component of the vector, usually left and right where -x is left and +x is right.
         /// </summary>
         public float x;
@@ -92,7 +97,7 @@ namespace SFML_GE.System
         /// <returns></returns>
         public static Vector2 Rotate(in Vector2 point, float degrees)
         {
-            float deg = degrees * (MathF.PI / 180); // Convert degrees to radians
+            float deg = degrees * to_deg; // Convert degrees to radians
 
             Vector2 newVec = new Vector2(
                 point.x * MathF.Cos(deg) - point.y * MathF.Sin(deg),
@@ -398,6 +403,28 @@ namespace SFML_GE.System
         }
 
         /// <summary>
+        /// Returns a new <see cref="Vector2i"/> from the current Vector2
+        /// This is a destructive process (casts a float to an int), and exists as a less painful more readable way of casting
+        /// You are responsible for rounding/ceiling/flooring beforehand
+        /// </summary>
+        /// <returns></returns>
+        public readonly Vector2i ToInt()
+        {
+            return new Vector2i((int)x, (int)y);
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="Vector2i"/> from the given Vector2
+        /// This is a destructive process (casts a float to an int), and exists as a less painful more readable way of casting
+        /// You are responsible for rounding/ceiling/flooring beforehand
+        /// </summary>
+        /// <returns></returns>
+        public static Vector2i ToInt(in Vector2 vec)
+        {
+            return vec.ToInt();
+        }
+
+        /// <summary>
         /// Returns a new Rounded Vector2 from the current vector
         /// </summary>
         /// <param name="digits">how many digits to round to, uses <see cref="MathF.Round(float, int)"/></param>
@@ -414,7 +441,7 @@ namespace SFML_GE.System
         /// <returns></returns>
         public readonly float Dot(in Vector2 other)
         {
-            return (x * other.x) + (y *  other.y);
+            return (x * other.x) + (y * other.y);
         }
 
         /// <summary>

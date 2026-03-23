@@ -122,6 +122,10 @@ namespace SFML_GE.System
         /// </summary>
         readonly HashSet<string> usedNames = new HashSet<string>();
 
+        /// <summary>
+        /// <see cref="DeltaTime"/> is multiplied by this value to speed-up or slowdown any deltatime using scripts
+        /// if you want the true DeltaTime in any script, multiply <see cref="DeltaTime"/> by 1 / <see cref="timeScale"/>
+        /// </summary>
         public float timeScale = 1f;
 
         readonly Stopwatch deltaWatch = new Stopwatch();
@@ -162,7 +166,7 @@ namespace SFML_GE.System
         {
             GameObject? instance = prefab.CreatePrefab?.Invoke(Project, this);
             if (instance == null) { return null; }
-            instance.name = withname == null ? instance.name : withname;
+            instance.name = withname ?? instance.name;
             root.AddChild(instance);
             gameObjects.Add(instance);
             return instance;
@@ -174,7 +178,7 @@ namespace SFML_GE.System
         public GameObject CreateGameObject(string name = "", GameObject? parent = null)
         {
             if (name == "" || name == null || name == string.Empty) { name = "Unnamed"; }
-            if (parent == null) { parent = root; }
+            parent ??= root;
 
             GameObject go = new GameObject(Project, this, parent);
             RegisterGameObjectToScene(go, name);
@@ -241,7 +245,7 @@ namespace SFML_GE.System
                 }
             }
             return null;
-        }
+        }// should not be null in any situation
 
         /// <summary>
         /// Gets an array of <see cref="GameObject"/>'s, and stopping after a given <paramref name="depth"/>
@@ -267,9 +271,9 @@ namespace SFML_GE.System
         /// </summary>
         internal void ZOrderGameObjectUpdate(GameObject go, int newZOrder, int oldZOrder)
         {
-            if (ZTree.ContainsKey(newZOrder))
+            if (ZTree.TryGetValue(newZOrder, out List<GameObject>? value))
             {
-                ZTree[newZOrder].Add(go);
+                value.Add(go);
                 if (newZOrder == oldZOrder) { return; } else { ZTree[oldZOrder].Remove(go); }
             }
             else
@@ -283,7 +287,7 @@ namespace SFML_GE.System
         /// <summary>
         /// Gets all GameObjects from <paramref name="from"/>, and adds then to <paramref name="sofar"/>, stopping at <paramref name="depth"/>
         /// </summary>
-        void GetObjectsAt(GameObject from, List<GameObject> sofar, int depth)
+        static void GetObjectsAt(GameObject from, List<GameObject> sofar, int depth)
         {
             sofar.AddRange(from.GetChildren());
             if (depth > 0)
@@ -303,12 +307,12 @@ namespace SFML_GE.System
         /// </summary>
         public void Destory()
         {
-            if(Project.ActiveScene == this)
+            if (Project.ActiveScene == this)
             {
                 Project.UnloadScene();
             }
 
-            if(destroyQueued)
+            if (destroyQueued)
             {
                 return;
             }
@@ -336,7 +340,7 @@ namespace SFML_GE.System
         /// </summary>
         public void Pause()
         {
-            if(IsPaused) return;
+            if (IsPaused) return;
             IsPaused = true;
             deltaWatch.Stop();
         }
@@ -406,7 +410,7 @@ namespace SFML_GE.System
                 {
                     gameObjects.RemoveAt(i);
                     root.Children.Remove(go);
-                    if (ZTree.ContainsKey(go.ZOrder)) { ZTree[go.ZOrder].Remove(go); }
+                    if (ZTree.TryGetValue(go.ZOrder, out List<GameObject>? value)) { value.Remove(go); }
                     usedNames.Remove(go.name);
                     i--;
                 }
@@ -420,7 +424,7 @@ namespace SFML_GE.System
         }
 
         RenderTexture? screenText = null;
-        Sprite drawSprite = new Sprite();
+        readonly Sprite drawSprite = new Sprite();
         internal void Render(RenderTarget rt)
         {
             if (!IsLoaded) { return; }
@@ -446,7 +450,7 @@ namespace SFML_GE.System
 
             Gizmo.RenderInternalCalls(screenText);
 
-            View oldView = new View(screenText.GetView());
+            View oldView;
             screenText.SetView(screenText.DefaultView);
 
             RenderManager.RenderOverlay(screenText);

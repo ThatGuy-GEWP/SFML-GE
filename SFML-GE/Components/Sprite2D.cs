@@ -29,7 +29,7 @@ namespace SFML_GE.Components
         /// <summary>
         /// A sub-section of the texture to render, in pixels.
         /// </summary>
-        public IntRect TextureRect = new IntRect(0,0, 100, 100);
+        public IntRect TextureRect = new IntRect(0, 0, 100, 100);
 
         /// <summary>
         /// If true, the <see cref="size"/> will match the <see cref="Texture"/>'s size, and so will its <see cref="TextureRect"/>

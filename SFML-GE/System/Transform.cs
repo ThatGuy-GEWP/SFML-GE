@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SFML_GE.System
+﻿namespace SFML_GE.System
 {
 
     /// <summary>
@@ -18,9 +12,9 @@ namespace SFML_GE.System
         /// <summary>The rotation of this transform</summary>
         public float Rotation
         {
-            get 
-            { 
-                return _rotation; 
+            get
+            {
+                return _rotation;
             }
             set
             {

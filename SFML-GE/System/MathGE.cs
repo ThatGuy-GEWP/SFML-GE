@@ -190,7 +190,7 @@ namespace SFML_GE.System
             float b = ((int)color.B) * by;
             float a = multiply_alpha ? ((int)color.A) * by : (int)color.A;
 
-            if(overflow)
+            if (overflow)
             {
                 r = MathF.Round(Mod(r, 256));
                 g = MathF.Round(Mod(g, 256));

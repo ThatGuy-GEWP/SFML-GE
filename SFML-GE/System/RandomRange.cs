@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SFML_GE.System
+﻿namespace SFML_GE.System
 {
     /// <summary>
     /// A struct for representing a random number range.<para></para>
@@ -16,7 +10,7 @@ namespace SFML_GE.System
     /// rand.Value // will return a new random number between -20 and 20 every time .Value is used.
     /// </code>
     /// </summary>
-    public struct RandomRange
+    public readonly struct RandomRange
     {
         /// <summary>
         /// The minimum value of this random range

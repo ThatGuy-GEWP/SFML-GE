@@ -1,5 +1,4 @@
-﻿using SFML.Audio;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML_GE.Resources;
 using SFML_GE.System;
 
@@ -10,6 +9,24 @@ namespace SFML_GE.GUI
     /// </summary>
     public class GUIPanel : Component, IRenderable, IMouseBlockable
     {
+        /*
+         *  For future stuffs, this should be redone
+         *  This component works fine and runs okay, but should not be the base
+         *  if i ever were to re-do the way GUI is done in SFML-GE, i would make a base GUIComponent
+         *  And not make every single GUI component a panel
+         *  Should each component have the Position size and anchor? yes
+         *  Should each component automatically handle passing that info scaled into children? yes
+         *  Should each component auto render a big fuck off panel behind everything and handle culling? no
+         *  Just making internally kerned shit is a pain thanks to having to disable all the built in rendering
+         *  its the only reason NewInvisiblePanel() exists
+         *  Could do with less bloat
+         *  GUI stuff should handle on a per-component basis any style sheet type thing from the project
+         *  and style sheets and/or guides should also be classes, not a bunch of
+         *  well whatever the fuck im doing below
+         */
+
+
+
         // works for now, should be configurable later.
         internal static Color defaultForeground = new Color(0xE0EBF1FF);
         internal static Color defaultBackground = new Color(0x474859FF) - new Color(0, 0, 0, 125);
@@ -55,7 +72,11 @@ namespace SFML_GE.GUI
         /// altered right before its drawn in the <see cref="PrePass(RenderTarget, ref Vector2, ref Vector2)"/> </summary>
         protected RectangleShape backgroundPanelRect = new RectangleShape();
 
-        RectangleShape outlineRect = new RectangleShape();
+        /// <summary>
+        /// The rect used for drawing the outline of this panel
+        /// can be altered right before its drawn in the <see cref="PrePass(RenderTarget, ref Vector2, ref Vector2)"/>
+        /// </summary>
+        protected RectangleShape outlineRect = new RectangleShape();
 
         /// <summary> controls whether or not the background from <see cref="GUIPanel"/> is drawn or not.</summary>
         protected bool renderBackgroundPanel = true;
@@ -63,7 +84,9 @@ namespace SFML_GE.GUI
         /// <summary> controls whether or not the outline from <see cref="GUIPanel"/> is drawn or not.</summary>
         protected bool renderOutline = true;
 
-        // used to pre-render the corner texture, should only be generated once at the start of the engine if any GUIPanels are created.
+        /// <summary>
+        /// used to pre-render the corner texture, should only be generated once at the start of the engine if any GUIPanels are created.
+        /// </summary>
         static Texture cornerText = null!;
 
         /// <summary>
@@ -114,8 +137,8 @@ namespace SFML_GE.GUI
         {
             if (lastParent != gameObject.Parent)
             {
-                if (gameObject.Parent == null) { lastGUIPanel = lastGUIPanel == null ? lastGUIPanel : null; }
-                lastGUIPanel = gameObject.Parent!.GetComponentOfSubclass<GUIPanel>();
+                if (gameObject.Parent == null) { lastGUIPanel = lastGUIPanel == null ? lastGUIPanel : null; return; }
+                lastGUIPanel = gameObject.Parent.GetComponentOfSubclass<GUIPanel>();
                 lastParent = gameObject.Parent;
             }
         }
@@ -206,7 +229,7 @@ namespace SFML_GE.GUI
             GUIPanel? foundPan = null;
             GUIPanel? lastPan = this;
             int searchIndx = 0;
-            while (searchIndx < 100) 
+            while (searchIndx < 100)
             {
                 searchIndx++;
                 GUIPanel? curPan = lastPan.GUIParent();

@@ -158,40 +158,45 @@ namespace SFML_GE.GUI
             return true;
         }
 
+        void KeyPressed(object? obj, KeyEventArgs args)
+        {
+            if (!focused) { return; }
+            if (args.Code == Keyboard.Key.Backspace && displayedString.Length > 0)
+            { displayedString = displayedString.Remove(displayedString.Length - 1); OnTextInput?.Invoke(displayedString, this); }
+
+            if (args.Shift)
+            {
+                if (KeyToCharUpper.ContainsKey(args.Code))
+                {
+                    char c = KeyToCharUpper[args.Code];
+
+                    if (args.Shift) { c = c.ToString().ToUpper()[0]; }
+                    displayedString += c;
+
+                    OnTextInput?.Invoke(displayedString, this);
+                }
+            }
+            else
+            {
+                if (KeyToChar.ContainsKey(args.Code))
+                {
+                    char c = KeyToChar[args.Code];
+                    displayedString += c;
+                    OnTextInput?.Invoke(displayedString, this);
+                }
+            }
+        }
+
         /// <inheritdoc/>
         public override void Start()
         {
             base.Start();
-            Project.App.KeyPressed += (obj, args) =>
-            {
-                if (!focused) { return; }
-                if (args.Code == Keyboard.Key.Backspace && displayedString.Length > 0)
-                { displayedString = displayedString.Remove(displayedString.Length - 1); OnTextInput?.Invoke(displayedString, this); }
-
-                if (args.Shift)
-                {
-                    if (KeyToCharUpper.ContainsKey(args.Code))
-                    {
-                        char c = KeyToCharUpper[args.Code];
-
-                        if (args.Shift) { c = c.ToString().ToUpper()[0]; }
-                        displayedString += c;
-
-                        OnTextInput?.Invoke(displayedString, this);
-                    }
-                }
-                else
-                {
-                    if (KeyToChar.ContainsKey(args.Code))
-                    {
-                        char c = KeyToChar[args.Code];
-                        displayedString += c;
-                        OnTextInput?.Invoke(displayedString, this);
-                    }
-                }
-                //Console.WriteLine(containedString);
-            };
+            Project.App.KeyPressed += KeyPressed;
         }
+
+
+
+
 
         /// <summary>
         /// if <c>true</c>, text can be inputed
@@ -270,20 +275,42 @@ namespace SFML_GE.GUI
 
         Color lastCol;
 
+
+        float flicker_timer = 0f;
+        bool flicker_active = true;
+
         /// <inheritdoc/>
         protected override void PrePass(RenderTarget rt, ref Vector2 pos, ref Vector2 size)
         {
             lastCol = outlineColor;
-            if (focused) { outlineColor = focusedColor; }
+
+            if (focused)
+            {
+                outlineColor = focusedColor;
+
+                flicker_timer += DeltaTime;
+                if (flicker_timer > 0.5f) { flicker_timer = 0f; flicker_active = !flicker_active; }
+
+                if (!flicker_active) { return; }
+
+                BoundBox textBounds = GetTextGlobalBounds();
+
+                Vector2 bounds = GetPosition() + new Vector2(2, 0);
+
+                Vector2 rightT = textBounds.TopRight + bounds;
+                Vector2 rightB = textBounds.BottomRight + bounds;
+
+                rt.Draw(new Vertex[] { rightT, rightB }, PrimitiveType.Lines);
+            }
         }
 
         /// <inheritdoc/>
         protected override void PostPass(RenderTarget rt)
         {
+            outlineColor = lastCol;
+
             UDim2 oldPos = textPosition;
             Vector2 relPos = oldPos.GetVector(GetBounds().Size);
-
-            Color lastCol = outlineColor;
 
             if (focused)
             {
@@ -296,7 +323,12 @@ namespace SFML_GE.GUI
             else { textPosition = new UDim2(textPosition.Scale, textPosition.Offset); }
             base.PostPass(rt);
             textPosition = oldPos;
-            outlineColor = lastCol;
+        }
+
+        public override void OnDestroy(GameObject gameObject)
+        {
+            Project.App.KeyPressed -= KeyPressed; // unbind your events kids!
+            base.OnDestroy(gameObject);
         }
     }
 }

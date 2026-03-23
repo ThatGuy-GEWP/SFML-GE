@@ -1,0 +1,13 @@
+﻿[*.{cs,vb}]
+
+# IDE0305: Simplify collection initialization
+# makes code less readable for me, dont like!
+dotnet_style_prefer_collection_expression = never
+
+# IDE0075: Simplify conditional expression
+# personal prefrence
+dotnet_style_prefer_simplified_boolean_expressions = false
+
+# IDE0290: Use primary constructor
+# no.
+csharp_style_prefer_primary_constructors = false

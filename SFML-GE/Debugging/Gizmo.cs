@@ -1,12 +1,5 @@
 ﻿using SFML.Graphics;
 using SFML_GE.System;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Color = SFML.Graphics.Color;
 
 namespace SFML_GE.Debugging
@@ -37,7 +30,7 @@ namespace SFML_GE.Debugging
         internal static void LinkToProject(Project proj)
         {
             LinkedProject = proj;
-            
+
         }
 
         /// <summary>
@@ -46,8 +39,8 @@ namespace SFML_GE.Debugging
         /// <param name="to">Target to render to.</param>
         internal static void RenderInternalCalls(RenderTarget to)
         {
-            if(LinkedProject == null || !_enabled) { GizmoCalls.Clear(); return; }
-            for(int i = 0; i < GizmoCalls.Count; i++)
+            if (LinkedProject == null || !_enabled) { GizmoCalls.Clear(); return; }
+            for (int i = 0; i < GizmoCalls.Count; i++)
             {
                 GizmoCalls[i].Invoke(to);
             }
@@ -102,7 +95,7 @@ namespace SFML_GE.Debugging
 
             GizmoCalls.Add((rt) =>
             {
-                rt.Draw(new Vertex[] { 
+                rt.Draw(new Vertex[] {
                     new Vertex(atPoint, Color.Red),
                     new Vertex(right, Color.Red)
                 }, PrimitiveType.Lines);
@@ -161,6 +154,7 @@ namespace SFML_GE.Debugging
         /// Draws the given sprite on the gizmo layer.
         /// </summary>
         /// <param name="spr"></param>
+        /// <param name="position">the position to draw this sprite to</param>
         public static void DrawSprite(Sprite spr, Vector2 position)
         {
             if (LinkedProject == null || !_enabled) { return; }

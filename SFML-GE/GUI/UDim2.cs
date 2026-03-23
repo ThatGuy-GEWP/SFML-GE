@@ -1,5 +1,4 @@
-﻿using SFML.System;
-using SFML_GE.System;
+﻿using SFML_GE.System;
 
 namespace SFML_GE.GUI
 {
@@ -48,7 +47,7 @@ namespace SFML_GE.GUI
         /// </summary>
         public readonly Vector2 GetVector(Vector2 scaleRelative)
         {
-            return Offset + scaleRelative * Scale.Clamp(0.0f, 1.0f);
+            return Offset + scaleRelative * Scale;
         }
     }
 }

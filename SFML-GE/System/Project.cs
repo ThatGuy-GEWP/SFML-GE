@@ -1,6 +1,5 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
-using SFML_GE.Debugging;
 using SFML_GE.GUI;
 using System.Diagnostics;
 
@@ -234,7 +233,7 @@ namespace SFML_GE.System
                 {
                     // scene should still be in the scene list to be cleaned properly, \
                     // but should be ignored as if its not real.
-                    if(scn.destroyQueued) { continue; }
+                    if (scn.destroyQueued) { continue; }
                     LoadScene(scn);
                     return;
                 }
@@ -280,10 +279,10 @@ namespace SFML_GE.System
             Started = true;
             if (ActiveScene is null) { return; }
             ActiveScene.Start();
-            if (writeToConsole) 
+            if (writeToConsole)
             {
                 DebugLogger.LogInfoPriority("Project started");
-                Console.WriteLine("---------------------------"); 
+                Console.WriteLine("---------------------------");
             }
         }
 
@@ -294,20 +293,21 @@ namespace SFML_GE.System
         {
             if (!Started)
             {
-                if (writeToConsole) { 
-                    DebugLogger.LogWarning("Update called without being started, manually starting..."); 
+                if (writeToConsole)
+                {
+                    DebugLogger.LogWarning("Update called without being started, manually starting...");
                 }
                 Start();
             }
 
             App.DispatchEvents();
 
-            for(int i = 0; i < scenes.Count; i++)
+            for (int i = 0; i < scenes.Count; i++)
             {
                 var scene = scenes[i];
-                if(scene.destroyQueued) // we need to start cleaning up
+                if (scene.destroyQueued) // we need to start cleaning up
                 {
-                    if(ActiveScene == scene)
+                    if (ActiveScene == scene)
                     {
                         UnloadScene();
                     }

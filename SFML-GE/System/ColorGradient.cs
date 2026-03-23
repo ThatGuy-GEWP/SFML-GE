@@ -1,9 +1,4 @@
 ﻿using SFML.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SFML_GE.System
 {
@@ -122,7 +117,7 @@ namespace SFML_GE.System
 
             return false;
         }
-        
+
         // sorts the points internally!
         void SortPoints()
         {
@@ -158,7 +153,7 @@ namespace SFML_GE.System
                 }
             }
 
-            if(easingType == GradientEasing.Linear)
+            if (easingType == GradientEasing.Linear)
             {
                 float curAt = MathGE.Map(at, points[toSample].position, points[toSample + 1].position, 0.0f, 1.0f);
                 Color startAt = points[toSample].value;
@@ -170,7 +165,7 @@ namespace SFML_GE.System
                 byte a = (byte)MathF.Round(MathGE.Lerp(startAt.A, endAt.A, curAt));
 
                 return new Color(r, g, b, a);
-            } 
+            }
             else
             {
                 return new Color(points[toSample].value);

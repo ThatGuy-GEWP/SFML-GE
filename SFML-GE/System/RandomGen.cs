@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SFML_GE.System
+﻿namespace SFML_GE.System
 {
     /// <summary>
     /// A Thread Safe class for various random generation based methods.
@@ -119,7 +113,7 @@ namespace SFML_GE.System
         }
 
         /// <summary>
-        /// Returns a <see cref="Vector2"/> with X and Y each in a random range of (0.0 - 1.0)
+        /// Returns a <see cref="Vector2"/> with X and Y each in a random range of (0.0 -> 1.0)
         /// </summary>
         /// <returns></returns>
         public static Vector2 NextVector()
@@ -128,7 +122,7 @@ namespace SFML_GE.System
         }
 
         /// <summary>
-        /// Returns a <see cref="Vector2"/> with X and Y each in a random range of (<paramref name="min"/> - <paramref name="max"/>)
+        /// Returns a <see cref="Vector2"/> with X and Y each in a random range of (<paramref name="min"/> -> <paramref name="max"/>)
         /// </summary>
         /// <returns></returns>
         public static Vector2 NextVector(float min, float max)
@@ -137,12 +131,21 @@ namespace SFML_GE.System
         }
 
         /// <summary>
-        /// Returns a <see cref="Vector2"/> with X in a range of (<paramref name="minX"/> - <paramref name="maxX"/>) and Y in a range of (<paramref name="minY"/> and <paramref name="maxY"/>)
+        /// Returns a <see cref="Vector2"/> with X in a range of (<paramref name="minX"/> -> <paramref name="maxX"/>) and Y in a range of (<paramref name="minY"/> and <paramref name="maxY"/>)
         /// </summary>
         /// <returns></returns>
         public static Vector2 NextVector(float minX, float maxX, float minY, float maxY)
         {
             return new Vector2(NextSingle(minX, maxX), NextSingle(minY, maxY));
+        }
+
+        /// <summary>
+        /// Returns a <see cref="Vector2"/> with X and Y each in a random range of (<paramref name="min"/> -> <paramref name="max"/>)
+        /// </summary>
+        /// <returns></returns>
+        public static Vector2 NextVector(Vector2 min, Vector2 max)
+        {
+            return new Vector2(NextSingle(min.x, max.x), NextSingle(min.x, max.y));
         }
 
         /// <summary>

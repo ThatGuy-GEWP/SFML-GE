@@ -1,11 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SFML_GE.System
 {
@@ -35,6 +30,16 @@ namespace SFML_GE.System
             app.Dispose();
             app = newApp;
             RebindEvents();
+        }
+
+        /// <summary>
+        /// Change the title of the window
+        /// </summary>
+        /// <param name="name">the new name</param>
+        public void SetTitle(string name)
+        {
+            app.SetTitle(name);
+            title = name;
         }
 
         void OnCreated()
@@ -113,8 +118,12 @@ namespace SFML_GE.System
         public ContextSettings Settings { get { return app.Settings; } }
 
         /// <inheritdoc cref="RenderWindow.SystemHandle"/>
-        public IntPtr SystemHandle {  get { return app.SystemHandle; } }
+        public IntPtr SystemHandle { get { return app.SystemHandle; } }
 
+        /// <summary>
+        /// Implicitly converts a GEWindow to a window base
+        /// </summary>
+        /// <param name="win"></param>
 
         public static implicit operator WindowBase(GEWindow win)
         {
@@ -280,12 +289,12 @@ namespace SFML_GE.System
         {
             app.RequestFocus();
         }
-        
+
         /// <summary>
         /// Activate the window as the current target for rendering
         /// </summary>
         /// <param name="active">if true, the window is the active rendering target</param>
-        public void SetActive(bool active=true)
+        public void SetActive(bool active = true)
         {
             app.SetActive(active);
         }
@@ -370,8 +379,8 @@ namespace SFML_GE.System
         public void Dispose()
         {
             app.Dispose();
+            GC.SuppressFinalize(this);
         }
-
 
         /////       Render target stuff below!     /////
 
@@ -381,12 +390,10 @@ namespace SFML_GE.System
         /// <inheritdoc/>
         public bool IsSrgb { get { return app.IsSrgb; } }
 
-        View _defaultView;
+        View _defaultView = null!;
 
         /// <inheritdoc/>
         public View DefaultView { get { return new View(_defaultView); } }
-
-
 
         /// <inheritdoc/>
         public View GetView()

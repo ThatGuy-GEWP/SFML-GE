@@ -23,7 +23,7 @@ namespace SFML_GE.Resources
             resource = new Font(filePath);
             Name = name;
         }
-        
+
         /// <inheritdoc/>
         public override void Dispose()
         {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFML_GE.System
+﻿namespace SFML_GE.System
 {
     /// <summary>
     /// This interface should be applied to <see cref="Component"/>'s to subscribe them to various

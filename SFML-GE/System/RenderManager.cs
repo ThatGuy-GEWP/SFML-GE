@@ -13,12 +13,12 @@ namespace SFML_GE.System
         /// <summary>
         /// A List of <see cref="IRenderable"/>'s to be rendered next frame, Cleared after every <see cref="Render(RenderTarget)"/>
         /// </summary>
-        List<Component> renderQueue = new List<Component>();
+        readonly List<Component> renderQueue = new List<Component>();
 
         /// <summary>
         /// A List of <see cref="IRenderable"/>'s to be rendered next frame, Cleared after every <see cref="Render(RenderTarget)"/>
         /// </summary>
-        List<Component> overlayQueue = new List<Component>();
+        readonly List<Component> overlayQueue = new List<Component>();
 
         internal RenderManager() { }
 
@@ -74,10 +74,10 @@ namespace SFML_GE.System
 
         static int ZSort(Component x, Component y)
         {
-            int realXZ = 0;
-            int realYZ = 0;
+            int realXZ;
+            int realYZ;
 
-            if(x is ShadowComponent)
+            if (x is ShadowComponent)
             {
                 realXZ = (x as IRenderable)!.ZOffset;
             }
@@ -85,7 +85,7 @@ namespace SFML_GE.System
             {
                 realXZ = x.gameObject.ZOrder + (x as IRenderable)!.ZOffset;
             }
-            if(y is ShadowComponent)
+            if (y is ShadowComponent)
             {
                 realYZ = (y as IRenderable)!.ZOffset;
             }
@@ -118,7 +118,7 @@ namespace SFML_GE.System
 
                 for (int i = 0; i < renderQueue.Count; i++)
                 {
-                    if (renderQueue[i] is ShadowComponent) { ((ShadowComponent)renderQueue[i]).OnRenderAction(target); continue; }
+                    if (renderQueue[i] is ShadowComponent component) { component.OnRenderAction(target); continue; }
                     if (!((IRenderable)renderQueue[i]).Visible) { continue; }
                     ((IRenderable)renderQueue[i]).OnRender(target);
                 }
@@ -142,7 +142,7 @@ namespace SFML_GE.System
 
                 for (int i = 0; i < overlayQueue.Count; i++)
                 {
-                    if (overlayQueue[i] is ShadowComponent) { ((ShadowComponent)overlayQueue[i]).OnRenderAction(target); continue; }
+                    if (overlayQueue[i] is ShadowComponent component) { component.OnRenderAction(target); continue; }
                     if (!((IRenderable)overlayQueue[i]).Visible) { continue; }
                     ((IRenderable)overlayQueue[i]).OnRender(target);
                 }

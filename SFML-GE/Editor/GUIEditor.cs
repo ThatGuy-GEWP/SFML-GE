@@ -1,8 +1,8 @@
-﻿using System.Reflection;
-using SFML_GE.Resources;
+﻿using SFML.Graphics;
 using SFML_GE.GUI;
+using SFML_GE.Resources;
 using SFML_GE.System;
-using SFML.Graphics;
+using System.Reflection;
 
 
 // WARNING!!!
@@ -185,7 +185,8 @@ namespace SFML_GE.Editor
                     {
                         float x = ((Vector2)member.GetValue(memberSource)!).x;
                         member.SetValue(memberSource, new Vector2(x, (float)val));
-                    };
+                    }
+                    ;
                 };
 
                 EditorUpdate += (ed) =>

@@ -135,7 +135,7 @@ namespace SFML_GE.GUI
         {
             base.Start();
 
-            if(Project.GetResource<FontResource>(Project.GUIStyling.defaultFontName) != null)
+            if (Project.GetResource<FontResource>(Project.GUIStyling.defaultFontName) != null)
             {
                 contentText.Font = Project.GetResource<FontResource>(Project.GUIStyling.defaultFontName)!;
             }

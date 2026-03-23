@@ -1,6 +1,5 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
-using SFML_GE.Debugging;
 using SFML_GE.System;
 
 namespace SFML_GE.GUI
@@ -143,7 +142,8 @@ namespace SFML_GE.GUI
             {
                 if (localInteractable) { OnHold?.Invoke(this); }
                 HeldDown = true;
-                if (useHoverEffects && localInteractable) { currentColor = heldColor; };
+                if (useHoverEffects && localInteractable) { currentColor = heldColor; }
+                ;
             }
             else { HeldDown = false; }
 

@@ -174,7 +174,7 @@ namespace SFML_GE.GUI
         Sprite drawSprite = new Sprite();
         protected override void PostPass(RenderTarget rt)
         {
-            if(renderTarget == null)
+            if (renderTarget == null)
             {
                 return;
             }

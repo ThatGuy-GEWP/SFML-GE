@@ -1,8 +1,6 @@
-﻿using SFML.Graphics;
-using System.Drawing;
-using Color = SFML.Graphics.Color;
-using SFML_GE.GUI;
+﻿using SFML_GE.GUI;
 using SFML_GE.System;
+using Color = SFML.Graphics.Color;
 
 namespace SFML_GE.Editor
 {

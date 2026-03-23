@@ -232,7 +232,7 @@
             }
             Children.Clear();
 
-            if(Parent != null)
+            if (Parent != null)
             {
                 Parent.RemoveChild(this);
             }
@@ -248,7 +248,7 @@
         /// <returns>true if null or destroyed, false otherwise</returns>
         public static bool IsNullOrDestroyed(GameObject? go)
         {
-            if(go == null) return true;
+            if (go == null) return true;
             return go.IsDestroyed();
         }
 

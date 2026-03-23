@@ -137,14 +137,14 @@
                 }
             }
 
-            if(easingType == GradientEasing.Linear)
+            if (easingType == GradientEasing.Linear)
             {
                 float curAt = MathGE.Map(at, points[toSample].position, points[toSample + 1].position, 0.0f, 1.0f);
                 float startAt = points[toSample].value;
                 float endAt = points[toSample + 1].value;
 
                 return MathGE.Lerp(startAt, endAt, curAt);
-            } 
+            }
             else
             {
                 return points[toSample].value;

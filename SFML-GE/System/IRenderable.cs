@@ -1,5 +1,4 @@
 ﻿using SFML.Graphics;
-using SFML_GE.Editor;
 
 namespace SFML_GE.System
 {
@@ -45,6 +44,10 @@ namespace SFML_GE.System
         /// </summary>
         public RenderQueueType QueueType { get; set; }
 
+        /// <summary>
+        /// Called when this IRenderable should be rendered to a render target
+        /// </summary>
+        /// <param name="rt">The render target being drawn too, usually the screen but other functions can call this one.</param>
         public void OnRender(RenderTarget rt);
     }
 }

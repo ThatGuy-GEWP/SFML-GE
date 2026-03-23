@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>SFML_GE</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -24,6 +24,7 @@
     <PackageTags>game engine,sfml.net,sfml,2D</PackageTags>
 	<PackageReleaseNotes>Gizmos, better sound playing, RichText upgrades, StylingDef, Mouse Blockers, BoundBox upgrades, Camera fixes, and more.</PackageReleaseNotes>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+	<NoWarn>IDE0090</NoWarn>
   </PropertyGroup>
 	
 
@@ -36,7 +37,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SFML.Net" Version="2.6.0" />
+    <PackageReference Include="SFML.Net" Version="2.6.1" />
   </ItemGroup>
 
   <ItemGroup>

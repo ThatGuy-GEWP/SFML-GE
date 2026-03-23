@@ -16,7 +16,7 @@ namespace SFML_GE.System
         /// The <see cref="Sound"/> within this instance
         /// </summary>
         public Sound sound;
-        
+
         /// <summary>
         /// The name of this sound
         /// </summary>
@@ -72,7 +72,7 @@ namespace SFML_GE.System
         public float MinDistance
         {
             get { return sound.MinDistance; }
-            set { sound.MinDistance = value; }
+            set { sound.MinDistance = value > 0f ? value : 1f; }
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace SFML_GE.System
 
         internal void OnDestroy()
         {
-            for(int i = 0; i < activeSounds.Count; i++)
+            for (int i = 0; i < activeSounds.Count; i++)
             {
                 ManagedSound cur = activeSounds[i];
                 cur.Stop();

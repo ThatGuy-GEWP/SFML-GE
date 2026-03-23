@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SFML_GE.System
+﻿namespace SFML_GE.System
 {
     internal class MouseBlockManager
     {
@@ -24,11 +18,11 @@ namespace SFML_GE.System
         int ZSort(Component x, Component y)
         {
             int aZ = x.gameObject.ZOrder;
-            if(x is IRenderable renderableA)
+            if (x is IRenderable renderableA)
             {
                 aZ += renderableA.ZOffset;
             }
-            
+
 
             int bZ = y.gameObject.ZOrder;
             if (y is IRenderable renderableB)
@@ -36,8 +30,8 @@ namespace SFML_GE.System
                 bZ += renderableB.ZOffset;
             }
 
-            if(aZ == bZ) { return 0; }
-            if(aZ < bZ) { return 1; }
+            if (aZ == bZ) { return 0; }
+            if (aZ < bZ) { return 1; }
             return -1;
         }
 
@@ -55,7 +49,7 @@ namespace SFML_GE.System
 
             HoveredComponent = null;
 
-            for(int i = 0; i < componentsToCheck.Count; i++)
+            for (int i = 0; i < componentsToCheck.Count; i++)
             {
                 IMouseBlockable blockr = ((componentsToCheck[i]) as IMouseBlockable)!;
 
