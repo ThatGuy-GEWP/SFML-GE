@@ -103,6 +103,7 @@ namespace SFML_GE.System
                 CurrentFrame = 0;
             }
             curTime = 0f;
+            playing = false;
         }
 
         /// <summary>

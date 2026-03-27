@@ -45,6 +45,8 @@ namespace SFML_GE.Resources
 
             Name = name;
 
+            // required as on linux systems "new Shader(path)" would not load shaders saved from windows due to encoding fuckery
+            // should hopefully fix that but who knows!
             var vert = VertexShaderPath != null ? File.ReadAllText(VertexShaderPath, Sys.Text.Encoding.UTF8) : null;
             var geom = GeometryShaderPath != null ? File.ReadAllText(GeometryShaderPath, Sys.Text.Encoding.UTF8) : null;
             var frag = FragmentShaderPath != null ? File.ReadAllText(FragmentShaderPath, Sys.Text.Encoding.UTF8) : null;

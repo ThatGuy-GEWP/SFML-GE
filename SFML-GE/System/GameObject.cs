@@ -221,7 +221,7 @@
         {
             for (int i = 0; i < Components.Count; i++)
             {
-                Components[i].OnDestroy(this);
+                Components[i].Destroy(this);
                 Components[i].Enabled = false;
             }
             Components.Clear();
@@ -279,6 +279,13 @@
             for (int i = 0; i < Components.Count; i++)
             {
                 if (!Scene.IsLoaded) return; // as scene can be unloaded mid-update
+                if (Components[i].Destroyed)
+                {
+                    RemoveComponent(i); // we should not fuck with destroyed components
+                    i--; // offset to not skip anything
+                    continue;
+                }
+
                 if (!Components[i].Started)
                 {
                     StartComponent(Components[i]);
@@ -436,6 +443,16 @@
             return false;
         }
 
+        void CompRemovedInternal(Component comp)
+        {
+            comp.gameObject = null;
+
+            if (!comp.Destroyed)
+            {
+                comp.OnRemoved(this);
+            }
+        }
+
         /// <summary>
         /// Removes then returns removed child, null if child was not removed
         /// </summary>
@@ -476,6 +493,63 @@
             comp.gameObject = this;
             Components.Add(comp);
             comp.OnAdded(this);
+            return comp;
+        }
+
+        /// <summary>
+        /// Tries to remove the first component it finds of the given type and return it
+        /// Returns null if the component could not be found.
+        /// </summary>
+        /// <typeparam name="T">the type of component</typeparam>
+        /// <returns></returns>
+        public T? RemoveComponent<T>() where T : Component
+        {
+            for(int i = 0; i < Components.Count; i++)
+            {
+                var c = Components[i];
+                if(c is T tc)
+                {
+                    Components.Remove(tc);
+                    CompRemovedInternal(tc);
+                    return tc;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Tries to remove the given component from this GameObject and return it
+        /// If the given component instance is not on this GameObject, it will return null.
+        /// </summary>
+        /// <param name="comp"></param>
+        /// <returns></returns>
+        public Component? RemoveComponent(Component comp)
+        {
+            bool found = Components.Remove(comp);
+            if(found)
+            {
+                CompRemovedInternal(comp);
+            }
+            return found ? comp : null;
+        }
+
+        /// <summary>
+        /// Tries to remove a component at the given index and return it.
+        /// If the index is out of range, returns null
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public Component? RemoveComponent(int index)
+        {
+            if(index >= Components.Count || index < 0) // what is WRONG with you.... why are you INDEX_OUT_OF_RANGE_EXCEPTION
+            {
+                return null;
+            }
+
+            var comp = Components[index];
+            Components.RemoveAt(index);
+            CompRemovedInternal(comp);
+
             return comp;
         }
 

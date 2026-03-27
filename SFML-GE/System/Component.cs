@@ -37,6 +37,17 @@
             set { if (!_enabled && value) { Awake(); } _enabled = value; }
         }
 
+        /// <summary>
+        /// If true, this <see cref="Component"/> can be considered invalid and should not be used.
+        /// Functions will no longer be called on Destroyed components, and GameObjects will
+        /// try to actively remove them
+        /// </summary>
+        public bool Destroyed
+        {
+            get { return _destroyed; }
+        }
+
+        bool _destroyed = false;
         bool _started = false;
         bool _enabled = true;
 
@@ -83,6 +94,26 @@
             set { _scene = value; }
         }
 
+        /// <summary>
+        /// Removes this component from its parent and 
+        /// This is immediate and may be ran before an update is called.
+        /// </summary>
+        public void Destroy(GameObject? go = null)
+        {
+            if (_destroyed)
+            {
+                return;
+            }
+
+            _destroyed = true;
+
+            
+            gameObject?.RemoveComponent(this);
+            
+
+            OnDestroy(gameObject);
+        }
+
         /// <summary>Called every <see cref="Project.Update"/></summary>
         public virtual void Update() { return; }
 
@@ -95,8 +126,11 @@
         /// <summary> Called when a component is just added to a <see cref="GameObject"/>.</summary>
         public virtual void OnAdded(GameObject gameObject) { return; }
 
+        /// <summary> Called when a component is removed from a <see cref="GameObject"/>. does not call when <see cref="Destroyed"/></summary>
+        public virtual void OnRemoved(GameObject gameObject) { return; }
+
         /// <summary> Called when this Component or <see cref="gameObject"/> is destroyed.</summary>
-        public virtual void OnDestroy(GameObject gameObject) { return; }
+        public virtual void OnDestroy(GameObject? gameObject) { return; }
 
         /// <summary> Called when this <see cref="gameObject"/>'s scene is unloaded</summary>
         public virtual void OnUnload() { return; }
