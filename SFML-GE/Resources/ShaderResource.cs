@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML_GE.System;
+using Sys = System;
 
 namespace SFML_GE.Resources
 {
@@ -44,7 +45,11 @@ namespace SFML_GE.Resources
 
             Name = name;
 
-            Resource = new Shader(VertexShaderPath, GeometryShaderPath, FragmentShaderPath);
+            var vert = VertexShaderPath != null ? File.ReadAllText(VertexShaderPath, Sys.Text.Encoding.UTF8) : null;
+            var geom = GeometryShaderPath != null ? File.ReadAllText(GeometryShaderPath, Sys.Text.Encoding.UTF8) : null;
+            var frag = FragmentShaderPath != null ? File.ReadAllText(FragmentShaderPath, Sys.Text.Encoding.UTF8) : null;
+
+            Resource = Shader.FromString(vert, geom, frag);
         }
 
         // because its alot nicer to just pass a ShaderResource into App.draw(thing, renderStates)
