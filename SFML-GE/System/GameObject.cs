@@ -221,8 +221,8 @@
         {
             for (int i = 0; i < Components.Count; i++)
             {
-                Components[i].Destroy(this);
                 Components[i].Enabled = false;
+                Components[i].Destroy(this);
             }
             Components.Clear();
 
@@ -445,7 +445,7 @@
 
         void CompRemovedInternal(Component comp)
         {
-            comp.gameObject = null;
+            comp.gameObject = null!;
 
             if (!comp.Destroyed)
             {
