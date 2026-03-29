@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML_GE.Resources;
+using System.Runtime.CompilerServices;
 
 namespace SFML_GE.System
 {
@@ -54,6 +55,20 @@ namespace SFML_GE.System
             DebugLogger.LogInfo($"Finished loading {allResources.Count} resources in '{dirToCollect}'!");
         }
 
+        /// <summary>
+        /// removes an extension from a path, and tries its damndest to make linux finally stop appending {rootname}/ to stuff
+        /// seriously why does only linux (or atleast mint) just append that shit i dont understand
+        /// whatever atleast it works!
+        /// </summary>
+        /// <param name="full_path"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        string StripName(string full_path, string extension)
+        {
+            return full_path.Replace(extension, string.Empty).Replace("\\", "/").Replace($"{rootName}/", string.Empty);
+        }
+
         // 100,000,000% a security risk but whatevs!
         /// <summary>
         /// Loads a folder with a passed function.
@@ -83,7 +98,7 @@ namespace SFML_GE.System
             {
                 string extension = Path.GetExtension(file);
 
-                string name = file.Replace(extension, "").Replace(rootName + "\\", "").Replace("\\", "/");
+                string name = StripName(file, extension);
 
                 var resource = func.Invoke(file, name, extension);
                 if (resource != null)
@@ -124,7 +139,7 @@ namespace SFML_GE.System
             {
                 string extension = Path.GetExtension(file);
 
-                string name = file.Replace(extension, string.Empty).Replace("\\", "/").Replace($"{rootName}/", string.Empty);
+                string name = StripName(file, extension);
 
                 LoadFile(file, name, extension);
             }

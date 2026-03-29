@@ -51,7 +51,15 @@ namespace SFML_GE.Resources
             var geom = GeometryShaderPath != null ? File.ReadAllText(GeometryShaderPath, Sys.Text.Encoding.UTF8) : null;
             var frag = FragmentShaderPath != null ? File.ReadAllText(FragmentShaderPath, Sys.Text.Encoding.UTF8) : null;
 
-            Resource = Shader.FromString(vert, geom, frag);
+            try
+            {
+                Resource = Shader.FromString(vert, geom, frag);
+            }
+            catch
+            {
+                DebugLogger.LogError($"Failed to compile shader '{name}'!");
+                throw;
+            }
         }
 
         // because its alot nicer to just pass a ShaderResource into App.draw(thing, renderStates)
@@ -65,7 +73,7 @@ namespace SFML_GE.Resources
         /// </summary>
         public override void Dispose()
         {
-            Resource.Dispose();
+            Resource?.Dispose();
         }
     }
 }
