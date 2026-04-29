@@ -259,6 +259,17 @@ namespace SFML_GE.System
         }
 
         /// <summary>
+        /// Gets all scenes created in this project thusfar
+        /// May return an empty array if no scenes were created.
+        /// This function creates a new array each time its called.
+        /// </summary>
+        /// <returns></returns>
+        public Scene[] GetAllScenes()
+        {
+            return scenes.ToArray();
+        }
+
+        /// <summary>
         /// Adds a new keyboard input to monitor with the given <paramref name="inputName"/> and <paramref name="key"/><para></para>
         /// you can get the state of the new input with <see cref="IsInputJustPressed(string)"/>
         /// </summary>

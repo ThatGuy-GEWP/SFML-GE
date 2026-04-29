@@ -158,9 +158,12 @@ namespace SFML_GE.GUI
         /// Creates then adds a new <see cref="GUIListEntry"/> to the <see cref="GUIList"/>, then returns it.
         /// </summary>
         /// <param name="entryName">the name of the entry, will be displayed in the list.</param>
-        public GUIListEntry AddEntry(string entryName)
+        /// <param name="value">an optional value to attach to the entry, accesable via <see cref="GUIListEntry.val"/></param>
+        public GUIListEntry AddEntry(string entryName, object? value = null)
         {
             GUIListEntry entr = new GUIListEntry(25, entryName, true);
+            entr.val = value;
+            entr.valType = value?.GetType();
             content.Add(entr);
             return entr;
         }
