@@ -115,7 +115,20 @@ namespace SFML_GE.System
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Clamp(float value, float min, float max)
         {
-            return Math.Min(MathF.Max(value, min), max);
+            return MathF.Min(MathF.Max(value, min), max);
+        }
+
+        /// <summary>
+        /// Clamps a <paramref name="value"/> to a minimum of <paramref name="min"/> and a maximum of <paramref name="max"/>
+        /// </summary>
+        /// <param name="value">The value to clamp</param>
+        /// <param name="min">The minimum the value can be</param>
+        /// <param name="max">The max the value can be</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Clamp(int value, int min, int max)
+        {
+            return Math.Min(Math.Max(value, min), max);
         }
 
         /// <summary>

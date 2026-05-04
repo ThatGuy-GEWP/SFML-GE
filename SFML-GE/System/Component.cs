@@ -95,7 +95,7 @@
         }
 
         /// <summary>
-        /// Removes this component from its parent and 
+        /// Removes this component from its parent.
         /// This is immediate and may be ran before an update is called.
         /// </summary>
         public void Destroy(GameObject? go = null)
